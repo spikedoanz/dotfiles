@@ -114,7 +114,7 @@ fi
 
 
 alias fd='cd "./$(find -type d | fzf)"'      # fuzzy directory finder
-alias fdh='cd;cd "./$(find -type d | fzf)"'  # fuzzy directory finder from ~
+alias fds='cd;cd "./$(find -type d | fzf)"'  # fuzzy directory finder from ~
 alias ls='exa'
 alias ll='exa -l'
 alias la='exa -a'
