@@ -6,7 +6,6 @@ keybinds {
     unbind "Ctrl k"
     unbind "Ctrl l"
     unbind "Ctrl b"
-    unbind "Alt i"
 
     normal {
         unbind "Ctrl n"
@@ -23,16 +22,8 @@ keybinds {
     }
     scroll {
         bind "Ctrl s" { SwitchToMode "Normal"; }
-        bind "e" { EditScrollback; SwitchToMode "Normal"; }
-        bind "s" { SwitchToMode "EnterSearch"; SearchInput 0; }
+        bind "v" { EditScrollback; SwitchToMode "Normal"; }
         bind "Ctrl c" "i" { ScrollToBottom; SwitchToMode "Normal"; }
-        bind "j" "Down" { ScrollDown; }
-        bind "k" "Up" { ScrollUp; }
-        bind "Ctrl f" "PageDown" "Right" "l" { PageScrollDown; }
-        bind "Ctrl b" "PageUp" "Left" "h" { PageScrollUp; }
-        bind "d" { HalfPageScrollDown; }
-        bind "u" { HalfPageScrollUp; }
-        bind "Alt c" { Copy; }
     }
     shared_except "locked" {
         bind "Ctrl g" { SwitchToMode "Locked"; }
@@ -60,6 +51,7 @@ keybinds {
         bind "Alt r" { SwitchToMode "RenameTab"; TabNameInput 0;  }
         bind "Alt t" { NewTab; }
         bind "Alt q" { CloseFocus; } 
+        unbind "Alt i"
     }
     shared_except "normal" "locked" {
         bind "Enter" "Esc" { SwitchToMode "Normal"; }
@@ -140,26 +132,23 @@ copy_on_select true
 
 // Path to the default editor to use to edit pane scrollbuffer
 // Default: $EDITOR or $VISUAL
-//
-// scrollback_editor "/usr/bin/vim"
+scrollback_editor "/home/spike/.local/share/bob/nightly/nvim-linux64/bin/nvim"
 
 // When attaching to an existing session with other users,
 // should the session be mirrored (true)
 // or should each user have their own cursor (false)
 // Default: false
 //
-// mirror_session true
+mirror_session true
 
 // The folder in which Zellij will look for layouts
-//
 // layout_dir "/path/to/my/layout_dir"
 
 // The folder in which Zellij will look for themes
-//
 // theme_dir "/path/to/my/theme_dir"
 
-// Enable or disable the rendering of styled and colored underlines (undercurl).
-// May need to be disabled for certain unsupported terminals
-// Default: true
-//
-// styled_underlines false
+ui {
+    pane_frames {
+        hide_session_name true
+    }
+}
