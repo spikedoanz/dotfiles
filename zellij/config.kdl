@@ -1,31 +1,21 @@
 // If you'd like to override the default keybindings completely, be sure to change "keybinds" to "keybinds clear-defaults=true"
 keybinds {
-    unbind "Ctrl n"
-    unbind "Ctrl h"
-    unbind "Ctrl j"
-    unbind "Ctrl k"
-    unbind "Ctrl l"
-    unbind "Ctrl b"
-
     normal {
         unbind "Ctrl n"
         unbind "Ctrl h"
         unbind "Ctrl j"
         unbind "Ctrl k"
         unbind "Ctrl l"
+    	bind "Ctrl s" { EditScrollback; SwitchToMode "Normal"; }
         // uncomment this and adjust key if using copy_on_select=false
         // bind "Alt c" { Copy; }
         bind "Alt w" {ToggleFloatingPanes; SwitchToMode "Normal";}
-    }
-    locked {
-        bind "Ctrl g" { SwitchToMode "Normal"; }
-    }
-    scroll {
-        bind "Ctrl s" { SwitchToMode "Normal"; }
-        bind "v" { EditScrollback; SwitchToMode "Normal"; }
-        bind "Ctrl c" "i" { ScrollToBottom; SwitchToMode "Normal"; }
-    }
-    shared_except "locked" {
+        unbind "Ctrl n"
+        unbind "Ctrl h"
+        unbind "Ctrl j"
+        unbind "Ctrl k"
+        unbind "Ctrl l"
+        unbind "Ctrl b"
         bind "Ctrl g" { SwitchToMode "Locked"; }
         bind "Ctrl Q" { Quit; }
         bind "Alt n" { NewPane; }
@@ -53,7 +43,7 @@ keybinds {
         bind "Alt q" { CloseFocus; } 
         unbind "Alt i"
     }
-    shared_except "normal" "locked" {
+    shared_except "normal" {
         bind "Enter" "Esc" { SwitchToMode "Normal"; }
     }
 }
