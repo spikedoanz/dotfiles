@@ -1,7 +1,5 @@
 # dotfiles #
 
-![myterminal](./extras/myterminal.jpg)
-
 ## Packages & Resources ##
 
 [nvlite](https://www.github.com/spikedoanz/nvlite) - my nvchad fork
