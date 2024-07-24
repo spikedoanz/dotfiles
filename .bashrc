@@ -1,6 +1,11 @@
-PS1="%F{blue}%2~%f § "
+PS1="%F{blue}%2~%f § " # this needs to be pwd \n fancy s
 
-alias l='exa'
 alias ls='exa'
-alias la='exa -a'
 alias ll='exa -l'
+alias la='exa -a'
+alias l='exa'
+
+export PATH="~/.scripts/"
+
+
+
