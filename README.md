@@ -1,10 +1,10 @@
 # dotfiles #
 
-## Packages & Resources ##
+## Packages & Resources #
 
-[nvlite](https://www.github.com/spikedoanz/nvlite) - my nvchad fork
+[llm.nvim](https://github.com/melbaldove/llm.nvim)
 
-font: https://github.com/ryanoasis/nerd-fonts/blob/master/patched-fonts/JetBrainsMono/Ligatures/Regular/JetBrainsMonoNerdFontMono-Regular.ttf
+font: [Jet Brains Mono](https://github.com/ryanoasis/nerd-fonts/blob/master/patched-fonts/JetBrainsMono/Ligatures/Regular/JetBrainsMonoNerdFontMono-Regular.ttf)
 
 ---
 
