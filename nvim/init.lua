@@ -82,4 +82,11 @@ vim.keymap.set("v", "<leader>.", function() require("llm").prompt({ replace = tr
 --
 require("brainrot").setup()
 
-
+vim.api.nvim_create_autocmd("FileType", {
+  pattern = "python",
+  callback = function()
+    vim.opt.shiftwidth = 2
+    vim.opt.tabstop = 2
+    vim.opt.softtabstop = 2
+  end,
+})
