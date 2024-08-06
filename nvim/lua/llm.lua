@@ -8,7 +8,9 @@ local active_job = nil
 local service_lookup = {
 	groq = {
 		url = "https://api.groq.com/openai/v1/chat/completions",
-		model = "llama-3.1-70b-versatile",
+		-- model = "llama-3.1-405b-reasoning",
+    model = "llama-3.1-70b-versatile",
+    -- model = "llama-3.1-8b-instant", 
 		api_key_name = "GROQ_API_KEY",
 	},
 	openai = {
@@ -173,6 +175,7 @@ function M.prompt(opts)
 
 	local data
 	if service == "anthropic" then
+    print("Using anthropic api")
 		data = {
 			system = replace and system_prompt_replace or system_prompt,
 			messages = {

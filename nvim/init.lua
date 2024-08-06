@@ -73,9 +73,13 @@ require('llm').setup({
 
 -- keybinds for prompting with groq
 vim.keymap.set("n", "<leader>m", function() require("llm").create_llm_md() end, { desc = "Create llm.md" })
-vim.keymap.set("n", "<leader>,", function() require("llm").prompt({ replace = false, service = "groq" }) end, { desc = "Prompt with groq" })
-vim.keymap.set("v", "<leader>,", function() require("llm").prompt({ replace = false, service = "groq" }) end, { desc = "Prompt with groq" })
-vim.keymap.set("v", "<leader>.", function() require("llm").prompt({ replace = true, service = "groq" }) end, { desc = "Prompt while replacing with groq" })
+vim.keymap.set("n", "<leader>,g", function() require("llm").prompt({ replace = false, service = "groq" }) end, { desc = "Prompt with groq" })
+vim.keymap.set("v", "<leader>,g", function() require("llm").prompt({ replace = false, service = "groq" }) end, { desc = "Prompt with groq" })
+vim.keymap.set("v", "<leader>.g", function() require("llm").prompt({ replace = true, service = "groq" }) end, { desc = "Prompt while replacing with groq" })
+
+vim.keymap.set("n", "<leader>,a", function() require("llm").prompt({ replace = false, service = "anthropic" }) end, { desc = "Prompt with groq" })
+vim.keymap.set("v", "<leader>,a", function() require("llm").prompt({ replace = false, service = "anthropic" }) end, { desc = "Prompt with groq" })
+vim.keymap.set("v", "<leader>.a", function() require("llm").prompt({ replace = true, service = "anthropic" }) end, { desc = "Prompt while replacing with groq" })
 
 
 -- end of llm --
