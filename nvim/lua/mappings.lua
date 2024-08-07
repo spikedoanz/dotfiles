@@ -4,6 +4,7 @@ require "nvchad.mappings"
 local nomap = vim.keymap.del
 
 nomap("i", "<C-k>")
+nomap("n", "<C-c>")
 
 -- add yours here
 
