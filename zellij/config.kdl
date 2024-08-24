@@ -6,18 +6,23 @@ keybinds {
         unbind "Ctrl j"
         unbind "Ctrl k"
         unbind "Ctrl l"
-    	bind "Ctrl s" { EditScrollback; SwitchToMode "Normal"; }
-        // uncomment this and adjust key if using copy_on_select=false
-        // bind "Alt c" { Copy; }
-        bind "Alt w" {ToggleFloatingPanes; SwitchToMode "Normal";}
+        unbind "Ctrl p"
         unbind "Ctrl n"
         unbind "Ctrl h"
         unbind "Ctrl j"
         unbind "Ctrl k"
         unbind "Ctrl l"
         unbind "Ctrl b"
-        bind "Ctrl g" { SwitchToMode "Locked"; }
+        unbind "Ctrl o"
+        unbind "Ctrl p"
+
+        unbind "Alt i"
+
+    	  bind "Ctrl s" { EditScrollback; SwitchToMode "Normal"; }
         bind "Ctrl Q" { Quit; }
+        bind "Ctrl g" { SwitchToMode "Locked"; }
+
+        bind "Alt w" {ToggleFloatingPanes; SwitchToMode "Normal";}
         bind "Alt n" { NewPane; }
         bind "Alt h" "Alt Left" { MoveFocusOrTab "Left"; }
         bind "Alt l" "Alt Right" { MoveFocusOrTab "Right"; }
@@ -41,17 +46,19 @@ keybinds {
         bind "Alt r" { SwitchToMode "RenameTab"; TabNameInput 0;  }
         bind "Alt t" { NewTab; }
         bind "Alt q" { CloseFocus; } 
-        unbind "Alt i"
+        // uncomment this and adjust key if using copy_on_select=false
+        // bind "Alt c" { Copy; }
     }
     shared_except "normal" {
         bind "Enter" "Esc" { SwitchToMode "Normal"; }
     }
+
 }
 
 plugins {
-    tab-bar { path "tab-bar"; }
+    // tab-bar { path "tab-bar"; }
     // status-bar { path "status-bar"; }
-    strider { path "strider"; }
+    // strider { path "strider"; }
     compact-bar { path "compact-bar"; }
     session-manager { path "session-manager"; }
 }
@@ -93,7 +100,7 @@ default_layout "compact"
 // Valid values: positive integers
 // Default value: 10000
 //
-// scroll_buffer_size 10000
+scroll_buffer_size 10000
 
 // Provide a command to execute when copying text. The text will be piped to
 // the stdin of the program to perform the copy. This can be used with
@@ -101,7 +108,6 @@ default_layout "compact"
 // that will be used by default if this option is not set.
 // Examples:
 
-//
 // copy_command "xclip -selection clipboard" // x11
 // copy_command "wl-copy"                    // wayland
 copy_command "pbcopy"                     // osx
@@ -116,23 +122,17 @@ copy_command "pbcopy"                     // osx
 copy_clipboard "system"
 
 // Enable or disable automatic copy (and clear) of selection when releasing mouse
-Default: true
-//
 copy_on_select true 
 
 // Path to the default editor to use to edit pane scrollbuffer
 // Default: $EDITOR or $VISUAL
-scrollback_editor "nvim"
+scrollback_editor "/Users/mdoan4/.local/share/bob/nightly/nvim-macos-arm64/bin/nvim"
 
 // When attaching to an existing session with other users,
-// should the session be mirrored (true)
-// or should each user have their own cursor (false)
-// Default: false
-//
 mirror_session true
 
 // The folder in which Zellij will look for layouts
-// layout_dir "/path/to/my/layout_dir"
+layout_dir "~/.config/zellij"
 
 // The folder in which Zellij will look for themes
 // theme_dir "/path/to/my/theme_dir"
