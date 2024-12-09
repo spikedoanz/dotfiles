@@ -1,5 +1,6 @@
 # fancy prompt
-PS1="%F{blue}%2~%f § "
+PS1="\[\033[34m\]\W\[\033[0m\] § " # bash
+# PS1="%{%F{blue}%}%2~%{%f%} § "   # zsh
 
 # replace ls with exa
 alias ls='exa'
@@ -9,9 +10,5 @@ alias l='exa'
 
 # shorthand
 alias icat='wezterm imgcat'
-alias sv='source venv/bin/activate'
-alias pee='pip install -e .'
-alias termconf='nvim ~/.config/alacritty/alacritty.toml'
-alias @time='date +"%Y-%m-%d-%H:%M"'
-alias v='source venv/bin/activate'
-alias nvim-settings="nvim ~/.config/nvim/init.lua"
+alias v='source .venv/bin/activate'
+alias gg='git add . && git commit -m "wp" && git push origin $(git branch --show-current)'

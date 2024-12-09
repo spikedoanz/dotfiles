@@ -10,7 +10,6 @@ ctrl+/: go to file
 ctrl+w: close tab
 ctrl+t: toggle terminal
 
-
 ## LLM ##
 ctrl+l: toggle chat window
 ctrl+shift+l: go to chat window
@@ -31,7 +30,7 @@ ctrl+x: decrement under cursor
 ```
 ## OS ##
 ```
-super: search for program
+super+space: search for program
 super+{num}: go to {num} workspace
 super+q: quit window
 super+t: open terminal
