@@ -25,7 +25,9 @@ c.keys = {
   { key = '0', mods = 'ALT', action = act.SendString '\x01' },
   { key = '4', mods = 'ALT', action = act.SendString '\x05' }, -- alias for $, but is the same thing
   { key = '$', mods = 'ALT', action = act.SendString '\x05' },
+  { key = 'd', mods = 'ALT', action = act.SendString '\x17' },
   { key = 'D', mods = 'ALT', action = act.SendString '\x0b' },
+  { key = 'x', mods = 'ALT', action = act.SendString '\x7f' },
 }
 
 -- Appearance
