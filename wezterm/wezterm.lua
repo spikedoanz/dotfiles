@@ -27,7 +27,7 @@ c.keys = {
   { key = '$', mods = 'ALT', action = act.SendString '\x05' },
   { key = 'd', mods = 'ALT', action = act.SendString '\x17' },
   { key = 'D', mods = 'ALT', action = act.SendString '\x0b' },
-  { key = 'x', mods = 'ALT', action = act.SendString '\x7f' },
+  { key = 'x', mods = 'ALT', action = act.SendString '\x1b[3~' },
 }
 
 -- Appearance
