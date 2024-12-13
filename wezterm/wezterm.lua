@@ -41,8 +41,7 @@ end
 -- Keybinding
 c.keys = {
   -- Theme cycling
-  { key = 'j', mods = 'ALT', action = cycle_theme(-1) },
-  { key = 'k', mods = 'ALT', action = cycle_theme(1) },
+  { key = '`', mods = 'ALT', action = cycle_theme(1) },
   -- Existing keybindings
   { key="-", mods="ALT", action=act.SplitVertical({ domain = "CurrentPaneDomain" }), },
   { key="=", mods="ALT", action=act.SplitHorizontal({ domain = "CurrentPaneDomain" }), },
