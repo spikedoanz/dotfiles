@@ -1,4 +1,7 @@
--- init.lua
+---------------------------
+-- spike's neovim config --
+---------------------------
+
 -- bootstrap lazy.nvim
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 if not vim.loop.fs_stat(lazypath) then
@@ -10,9 +13,9 @@ if not vim.loop.fs_stat(lazypath) then
 end
 vim.opt.rtp:prepend(lazypath)
 
--- core options
 local opt = vim.opt
 vim.g.mapleader = " "
+vim.opt.termguicolors = false
 
 -- disable swap/backup
 opt.swapfile = false
@@ -29,28 +32,16 @@ opt.shortmess:append("I")
 opt.clipboard = "unnamedplus"
 opt.autoread = true
 
--- disable auto indent
-opt.autoindent = false
-opt.cindent = false
-opt.smartindent = false
+-- persistent undo
+local undodir = vim.fn.stdpath("data") .. "/undodir"
+if not vim.fn.isdirectory(undodir) then
+  vim.fn.mkdir(undodir, "p")
+end
 
--- load math symbols
-require("math")
-
--- auto reload files
-vim.api.nvim_create_autocmd({ "FocusGained", "BufEnter" }, {
-  command = "if mode() != 'c' | checktime | endif",
-  pattern = { "*" },
-})
-
--- keymaps
-local map = vim.keymap.set
-
-map("n", "<C-b>", ":NvimTreeToggle<CR>", { silent = true })
-map({ 'n', 'i', 'v' }, '<C-J>', '10j', { noremap = true, silent = true })
-map({ 'n', 'i', 'v' }, '<C-K>', '10k', { noremap = true, silent = true })
-map('n', '<leader>n', ':set number!<CR>', { noremap = true, silent = true })
-map('n', '<leader>r', ':set relativenumber!<CR>', { noremap = true, silent = true })
+vim.opt.undofile = true        -- Enable persistent undo
+vim.opt.undodir = undodir      -- Set undo directory
+vim.opt.undolevels = 10000     -- Maximum number of changes that can be undone
+vim.opt.undoreload = 10000     -- Maximum number lines to save for undo on buffer reload
 
 -- tab spacing shortcuts
 local function set_tab_width(width)
@@ -59,117 +50,21 @@ local function set_tab_width(width)
   print("Tab spacing set to " .. width)
 end
 
+-- keymaps
+local map = vim.keymap.set
+
+map("n", "<C-b>", ":NvimTreeToggle<CR>", { silent = true })
+
+map({ 'n', 'i', 'v' }, '<C-J>', '10j', { noremap = true, silent = true })
+map({ 'n', 'i', 'v' }, '<C-K>', '10k', { noremap = true, silent = true })
+
+map('n', '<leader>n', ':set number!<CR>', { noremap = true, silent = true })
+map('n', '<leader>r', ':set relativenumber!<CR>', { noremap = true, silent = true })
+
 map('n', '<leader>t2', function() set_tab_width(2) end, { noremap = true, silent = true })
 map('n', '<leader>t4', function() set_tab_width(4) end, { noremap = true, silent = true })
 
--- shared lsp setup
-local function on_attach(client, bufnr)
-  client.server_capabilities.documentFormattingProvider = false
-  client.server_capabilities.documentRangeFormattingProvider = false
-  
-  local opts = { buffer = bufnr }
-  map('n', 'gD', vim.lsp.buf.declaration, opts)
-  map('n', 'gd', vim.lsp.buf.definition, opts)
-  map('n', 'K', vim.lsp.buf.hover, opts)
-  map('n', 'gi', vim.lsp.buf.implementation, opts)
-  map('n', '<space>D', vim.lsp.buf.type_definition, opts)
-  map('n', '<space>rn', vim.lsp.buf.rename, opts)
-  map({ 'n', 'v' }, '<space>ca', vim.lsp.buf.code_action, opts)
-  map('n', 'gr', vim.lsp.buf.references, opts)
-end
 
--- plugins
-require("lazy").setup({
-  -- theme
-  {
-    "catppuccin/nvim",
-    name = "catppuccin",
-    priority = 1000,
-    config = function() vim.cmd.colorscheme "catppuccin" end,
-  },
-
-  -- utilities
-  { "norcalli/nvim-colorizer.lua", config = true },
-  { 
-    "nvim-tree/nvim-tree.lua",
-    dependencies = { "nvim-tree/nvim-web-devicons" },
-    config = true,
-  },
-
-  -- telescope
-  {
-    "nvim-telescope/telescope.nvim",
-    dependencies = { "nvim-lua/plenary.nvim" },
-    config = function()
-      local builtin = require("telescope.builtin")
-      map("n", "<leader>ff", builtin.find_files)
-      map("n", "<leader>fg", builtin.live_grep)
-      map("n", "<leader>fb", builtin.buffers)
-      map("n", "<leader>fh", builtin.help_tags)
-    end,
-  },
-
-  -- lsp
-  {
-    "neovim/nvim-lspconfig",
-    dependencies = {
-      "williamboman/mason.nvim",
-      "williamboman/mason-lspconfig.nvim",
-    },
-    config = function()
-      require("mason").setup()
-      local lspconfig = require("lspconfig")
-      
-      -- ruff setup
-      lspconfig.ruff_lsp.setup{
-        on_attach = on_attach,
-        init_options = {
-          settings = {
-            "--ignore=E701",
-            "--extend-ignore=E402,F401"
-          }
-        }
-      }
-      -- global diagnostic mappings
-      map('n', '<space>e', vim.diagnostic.open_float)
-      map('n', '[d', vim.diagnostic.goto_prev)
-      map('n', ']d', vim.diagnostic.goto_next)
-      map('n', '<space>q', vim.diagnostic.setloclist)
-    end,
-  },
-
-  -- which-key
-  {
-    "folke/which-key.nvim",
-    event = "VeryLazy",
-    opts = {},
-    keys = {
-      {
-        "<leader>?",
-        function() require("which-key").show({ global = false }) end,
-        desc = "Buffer Local Keymaps (which-key)",
-      },
-    },
-  },
-
-  -- lean
-  {
-    'Julian/lean.nvim',
-    event = { 'BufReadPre *.lean', 'BufNewFile *.lean' },
-    dependencies = {
-      'neovim/nvim-lspconfig',
-      'nvim-lua/plenary.nvim',
-    },
-    opts = {
-      lsp = {},
-      mappings = true,
-    }
-  },
-})
-
-
--- $$math symbols$$
--- greek 
 vim.keymap.set('i', '\\alpha', 'α', {buffer = true})
 vim.keymap.set('i', '\\a', 'α', {buffer = true}) -- sugar
 vim.keymap.set('i', '\\beta', 'β', {buffer = true}) 
@@ -246,3 +141,53 @@ vim.keymap.set('i', '\\copyright', '©', {buffer = true})
 
 vim.keymap.set('i', '\\dot', '·', {buffer = true})
 vim.keymap.set('i', '\\', '\\', {buffer = true})
+
+-- plugins
+require("lazy").setup({
+  { 
+    "nvim-tree/nvim-tree.lua",
+    dependencies = { "nvim-tree/nvim-web-devicons" },
+    config = true,
+  },
+
+  -- telescope
+  {
+    "nvim-telescope/telescope.nvim",
+    dependencies = { "nvim-lua/plenary.nvim" },
+    config = function()
+      local builtin = require("telescope.builtin")
+      map("n", "<leader>ff", builtin.find_files)
+      map("n", "<leader>fg", builtin.live_grep)
+      map("n", "<leader>fb", builtin.buffers)
+      map("n", "<leader>fh", builtin.help_tags)
+    end,
+  },
+
+  -- which-key
+  {
+    "folke/which-key.nvim",
+    event = "VeryLazy",
+    opts = {},
+    keys = {
+      {
+        "<leader>?",
+        function() require("which-key").show({ global = false }) end,
+        desc = "Buffer Local Keymaps (which-key)",
+      },
+    },
+  },
+
+  -- lean
+  {
+    'Julian/lean.nvim',
+    event = { 'BufReadPre *.lean', 'BufNewFile *.lean' },
+    dependencies = {
+      'neovim/nvim-lspconfig',
+      'nvim-lua/plenary.nvim',
+    },
+    opts = {
+      lsp = {},
+      mappings = true,
+    }
+  },
+})

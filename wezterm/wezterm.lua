@@ -2,16 +2,49 @@ local wezterm = require 'wezterm'
 
 -- Prelude
 local c = {}
-if wezterm.c_builder then
+if wezterm.config_builder then
   c = wezterm.config_builder()
   c:set_strict_mode(true)
 end
-
 local act = wezterm.action
+
+-- Theme management
+local themes = {
+  --'Catppuccin Mocha',
+  'Solarized Light (Gogh)',
+  'Solarized Dark (Gogh)',
+  -- Add more themes here
+}
+
+-- Initialize current theme index
+local current_theme_index = 1
+c.color_scheme = themes[current_theme_index]
+
+-- Create theme cycling action
+local function cycle_theme(delta)
+  return wezterm.action_callback(function(window, pane)
+    current_theme_index = current_theme_index + delta
+    if current_theme_index > #themes then
+      current_theme_index = 1
+    elseif current_theme_index < 1 then
+      current_theme_index = #themes
+    end
+    
+    window:set_config_overrides({
+      color_scheme = themes[current_theme_index]
+    })
+    
+    -- Show theme name in toast notification
+    window:toast_notification('WezTerm', 'Theme: ' .. themes[current_theme_index], nil)
+  end)
+end
 
 -- Keybinding
 c.keys = {
-  -- window bindings
+  -- Theme cycling
+  { key = 'j', mods = 'ALT', action = cycle_theme(-1) },
+  { key = 'k', mods = 'ALT', action = cycle_theme(1) },
+  -- Existing keybindings
   { key="-", mods="ALT", action=act.SplitVertical({ domain = "CurrentPaneDomain" }), },
   { key="=", mods="ALT", action=act.SplitHorizontal({ domain = "CurrentPaneDomain" }), },
   { key="Q", mods="ALT", action=act.CloseCurrentPane({ confirm = true }) },
@@ -23,7 +56,7 @@ c.keys = {
   { key = 'b', mods = 'ALT', action = act.SendString '\x1bb' },
   { key = 'w', mods = 'ALT', action = act.SendString '\x1bf' },
   { key = '0', mods = 'ALT', action = act.SendString '\x01' },
-  { key = '4', mods = 'ALT', action = act.SendString '\x05' }, -- alias for $, but is the same thing
+  { key = '4', mods = 'ALT', action = act.SendString '\x05' },
   { key = '$', mods = 'ALT', action = act.SendString '\x05' },
   { key = 'd', mods = 'ALT', action = act.SendString '\x17' },
   { key = 'D', mods = 'ALT', action = act.SendString '\x0b' },
@@ -39,9 +72,6 @@ c.window_padding = {
   top = 0,
   bottom = 0,
 }
-c.enable_kitty_graphics = false
-c.enable_sixel = true
-c.color_scheme = 'Catppuccin Mocha'
 c.use_fancy_tab_bar = false
 c.hide_tab_bar_if_only_one_tab = true
 c.max_fps = 144
