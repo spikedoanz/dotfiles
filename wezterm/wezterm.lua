@@ -11,9 +11,8 @@ local act = wezterm.action
 -- Theme management
 local themes = {
   --'Catppuccin Mocha',
-  'Solarized Light (Gogh)',
-  'Solarized Dark (Gogh)',
-  -- Add more themes here
+  'Solarized (light) (terminal.sexy)',
+  'Solarized (dark) (terminal.sexy)',
 }
 
 -- Initialize current theme index
