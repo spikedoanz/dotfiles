@@ -11,22 +11,30 @@ local act = wezterm.action
 -- Theme management
 local themes = {
   --'Catppuccin Mocha',
-  'Solarized (light) (terminal.sexy)',
-  'Solarized (dark) (terminal.sexy)',
+  'Solarized Light (Gogh)',
+  'Solarized Dark (Gogh)',
+  -- Add more themes here
 }
 
--- Initialize current theme index
+-- Initialize current theme index and last switch time
 local current_theme_index = 1
+local last_switch_time = 0
 c.color_scheme = themes[current_theme_index]
 
--- Create theme cycling action
-local function cycle_theme(delta)
+-- Create theme cycling action with cooldown
+local function cycle_theme()
   return wezterm.action_callback(function(window, pane)
-    current_theme_index = current_theme_index + delta
+    -- Add 1-second cooldown to prevent rapid switching
+    local current_time = os.time()
+    if current_time - last_switch_time < 1 then
+      return
+    end
+    last_switch_time = current_time
+
+    -- Cycle forward only
+    current_theme_index = current_theme_index + 1
     if current_theme_index > #themes then
       current_theme_index = 1
-    elseif current_theme_index < 1 then
-      current_theme_index = #themes
     end
     
     window:set_config_overrides({
@@ -40,8 +48,8 @@ end
 
 -- Keybinding
 c.keys = {
-  -- Theme cycling
-  { key = '`', mods = 'ALT', action = cycle_theme(1) },
+  -- Theme cycling with single key
+  { key = '`', mods = 'ALT', action = cycle_theme() },
   -- Existing keybindings
   { key="-", mods="ALT", action=act.SplitVertical({ domain = "CurrentPaneDomain" }), },
   { key="=", mods="ALT", action=act.SplitHorizontal({ domain = "CurrentPaneDomain" }), },
