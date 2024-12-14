@@ -9,3 +9,10 @@ term: wezterm
 shell: bash/zsh
 
 editor: nvim/zed
+
+extras:
+
+```
+dmenu
+zen browser
+```
