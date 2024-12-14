@@ -35,11 +35,9 @@ local function cycle_theme()
     })
   end)
 end
+c.adjust_window_size_when_changing_font_size = false
 -- Keybinding
 c.keys = {
-  -- Font size adjustments
-  { key = '=', mods = 'CTRL', action = act.IncreaseFontSize },
-  { key = '-', mods = 'CTRL', action = act.DecreaseFontSize },
   -- Theme cycling with single key
   { key = 'T', mods = 'ALT', action = cycle_theme() },
   -- Existing keybindings

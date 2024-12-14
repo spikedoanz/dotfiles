@@ -15,7 +15,7 @@ vim.opt.rtp:prepend(lazypath)
 
 local opt = vim.opt
 vim.g.mapleader = " "
-vim.opt.termguicolors = false
+--vim.opt.termguicolors = false
 
 -- disable swap/backup
 opt.swapfile = false
@@ -144,6 +144,14 @@ vim.keymap.set('i', '\\', '\\', {buffer = true})
 
 -- plugins
 require("lazy").setup({
+  {
+    "Tsuzat/NeoSolarized.nvim",
+      lazy = false, -- make sure we load this during startup if it is your main colorscheme
+      priority = 1000, -- make sure to load this before all the other start plugins
+      config = function()
+        vim.cmd [[ colorscheme NeoSolarized ]]
+      end
+  },
   { 
     "nvim-tree/nvim-tree.lua",
     dependencies = { "nvim-tree/nvim-web-devicons" },
