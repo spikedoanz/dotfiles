@@ -1,0 +1,51 @@
+######################
+## spike's shell rc ##
+######################
+#
+# move into ~/.shrc (or wherever you want)
+# and add "source .shrc" to your .bashrc/.zshrc
+
+
+# Detect shell and set appropriate prompt
+if [ -n "$ZSH_VERSION" ]; then
+    # Running in zsh
+    PS1="%{%F{blue}%}%2~%{%f%} § "
+    source <(fzf --zsh)
+elif [ -n "$BASH_VERSION" ]; then
+    # Running in bash
+    PS1="\[\033[34m\]\W\[\033[0m\] § "
+    eval "$(fzf --bash)"
+else
+    echo "Unknown shell type"
+fi
+
+# Set up exa aliases if it exists
+if command -v exa >/dev/null 2>&1; then
+    alias ls='exa'
+    alias ll='exa -l'
+    alias la='exa -a'
+    alias l='exa'
+fi
+
+# Detect OS and set up clipboard aliases
+if [[ "$OSTYPE" == "darwin"* ]]; then
+    # macOS
+    alias copy='pbcopy'
+    alias paste='pbpaste'
+else
+    # Linux/Unix - check for xclip or xsel
+    if command -v xclip >/dev/null 2>&1; then
+        alias copy='xclip -selection clipboard'
+        alias paste='xclip -selection clipboard -o'
+    elif command -v xsel >/dev/null 2>&1; then
+        alias copy='xsel --clipboard --input'
+        alias paste='xsel --clipboard --output'
+    else
+        echo "Neither xclip nor xsel is installed. Please install one of them."
+    fi
+fi
+
+# shorthand
+alias icat='wezterm imgcat'
+alias v='source .venv/bin/activate'
+alias gg='git add . && git commit -m "wp" && git push origin $(git branch --show-current)'
