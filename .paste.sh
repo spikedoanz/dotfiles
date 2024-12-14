@@ -28,5 +28,6 @@ paste_config "nvim/init.lua" "nvim" "init.lua"
 paste_config "wezterm/wezterm.lua" "wezterm" "wezterm.lua"
 paste_config "zed/settings.json" "zed" "settings.json"
 paste_config ".shrc" "." ".shrc"
+paste_config ".xmonad/xmonad.hs" ".xmonad" "xmonad.hs"
 
 echo "Done"
