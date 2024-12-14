@@ -1,10 +1,11 @@
 # dotfiles #
 
-font: [Jet Brains Mono](https://github.com/ryanoasis/nerd-fonts/blob/master/patched-fonts/JetBrainsMono/Ligatures/Regular/JetBrainsMonoNerdFontMono-Regular.ttf)
+font: [jetbrains mono](https://github.com/ryanoasis/nerd-fonts/blob/master/patched-fonts/JetBrainsMono/Ligatures/Regular/JetBrainsMonoNerdFontMono-Regular.ttf)
 
----
+wm: xmonad
 
-```
-cd nix
-xargs nix-env -iA < requirements.nix
-```
+term: wezterm
+
+shell: bash/zsh
+
+editor: nvim/zed
