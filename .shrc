@@ -4,17 +4,22 @@
 #
 # move into ~/.shrc (or wherever you want)
 # and add "source .shrc" to your .bashrc/.zshrc
-
+#
 
 # Detect shell and set appropriate prompt
 if [ -n "$ZSH_VERSION" ]; then
     # Running in zsh
     PS1="%{%F{blue}%}%2~%{%f%} § "
-    source <(fzf --zsh)
+    if [[ -z "$SSH_AGENT_PID" ]]; then
+        eval $(ssh-agent -s)
+    fi
 elif [ -n "$BASH_VERSION" ]; then
     # Running in bash
     PS1="\[\033[34m\]\W\[\033[0m\] § "
     eval "$(fzf --bash)"
+    if [ -z "$SSH_AGENT_PID" ]; then
+        eval $(ssh-agent -s)
+    fi
 else
     echo "Unknown shell type"
 fi
