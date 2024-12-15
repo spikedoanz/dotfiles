@@ -19,3 +19,4 @@ copy_config ~/.config/wezterm/wezterm.lua wezterm wezterm.lua
 copy_config ~/.config/zed/settings.json zed settings.json
 copy_config ~/.shrc . .shrc
 copy_config ~/.xmonad/xmonad.hs .xmonad xmonad.hs
+copy_config ~/.config/xmobar/xmobar.config xmobar xmobar.config

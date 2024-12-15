@@ -9,9 +9,13 @@ import System.Exit
 import qualified XMonad.StackSet as W
 import qualified Data.Map        as M
 
+import XMonad.Hooks.ManageDocks
+
 import XMonad.Layout.NoBorders (noBorders)
 import XMonad.Layout.ResizableTile
+
 import XMonad.Actions.Navigation2D
+
 import XMonad.Util.SpawnOnce
 import XMonad.Util.Run
 
@@ -70,6 +74,9 @@ help = unlines [
 
 
 myTerminal      = "wezterm"
+myFont          = "xft:JetBrainsNerdFont Mono"
+myTextEditor    = "nvim"
+
 myModMask       = mod4Mask -- Modifer key. mod4Mask is Super
 myBorderWidth   = 2 -- Width of the window border in pixels.
 
@@ -124,7 +131,7 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
 
     -- System
     , ((modm .|. shiftMask, xK_Escape    ), io (exitWith ExitSuccess))  -- quit
-    , ((modm,               xK_Escape     ), spawn "xmonad --recompile; xmonad --restart") -- restart
+    , ((modm,               xK_Escape     ), spawn "killall xmobar; xmonad --recompile; xmonad --restart") -- restart
     , ((modm .|. shiftMask, xK_slash ), spawn ("echo \"" ++ help ++ "\" | xmessage -file -")) -- show help
 
     -- Screenshot
@@ -152,7 +159,7 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
 
 ------------------------------------------------------------------------
 -- Layouts:
-myLayout = tiled ||| noBorders Full
+myLayout = avoidStruts (tiled ||| noBorders Full)
   where
     -- default tiling algorithm partitions the screen into two panes
     tiled = Tall nmaster delta ratio
@@ -198,8 +205,8 @@ myStartupHook = do
 
 ------------------------------------------------------------------------
 main = do 
-  xmproc <- spawnPipe "xmobar -x 0 ~/.config/xmobar"
-  xmonad defaults
+  xmproc <- spawnPipe "xmobar -x 0 ~/.config/xmobar/xmobar.config"
+  xmonad $ docks defaults
 
 defaults = def {
       -- simple stuff
