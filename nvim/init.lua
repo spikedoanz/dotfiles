@@ -15,7 +15,6 @@ vim.opt.rtp:prepend(lazypath)
 
 local opt = vim.opt
 vim.g.mapleader = " "
---vim.opt.termguicolors = false
 
 -- disable swap/backup
 opt.swapfile = false
