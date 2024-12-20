@@ -59,6 +59,12 @@
   programs.firefox.enable = true;
   programs.zsh.enable = true;
 
+  programs.neovim = {
+    enable = true;
+    defaultEditor = true;
+    vimAlias = true;
+  };
+
   nixpkgs.config.allowUnfree = false;
   # nix search $package-name
   environment.systemPackages = with pkgs; [
@@ -69,7 +75,6 @@
 
     # General
     git
-    neovim
     ripgrep
     tree
     curl
@@ -115,7 +120,6 @@
     gnomeExtensions.forge
     ledger
   ];
-  environment.variables.EDITOR = "nvim";
 
   fonts.packages = with pkgs; [ nerdfonts ];
 
