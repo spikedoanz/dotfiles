@@ -2,7 +2,7 @@
 
 font: [jetbrains mono](https://github.com/ryanoasis/nerd-fonts/blob/master/patched-fonts/JetBrainsMono/Ligatures/Regular/JetBrainsMonoNerdFontMono-Regular.ttf)
 
-wm: xmonad
+wm: gnome/xmonad
 
 term: wezterm
 
@@ -10,9 +10,18 @@ shell: bash/zsh
 
 editor: nvim/zed
 
-extras:
 
 ```
-dmenu
-zen browser
+~/.config § tree
+.
+├── home-manager
+│   └── home.nix
+├── nvim
+│   ├── init.lua
+│   └── lazy-lock.json
+├── wezterm
+│   └── wezterm.lua
+└── zed
+    ├── settings.json
+    └── themes
 ```
