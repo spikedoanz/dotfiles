@@ -1,6 +1,6 @@
-# Edit this configuration file to define what should be installed on
-# your system.  Help is available in the configuration.nix(5) man page
-# and in the NixOS manual (accessible by running ‘nixos-help’).
+########################
+## spike's nix config ##
+########################
 
 { config, pkgs, ... }:
 
@@ -8,14 +8,13 @@
   imports =
     [ # Include the results of the hardware scan.
       ./hardware-configuration.nix
-      <home-manager/nixos>
     ];
 
   # Bootloader.
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
 
-  networking.hostName = "nixos"; # Define your hostname.
+  networking.hostName = "nixos";
   # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
 
   # Configure network proxy if necessary
@@ -69,42 +68,32 @@
     alsa.enable = true;
     alsa.support32Bit = true;
     pulse.enable = true;
-    # If you want to use JACK applications, uncomment this
-    #jack.enable = true;
-
-    # use the example session manager (no others are packaged yet so this is enabled by default,
-    # no need to redefine it in your config for now)
     #media-session.enable = true;
   };
 
-  # Define a user account. Don't forget to set a password with ‘passwd’.
   users.users.spike = {
     isNormalUser = true;
     description = "spike";
     extraGroups = [ "networkmanager" "wheel" ];
-    packages = with pkgs; [
-    #  thunderbird
-    ];
+    shell = pkgs.zsh;
+    packages = with pkgs; [];
   };
 
 
-  # Install firefox.
   programs.firefox.enable = true;
+  programs.zsh.enable = true;
 
   # Allow unfree packages
   nixpkgs.config.allowUnfree = false;
 
-  # List packages installed in system profile. To search, run:
-  # $ nix search wget
+  # nix search $package-name
   environment.systemPackages = with pkgs; [
     # Apparently you have to do this????
     #nix-channel --add https://github.com/nix-community/home-manager/archive/master.tar.gz home-manager
     #nix-channel --update    
-
     home-manager
     # General
     git
-    vim
     neovim
     ripgrep
     tree
@@ -113,6 +102,7 @@
     fzf
     zip
     unzip
+    eza
     lsof
     htop
     ncdu
@@ -170,5 +160,4 @@
   # networking.firewall.enable = false;
 
   system.stateVersion = "unstable"; # Did you read the comment?
-
 }
