@@ -10,6 +10,9 @@ shell: bash/zsh
 
 editor: nvim/zed
 
+configuration.nix lives in /etc/nixos/
+
+everything else is in:
 
 ```
 ~/.config § tree
