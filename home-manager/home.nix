@@ -41,6 +41,7 @@
       gg = "git add . && git commit -m \"wp\" && git push origin $(git branch --show-current)";
     };
   };
+
   dconf.settings = {
     "org/gnome/desktop/input-sources" = {
       sources = [ [ "xkb" "us" ] ];

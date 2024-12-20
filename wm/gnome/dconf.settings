@@ -1,0 +1,198 @@
+[org/gnome/Console]
+font-scale=1.7000000000000006
+last-window-maximised=true
+last-window-size=(652, 480)
+
+[org/gnome/Geary]
+migrated-config=true
+
+[org/gnome/control-center]
+last-panel='keyboard'
+window-state=(980, 640, false)
+
+[org/gnome/desktop/a11y/magnifier]
+mag-factor=12.0
+
+[org/gnome/desktop/app-folders]
+folder-children=['Utilities', 'YaST', 'Pardus']
+
+[org/gnome/desktop/app-folders/folders/Pardus]
+categories=['X-Pardus-Apps']
+name='X-Pardus-Apps.directory'
+translate=true
+
+[org/gnome/desktop/app-folders/folders/Utilities]
+apps=['gnome-abrt.desktop', 'gnome-system-log.desktop', 'nm-connection-editor.desktop', 'org.gnome.baobab.desktop', 'org.gnome.Connections.desktop', 'org.gnome.DejaDup.desktop', 'org.gnome.Dictionary.desktop', 'org.gnome.DiskUtility.desktop', 'org.gnome.Evince.desktop', 'org.gnome.FileRoller.desktop', 'org.gnome.fonts.desktop', 'org.gnome.Loupe.desktop', 'org.gnome.seahorse.Application.desktop', 'org.gnome.tweaks.desktop', 'org.gnome.Usage.desktop', 'vinagre.desktop']
+categories=['X-GNOME-Utilities']
+name='X-GNOME-Utilities.directory'
+translate=true
+
+[org/gnome/desktop/app-folders/folders/YaST]
+categories=['X-SuSE-YaST']
+name='suse-yast.directory'
+translate=true
+
+[org/gnome/desktop/background]
+color-shading-type='solid'
+picture-options='zoom'
+picture-uri='file:///run/current-system/sw/share/backgrounds/gnome/blobs-l.svg'
+picture-uri-dark='file:///run/current-system/sw/share/backgrounds/gnome/blobs-d.svg'
+primary-color='#241f31'
+secondary-color='#000000'
+
+[org/gnome/desktop/input-sources]
+show-all-sources=true
+sources=[('xkb', 'us')]
+xkb-options=['terminate:ctrl_alt_bksp', 'lv3:ralt_switch', 'ctrl:nocaps', 'altwin:swap_alt_win']
+
+[org/gnome/desktop/interface]
+accent-color='pink'
+color-scheme='prefer-dark'
+font-antialiasing='rgba'
+gtk-enable-primary-paste=false
+monospace-font-name='JetBrainsMono Nerd Font 10'
+
+[org/gnome/desktop/notifications]
+application-children=['gnome-power-panel', 'org-gnome-console', 'firefox', 'org-gnome-tweaks', 'org-gnome-nautilus']
+show-banners=false
+
+[org/gnome/desktop/notifications/application/firefox]
+application-id='firefox.desktop'
+
+[org/gnome/desktop/notifications/application/gnome-power-panel]
+application-id='gnome-power-panel.desktop'
+
+[org/gnome/desktop/notifications/application/org-gnome-console]
+application-id='org.gnome.Console.desktop'
+
+[org/gnome/desktop/notifications/application/org-gnome-nautilus]
+application-id='org.gnome.Nautilus.desktop'
+
+[org/gnome/desktop/notifications/application/org-gnome-tweaks]
+application-id='org.gnome.tweaks.desktop'
+
+[org/gnome/desktop/peripherals/mouse]
+accel-profile='flat'
+speed=0.54263565891472876
+
+[org/gnome/desktop/peripherals/pointingstick]
+accel-profile='flat'
+
+[org/gnome/desktop/peripherals/touchpad]
+accel-profile='flat'
+two-finger-scrolling-enabled=true
+
+[org/gnome/desktop/screensaver]
+color-shading-type='solid'
+picture-options='zoom'
+picture-uri='file:///run/current-system/sw/share/backgrounds/gnome/blobs-l.svg'
+primary-color='#241f31'
+secondary-color='#000000'
+
+[org/gnome/desktop/wm/keybindings]
+activate-window-menu=@as []
+begin-move=@as []
+begin-resize=@as []
+close=['<Super>q']
+cycle-windows=@as []
+cycle-windows-backward=@as []
+maximize=['<Super>m']
+minimize=@as []
+panel-run-dialog=['<Super>p']
+switch-input-source=@as []
+switch-input-source-backward=@as []
+switch-to-workspace-1=['<Super>1']
+switch-to-workspace-2=['<Super>2']
+switch-to-workspace-3=['<Super>3']
+switch-to-workspace-4=['<Super>4']
+toggle-fullscreen=['F11']
+toggle-maximized=@as []
+unmaximize=@as []
+
+[org/gnome/desktop/wm/preferences]
+button-layout='appmenu:maximize,close'
+
+[org/gnome/epiphany]
+ask-for-default=false
+
+[org/gnome/epiphany/state]
+is-maximized=true
+window-size=(2560, 1408)
+
+[org/gnome/evolution-data-server]
+migrated=true
+
+[org/gnome/mutter/keybindings]
+toggle-tiled-left=@as []
+toggle-tiled-right=@as []
+
+[org/gnome/mutter/wayland/keybindings]
+restore-shortcuts=@as []
+
+[org/gnome/nautilus/preferences]
+default-folder-viewer='icon-view'
+migrated-gtk-settings=true
+search-filter-time-type='last_modified'
+
+[org/gnome/nautilus/window-state]
+initial-size=(1597, 550)
+
+[org/gnome/nm-applet/eap/2a1eb42f-96f9-4ac9-9aa3-405a8585cf0d]
+ignore-ca-cert=true
+ignore-phase2-ca-cert=false
+
+[org/gnome/settings-daemon/plugins/color]
+night-light-schedule-automatic=false
+
+[org/gnome/settings-daemon/plugins/media-keys]
+control-center=['<Shift><Super>slash']
+custom-keybindings=['/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0/']
+help=@as []
+logout=['<Shift><Super>Escape']
+magnifier=@as []
+magnifier-zoom-in=@as []
+magnifier-zoom-out=@as []
+screensaver=@as []
+search=['<Super>space']
+www=['<Shift><Super>b']
+
+[org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0]
+binding='<Shift><Super>Return'
+command='wezterm'
+name='Launch Terminal'
+
+[org/gnome/shell]
+command-history=['wezterm']
+last-selected-power-profile='power-saver'
+welcome-dialog-last-shown-version='47.1'
+
+[org/gnome/shell/keybindings]
+focus-active-notification=@as []
+show-screen-recording-ui=['<Shift><Alt>Print']
+switch-to-application-1=@as []
+switch-to-application-2=@as []
+switch-to-application-3=@as []
+switch-to-application-4=@as []
+toggle-application-view=@as []
+toggle-message-tray=@as []
+toggle-quick-settings=@as []
+
+[org/gnome/shell/world-clocks]
+locations=@av []
+
+[org/gnome/tweaks]
+show-extensions-notice=false
+
+[org/gtk/settings/file-chooser]
+date-format='regular'
+location-mode='path-bar'
+show-hidden=false
+show-size-column=true
+show-type-column=true
+sidebar-width=157
+sort-column='name'
+sort-directories-first=false
+sort-order='ascending'
+type-format='category'
+window-position=(26, 23)
+window-size=(1231, 902)
