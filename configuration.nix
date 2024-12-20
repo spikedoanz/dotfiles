@@ -1,35 +1,24 @@
-########################
+#######################
 ## spike's nix config ##
 ########################
 
 { config, pkgs, ... }:
 
 {
-  imports =
-    [ # Include the results of the hardware scan.
-      ./hardware-configuration.nix
-    ];
+  imports = [./hardware-configuration.nix];
+  nix.settings.experimental-features = [ "nix-command" "flakes"];
 
-  # Bootloader.
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
 
   networking.hostName = "nixos";
-  # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
-
-  # Configure network proxy if necessary
-  # networking.proxy.default = "http://user:password@proxy:port/";
-  # networking.proxy.noProxy = "127.0.0.1,localhost,internal.domain";
-
-  # Enable networking
   networking.networkmanager.enable = true;
 
-  # Set your time zone.
+  hardware.pulseaudio.enable = false;
+  security.rtkit.enable = true;
+
   time.timeZone = "America/New_York";
-
-  # Select internationalisation properties.
   i18n.defaultLocale = "en_US.UTF-8";
-
   i18n.extraLocaleSettings = {
     LC_ADDRESS = "en_US.UTF-8";
     LC_IDENTIFICATION = "en_US.UTF-8";
@@ -42,33 +31,21 @@
     LC_TIME = "en_US.UTF-8";
   };
 
-  nix.settings.experimental-features = [ "nix-command" "flakes"];
-
-  # Enable the X11 windowing system.
+  # Desktop environment
   services.xserver.enable = true;
-
-  # Enable the GNOME Desktop Environment.
   services.xserver.displayManager.gdm.enable = true;
   services.xserver.desktopManager.gnome.enable = true;
-
-  # Configure keymap in X11
   services.xserver.xkb = {
     layout = "us";
     variant = "";
+    options = "ctrl:nocaps,terminate:ctrl_alt_bksp,lv3:ralt_switch,altwin:swap_alt_win";
   };
-
-  # Enable CUPS to print documents.
   services.printing.enable = true;
-
-  # Enable sound with pipewire.
-  hardware.pulseaudio.enable = false;
-  security.rtkit.enable = true;
   services.pipewire = {
     enable = true;
     alsa.enable = true;
     alsa.support32Bit = true;
     pulse.enable = true;
-    #media-session.enable = true;
   };
 
   users.users.spike = {
@@ -79,19 +56,17 @@
     packages = with pkgs; [];
   };
 
-
   programs.firefox.enable = true;
   programs.zsh.enable = true;
 
-  # Allow unfree packages
   nixpkgs.config.allowUnfree = false;
-
   # nix search $package-name
   environment.systemPackages = with pkgs; [
     # Apparently you have to do this????
     #nix-channel --add https://github.com/nix-community/home-manager/archive/master.tar.gz home-manager
     #nix-channel --update    
     home-manager
+
     # General
     git
     neovim
@@ -108,6 +83,7 @@
     ncdu
     xclip
     flameshot
+
     # Media
     ffmpeg
     gimp
@@ -115,6 +91,7 @@
     obs-studio
     qbittorrent
     inkscape
+
     # Dev
     (python311.withPackages (ps: with ps; [
 	requests
@@ -130,6 +107,7 @@
     pyright
     zig
     go
+
     # Apps
     wezterm
     gnome-tweaks
@@ -137,27 +115,9 @@
     gnomeExtensions.forge
     ledger
   ];
+  environment.variables.EDITOR = "nvim";
 
   fonts.packages = with pkgs; [ nerdfonts ];
-
-  # Some programs need SUID wrappers, can be configured further or are
-  # started in user sessions.
-  # programs.mtr.enable = true;
-  # programs.gnupg.agent = {
-  #   enable = true;
-  #   enableSSHSupport = true;
-  # };
-
-  # List services that you want to enable:
-
-  # Enable the OpenSSH daemon.
-  # services.openssh.enable = true;
-
-  # Open ports in the firewall.
-  # networking.firewall.allowedTCPPorts = [ ... ];
-  # networking.firewall.allowedUDPPorts = [ ... ];
-  # Or disable the firewall altogether.
-  # networking.firewall.enable = false;
 
   system.stateVersion = "unstable"; # Did you read the comment?
 }
