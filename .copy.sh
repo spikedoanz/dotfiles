@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 # copy.sh
 copy_config() {
     local src="$1"
@@ -20,3 +20,6 @@ copy_config ~/.config/zed/settings.json zed settings.json
 copy_config ~/.shrc . .shrc
 copy_config ~/.xmonad/xmonad.hs .xmonad xmonad.hs
 copy_config ~/.config/xmonad/xmobar/xmobar.config xmonad/xmobar xmobar.config
+copy_config /etc/nixos/configuration.nix . configuration.nix
+copy_config ~/.config/home-manager/home.nix home-manager home.nix
+

@@ -19,6 +19,8 @@ local themes = {
 local current_theme_index = 1
 local last_switch_time = 0
 c.color_scheme = themes[current_theme_index]
+c.front_end = "WebGpu"
+
 local function cycle_theme()
   return wezterm.action_callback(function(window, pane)
     local current_time = os.time()
@@ -82,5 +84,5 @@ c.window_padding = {
 }
 c.use_fancy_tab_bar = false
 c.hide_tab_bar_if_only_one_tab = true
-c.max_fps = 144
+c.enable_wayland = false
 return c
