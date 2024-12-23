@@ -3,12 +3,19 @@ font-scale=1.7000000000000006
 last-window-maximised=true
 last-window-size=(652, 480)
 
+[org/gnome/Extensions]
+window-height=1384
+window-width=2544
+
 [org/gnome/Geary]
 migrated-config=true
 
 [org/gnome/control-center]
 last-panel='keyboard'
-window-state=(980, 640, false)
+window-state=(980, 637, false)
+
+[org/gnome/desktop/a11y/interface]
+show-status-shapes=false
 
 [org/gnome/desktop/a11y/magnifier]
 mag-factor=12.0
@@ -48,9 +55,14 @@ xkb-options=['terminate:ctrl_alt_bksp', 'lv3:ralt_switch', 'ctrl:nocaps', 'altwi
 [org/gnome/desktop/interface]
 accent-color='pink'
 color-scheme='prefer-dark'
+cursor-size=24
+enable-animations=false
 font-antialiasing='rgba'
 gtk-enable-primary-paste=false
 monospace-font-name='JetBrainsMono Nerd Font 10'
+overlay-scrolling=true
+text-scaling-factor=1.25
+toolkit-accessibility=false
 
 [org/gnome/desktop/notifications]
 application-children=['gnome-power-panel', 'org-gnome-console', 'firefox', 'org-gnome-tweaks', 'org-gnome-nautilus']
@@ -94,13 +106,22 @@ activate-window-menu=@as []
 begin-move=@as []
 begin-resize=@as []
 close=['<Super>q']
+cycle-panels=@as []
+cycle-panels-backward=@as []
 cycle-windows=@as []
 cycle-windows-backward=@as []
 maximize=['<Super>m']
 minimize=@as []
+move-to-monitor-down=@as []
+move-to-monitor-left=@as []
+move-to-monitor-right=@as []
+move-to-monitor-up=@as []
+move-to-workspace-left=@as []
 panel-run-dialog=['<Super>p']
 switch-input-source=@as []
 switch-input-source-backward=@as []
+switch-panels=@as []
+switch-panels-backward=@as []
 switch-to-workspace-1=['<Super>1']
 switch-to-workspace-2=['<Super>2']
 switch-to-workspace-3=['<Super>3']
@@ -152,6 +173,7 @@ logout=['<Shift><Super>Escape']
 magnifier=@as []
 magnifier-zoom-in=@as []
 magnifier-zoom-out=@as []
+screenreader=@as []
 screensaver=@as []
 search=['<Super>space']
 www=['<Shift><Super>b']
@@ -163,8 +185,56 @@ name='Launch Terminal'
 
 [org/gnome/shell]
 command-history=['wezterm']
+enabled-extensions=['forge@jmmaranan.com']
 last-selected-power-profile='power-saver'
 welcome-dialog-last-shown-version='47.1'
+
+[org/gnome/shell/extensions/forge]
+css-last-update=uint32 37
+preview-hint-enabled=true
+split-border-toggle=true
+stacked-tiling-mode-enabled=true
+
+[org/gnome/shell/extensions/forge/keybindings]
+con-split-horizontal=['<Super>z']
+con-split-layout-toggle=['<Super>g']
+con-split-vertical=['<Super>v']
+con-stacked-layout-toggle=['<Shift><Super>s']
+con-tabbed-layout-toggle=['<Shift><Super>t']
+con-tabbed-showtab-decoration-toggle=['<Control><Alt>y']
+focus-border-toggle=['<Super>x']
+prefs-tiling-toggle=['<Super>w']
+window-focus-down=['<Super>j']
+window-focus-left=['<Super>h']
+window-focus-right=['<Super>l']
+window-focus-up=['<Super>k']
+window-gap-size-decrease=['<Control><Super>minus']
+window-gap-size-increase=['<Control><Super>plus']
+window-move-down=['<Shift><Super>j']
+window-move-left=['<Shift><Super>h']
+window-move-right=['<Shift><Super>l']
+window-move-up=['<Shift><Super>k']
+window-resize-bottom-decrease=['<Shift><Control><Super>i']
+window-resize-bottom-increase=['<Control><Super>u']
+window-resize-left-decrease=['<Shift><Control><Super>o']
+window-resize-left-increase=['<Control><Super>y']
+window-resize-right-decrease=['<Shift><Control><Super>y']
+window-resize-right-increase=['<Control><Super>o']
+window-resize-top-decrease=['<Shift><Control><Super>u']
+window-resize-top-increase=['<Control><Super>i']
+window-snap-center=['<Control><Alt>c']
+window-snap-one-third-left=['<Control><Alt>d']
+window-snap-one-third-right=['<Control><Alt>g']
+window-snap-two-third-left=['<Control><Alt>e']
+window-snap-two-third-right=['<Control><Alt>t']
+window-swap-down=['<Control><Super>j']
+window-swap-last-active=['<Super>Return']
+window-swap-left=['<Control><Super>h']
+window-swap-right=['<Control><Super>l']
+window-swap-up=['<Control><Super>k']
+window-toggle-always-float=['<Shift><Super>c']
+window-toggle-float=['<Super>c']
+workspace-active-tile-toggle=['<Shift><Super>w']
 
 [org/gnome/shell/keybindings]
 focus-active-notification=@as []
@@ -182,6 +252,9 @@ locations=@av []
 
 [org/gnome/tweaks]
 show-extensions-notice=false
+
+[org/gtk/settings/color-chooser]
+selected-color=(true, 0.92941176470588238, 0.20000000000000001, 0.23137254901960785, 1.0)
 
 [org/gtk/settings/file-chooser]
 date-format='regular'

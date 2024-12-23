@@ -13,6 +13,12 @@
     userName = "spikedoanz";
   };
 
+  dconf.settings = {
+    "org/gnome/desktop/interface" = {
+      text-scaling-factor = 1.25;
+    };
+  };
+
   programs.zsh = {
     enable = true;
     
@@ -22,6 +28,10 @@
 
       # FZF integration (make sure fzf is in home.packages)
       eval "$(fzf --zsh)"
+
+      # Key bindings for command history navigation
+      bindkey '^P' up-line-or-history
+      bindkey '^N' down-line-or-history
     '';
 
     shellAliases = {
@@ -41,6 +51,8 @@
       gg = "git add . && git commit -m \"wp\" && git push origin $(git branch --show-current)";
     };
   };
+
+
   home.packages = with pkgs; [];
   fonts.fontconfig.enable = true;        
 }

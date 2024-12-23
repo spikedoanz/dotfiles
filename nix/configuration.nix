@@ -97,22 +97,32 @@
     qbittorrent
     inkscape
 
-    # Dev
-    (python311.withPackages (ps: with ps; [
-	requests
-	numpy
-	pandas
-	pillow
-	pip
-	pyarrow
-	selenium
-	tinygrad
-	pyright
+    # Python
+    (python312.withPackages (ps: with ps; [
+      requests
+      numpy
+      pandas
+      pillow
+      torch
+      pip
+      pyarrow
+      selenium
+      tinygrad
+      pyright
     ]))
     pyright
-    zig
-    go
 
+    # C
+    cmake
+    gnumake
+    clang
+    extra-cmake-modules
+    pkg-config
+    gcc
+    
+    # Haskell
+    ghc
+  
     # Apps
     wezterm
     gnome-tweaks
@@ -122,6 +132,5 @@
   ];
 
   fonts.packages = with pkgs; [ nerdfonts ];
-
-  system.stateVersion = "unstable"; # Did you read the comment?
+  system.stateVersion = "24.11";
 }
