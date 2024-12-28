@@ -31,6 +31,10 @@ opt.shortmess:append("I")
 opt.clipboard = "unnamedplus"
 opt.autoread = true
 
+
+-- file extensions
+vim.filetype.add({ extension = { ispc = "c", }, }) -- ispc
+
 -- persistent undo
 local undodir = vim.fn.stdpath("data") .. "/undodir"
 if not vim.fn.isdirectory(undodir) then
@@ -60,10 +64,11 @@ map({ 'n', 'i', 'v' }, '<C-K>', '10k', { noremap = true, silent = true })
 map('n', '<leader>n', ':set number!<CR>', { noremap = true, silent = true })
 map('n', '<leader>r', ':set relativenumber!<CR>', { noremap = true, silent = true })
 
-map('n', '<leader>t2', function() set_tab_width(2) end, { noremap = true, silent = true })
-map('n', '<leader>t4', function() set_tab_width(4) end, { noremap = true, silent = true })
+map('n','<leader>t2',function() set_tab_width(2) end,{ noremap=true, silent=true })
+map('n','<leader>t4',function() set_tab_width(4) end,{ noremap=true, silent=true })
 
-
+-- Greek
+-- Lowercase
 vim.keymap.set('i', '\\alpha', 'α', {buffer = true})
 vim.keymap.set('i', '\\a', 'α', {buffer = true}) -- sugar
 vim.keymap.set('i', '\\beta', 'β', {buffer = true}) 
@@ -88,8 +93,7 @@ vim.keymap.set('i', '\\chi', 'χ', {buffer = true})
 vim.keymap.set('i', '\\psi', 'ψ', {buffer = true})
 vim.keymap.set('i', '\\omega', 'ω', {buffer = true})
 
--- Greek
-
+-- Uppercase
 vim.keymap.set('i', '\\Alpha', 'Α', {buffer = true})
 vim.keymap.set('i', '\\Beta', 'Β', {buffer = true})
 vim.keymap.set('i', '\\Gamma', 'Γ', {buffer = true})
@@ -141,25 +145,38 @@ vim.keymap.set('i', '\\copyright', '©', {buffer = true})
 vim.keymap.set('i', '\\dot', '·', {buffer = true})
 vim.keymap.set('i', '\\', '\\', {buffer = true})
 
+-- Automatically detect and match terminal background
+local function update_background()
+  local stdout = vim.fn.system('printf "%d" "$(id -u)"')
+  local is_dark = vim.fn.system("osascript -e 'tell application \"Terminal\" to get dark mode of window 1'")
+  
+  -- Default to dark if we can't detect
+  if is_dark == "true\n" then
+    vim.opt.background = "dark"
+  else
+    vim.opt.background = "light"
+  end
+end
+
+-- Set initial background
+update_background()
+
+-- Create an autocommand to update on focus gain
+vim.api.nvim_create_autocmd("FocusGained", {
+  callback = update_background
+})
+
+-- Disable true colors to use terminal colors
+opt.termguicolors = false
+
 -- plugins
 require("lazy").setup({
-  {
-    "Tsuzat/NeoSolarized.nvim",
-      lazy = false, -- make sure we load this during startup if it is your main colorscheme
-      priority = 1000, -- make sure to load this before all the other start plugins
-      config = function()
-        vim.cmd [[ colorscheme NeoSolarized ]]
-      end
-  },
-  { 
-    "nvim-tree/nvim-tree.lua",
+  { "nvim-tree/nvim-tree.lua",
     dependencies = { "nvim-tree/nvim-web-devicons" },
     config = true,
   },
 
-  -- telescope
-  {
-    "nvim-telescope/telescope.nvim",
+  { "nvim-telescope/telescope.nvim",
     dependencies = { "nvim-lua/plenary.nvim" },
     config = function()
       local builtin = require("telescope.builtin")
@@ -170,31 +187,20 @@ require("lazy").setup({
     end,
   },
 
-  -- which-key
-  {
-    "folke/which-key.nvim",
+  { "folke/which-key.nvim",
     event = "VeryLazy",
     opts = {},
     keys = {
-      {
-        "<leader>?",
+      { "<leader>?",
         function() require("which-key").show({ global = false }) end,
         desc = "Buffer Local Keymaps (which-key)",
       },
     },
   },
 
-  -- lean
-  {
-    'Julian/lean.nvim',
-    event = { 'BufReadPre *.lean', 'BufNewFile *.lean' },
-    dependencies = {
-      'neovim/nvim-lspconfig',
-      'nvim-lua/plenary.nvim',
-    },
-    opts = {
-      lsp = {},
-      mappings = true,
-    }
+  { 'Julian/lean.nvim', event = { 'BufReadPre *.lean', 'BufNewFile *.lean' },
+    dependencies = { 'neovim/nvim-lspconfig', 'nvim-lua/plenary.nvim', },
+    opts = { lsp = {}, mappings = true, }
   },
+
 })

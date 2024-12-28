@@ -12,8 +12,9 @@ local act = wezterm.action
 
 -- Theme switching
 local themes = {
-  'Solarized Dark (Gogh)',
-  'Solarized Light (Gogh)',
+  --'Catppuccin Mocha',
+  'GruvboxDark',
+  'GruvboxLight',
 }
 
 local current_theme_index = 1

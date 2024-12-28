@@ -10,9 +10,11 @@ import qualified XMonad.StackSet as W
 import qualified Data.Map        as M
 
 import XMonad.Hooks.ManageDocks
+import XMonad.Hooks.DynamicLog
 
 import XMonad.Layout.NoBorders (noBorders)
 import XMonad.Layout.ResizableTile
+import XMonad.Layout.Spacing
 
 import XMonad.Actions.Navigation2D
 
@@ -111,7 +113,7 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
 
 ------------------------------------------------------------------------
 -- Layouts:
-myLayout = avoidStruts (tiled ||| noBorders Full)
+myLayout = avoidStruts (tiled) ||| noBorders Full
   where
     -- default tiling algorithm partitions the screen into two panes
     tiled = Tall nmaster delta ratio
@@ -146,7 +148,7 @@ myEventHook = mempty
 
 ------------------------------------------------------------------------
 -- Status bars and logging
-myLogHook = return ()
+myLogHook = dynamicLog
 
 ------------------------------------------------------------------------
 -- Startup hook
@@ -154,11 +156,13 @@ myStartupHook = do
     spawnOnce "nitrogen --restore &"
     spawnOnce "compton &"
     spawnOnce "eval $(ssh-agent)"
+    spawnOnce "syncthing"
 
 ------------------------------------------------------------------------
 main = do 
   xmproc <- spawnPipe "xmobar -- ~/.config/xmonad/xmobar/xmobar.config"
   xmonad $ docks defaults
+
 
 defaults = def {
       -- simple stuff
