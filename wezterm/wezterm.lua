@@ -82,6 +82,7 @@ c.window_padding = {
   bottom = 0,
 }
 c.use_fancy_tab_bar = false
+c.window_decorations = "RESIZE"
 c.hide_tab_bar_if_only_one_tab = true
 c.enable_wayland = false
 return c

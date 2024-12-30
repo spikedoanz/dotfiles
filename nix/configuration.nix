@@ -55,8 +55,11 @@
     shell = pkgs.zsh;
     packages = with pkgs; [];
   };
+
   programs.firefox.enable = true;
+
   programs.zsh.enable = true;
+
   programs.neovim = { enable = true; defaultEditor = true; vimAlias = true; };
   nixpkgs.config.allowUnfree = false;
   environment = {
@@ -83,6 +86,7 @@
       rofi            # window switcher util tool
       pulseaudio      # audiomanager
       brightnessctl   # brightness controls
+      wmctrl          # window manager controling
 
     
       # Apps

@@ -26,15 +26,16 @@ bar {
         active_workspace     $darkgray $darkgray $lightgray
         urgent_workspace     $red $red $bg
     }
+
 }
 
 # class                 border|backgr|text|indicator|child_border
-client.focused          $lightgray $lightgray $bg $purple $darkgray
-client.focused_inactive $darkgray $darkgray $lightgray $purple $darkgray
-client.unfocused        $darkgray $darkgray $lightgray $purple $darkgray
+client.focused          $lightgray $lightgray $bg $darkgray $lightgray
+client.focused_inactive $darkgray $darkgray $lightgray $darkgray $darkgray
+client.unfocused        $darkgray $darkgray $lightgray $darkgray $darkgray
 client.urgent           $red $red $white $red $red
 
-font pango:JetBrainsMono Nerd Font Mono 12
+font pango:JetBrainsMono Nerd Font Mono 16
 
 # system startup
 exec --no-startup-id dex --autostart --environment i3
@@ -149,10 +150,18 @@ mode "resize" {
         bindsym k resize shrink height 10 px or 10 ppt
         bindsym l resize grow width 10 px or 10 ppt
 
-        # back to normal: Enter or Escape or $mod+r
         bindsym Return mode "default"
         bindsym Escape mode "default"
-        bindsym $mod+r mode "default"
+        bindsym semicolon mode "default"
+        bindsym $mod+semicolon mode "default"
 }
 
-bindsym $mod+r mode "resize"
+bindsym $mod+semicolon mode "resize"
+
+# make firefox stacking
+for_window [class="firefox"] layout tabbed
+bindsym $mod+a exec ~/.local/bin/firefox-window-search.sh
+bindsym $mod+t exec firefox
+bindsym Mod4+Tab focus right
+bindsym Mod4+Shift+Tab focus left
+bindsym Print exec --no-startup-id flameshot gui

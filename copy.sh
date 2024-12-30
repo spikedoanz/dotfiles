@@ -1,4 +1,5 @@
 #!/bin/sh
+# copies files from local to this directory
 copy_config() {
     local src="$1"
     local dest_dir="$2"
