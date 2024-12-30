@@ -9,6 +9,9 @@ opt.swapfile = false
 opt.backup = false
 opt.writebackup = false
 
+-- disable error highlighting
+vim.diagnostic.disable()
+
 -- editor settings
 opt.number = false
 opt.expandtab = true
