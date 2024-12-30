@@ -12,9 +12,8 @@ local act = wezterm.action
 
 -- Theme switching
 local themes = {
-  --'Catppuccin Mocha',
-  'GruvboxDark',
-  'GruvboxLight',
+  "GruvboxDark",
+  "GruvboxLight",
 }
 
 local current_theme_index = 1
@@ -73,11 +72,9 @@ c.keys = {
   { key = 'x', mods = 'ALT', action = act.SendString '\x1b[3~' },
   { key = 'v', mods = 'ALT', action = wezterm.action.ActivateCopyMode, },
 }
--- Enable mouse focus
-c.pane_focus_follows_mouse = true
 -- Appearance
 c.font = wezterm.font('JetBrainsMono Nerd Font Mono')
-c.font_size = 12
+c.font_size = 16
 c.window_padding = {
   left = 0,
   right = 0,

@@ -1,10 +1,13 @@
 { config, pkgs, ... }:
 
 {
-
   home.username = "spike";
   home.homeDirectory = "/home/spike";
   home.stateVersion = "24.11";
+
+  home.packages = with pkgs; [
+    xorg.xrandr
+  ];
 
   programs.home-manager.enable = true;
   programs.git = {
@@ -13,10 +16,13 @@
     userName = "spikedoanz";
   };
 
-  dconf.settings = {
-    "org/gnome/desktop/interface" = {
-      text-scaling-factor = 1.25;
-    };
+  xresources.properties = {
+    "Xft.dpi" = 120;
+  };
+
+  home.sessionVariables = {
+    GDK_SCALE = "1.25";
+    GDK_DPI_SCALE = "1.25";
   };
 
   programs.zsh = {
@@ -45,14 +51,13 @@
       copy = "xclip -selection clipboard";
       paste = "xclip -selection clipboard -o";
 
-      # Your custom shortcuts
       icat = "wezterm imgcat";
       v = "source .venv/bin/activate";
       gg = "git add . && git commit -m \"wp\" && git push origin $(git branch --show-current)";
+      rebuild = "sudo nixos-rebuild switch";
+      nixedit = "sudoedit /etc/nixos/configuration.nix";
     };
   };
 
-
-  home.packages = with pkgs; [];
   fonts.fontconfig.enable = true;        
 }
