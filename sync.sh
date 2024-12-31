@@ -24,5 +24,5 @@ copy_config /etc/nixos/configuration.nix            nix                 configur
 copy_config ~/.config/home-manager/home.nix         nix/home-manager    home.nix
 
 
-copy_config ~/.config/i3/config                     wm/i3/i3            config
-copy_config ~/.config/i3status/config               wm/i3/i3status      config
+copy_config ~/.config/i3/config                     i3/i3               config
+copy_config ~/.config/i3status/config               i3/i3status         config

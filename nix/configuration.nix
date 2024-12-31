@@ -130,45 +130,46 @@
     systemPackages = with pkgs; [
       # Utils
       home-manager    # config manager
-      light          # brightness manager
-      flameshot      # screenshot tool
-      feh            # background image manager
-      wmctrl         # window manager manager
+      brightnessctl   # brightness manager
+      flameshot       # screenshot tool
+      feh             # background image manager
+      wmctrl          # window manager manager
 
       # General
-      zsh            # shell 
-      git            # version control tool
-      ripgrep        # better grep
-      tree           # file tree visualizer
-      curl           # download tool
-      fzf            # fuzzy file searching
-      zip unzip      # compression tools
-      eza            # better "ls"
-      lsof           # list open files
-      htop           # system utilization tool
-      ncdu           # disk usage monitoring
-      xclip          # clipboard
-      rofi           # window switcher util tool
-      pass           # password manager
-      gnupg          # private key creator
+      zsh             # shell 
+      git             # version control tool
+      ripgrep         # better grep
+      tree            # file tree visualizer
+      curl            # download tool
+      fzf             # fuzzy file searching
+      zip unzip       # compression tools
+      eza             # better "ls"
+      lsof            # list open files
+      htop            # system utilization tool
+      ncdu            # disk usage monitoring
+      xclip           # clipboard
+      rofi            # window switcher util tool
+      pass            # password manager
+      gnupg           # private key creator
       pinentry-curses # in terminal prompts
-      neovim         # editor number one
-      yazi           # tui file browser
+      neovim          # editor number one
+      yazi            # tui file browser
+      zoxide          # better cd   
     
       # Apps
-      wezterm        # terminal emulator
-      firefox        # browser
-      syncthing      # file syncing
-      zathura        # pdf reader
-      zed-editor     # editor number two
+      wezterm         # terminal emulator
+      firefox         # browser
+      syncthing       # file syncing
+      zathura         # pdf reader
+      zed-editor      # editor number two
 
       # Media
-      ffmpeg         # video/gif/etc editor
-      gimp           # image editor
-      mpv            # video viewer
-      obs-studio     # screen recording
-      qbittorrent    # file "sharing"
-      inkscape       # svg editor
+      ffmpeg          # video/gif/etc editor
+      gimp            # image editor
+      mpv             # video viewer
+      obs-studio      # screen recording
+      qbittorrent     # file "sharing"
+      inkscape        # svg editor
 
       # Python
       (python311.withPackages (ps: with ps; [
@@ -207,7 +208,6 @@
     defaultEditor = true;
     vimAlias = true;
   };
-  programs.light.enable = true;
 
   # Fonts
   fonts.packages = with pkgs; [ nerdfonts ];
