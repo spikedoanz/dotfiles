@@ -17,7 +17,7 @@
 │ │ WM:       i3                                            │ │
 │ │ Terminal: wezterm                                       │ │
 │ │ Shell:    zsh                                           │ │
-│ │ Editors:  neovim, zed                                   │ │
+│ │ Editors:  neovim                                        │ │
 │ │ Theme:    gruvbox                                       │ │
 │ │ Font:     jetbrains mono nerd font                      │ │
 │ └─────────────────────────────────────────────────────────┘ │
