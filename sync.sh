@@ -1,6 +1,6 @@
 #!/bin/sh
 # copies files from local to this directory
-copy_config() {
+cfg() {
     local src="$1"
     local dest_dir="$2"
     local dest_file="$3"
@@ -14,15 +14,15 @@ copy_config() {
     fi
 }
 
-# source                                            dest                file
-copy_config ~/.config/nvim/init.lua                 nvim                init.lua
-copy_config ~/.config/wezterm/wezterm.lua           wezterm             wezterm.lua
-copy_config ~/.config/zed/settings.json             zed                 settings.json
-copy_config ~/.shrc                                 .                   .shrc
+# source                              dest                file
+cfg ~/.config/nvim/init.lua           nvim                init.lua
+cfg ~/.config/wezterm/wezterm.lua     wezterm             wezterm.lua
+cfg ~/.config/zed/settings.json       zed                 settings.json
+cfg ~/.shrc                           .                   .shrc
 
-copy_config /etc/nixos/configuration.nix            nix                 configuration.nix
-copy_config ~/.config/home-manager/home.nix         nix/home-manager    home.nix
+cfg /etc/nixos/configuration.nix      nix                 configuration.nix
+cfg ~/.config/home-manager/home.nix   nix/home-manager    home.nix
 
 
-copy_config ~/.config/i3/config                     i3/i3               config
-copy_config ~/.config/i3status/config               i3/i3status         config
+cfg ~/.config/i3/config               i3/i3               config
+cfg ~/.config/i3status/config         i3/i3status         config
