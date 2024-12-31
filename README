@@ -1,20 +1,18 @@
-███████╗██████╗ ██╗██╗  ██╗███████╗ ███████╗
-██╔════╝██╔══██╗██║██║ ██╔╝██╔════╝ ██╔════╝
-███████╗██████╔╝██║█████╔╝ █████╗   ███████╗
-╚════██║██╔═══╝ ██║██╔═██╗ ██╔══╝   ╚════██║
-███████║██║     ██║██║  ██╗███████╗ ███████║
-╚══════╝╚═╝     ╚═╝╚═╝  ╚═╝╚══════╝ ╚══════╝
-██████╗  ██████╗ ████████╗███████╗██╗██╗     ███████╗███████╗
-██╔══██╗██╔═══██╗╚══██╔══╝██╔════╝██║██║     ██╔════╝██╔════╝
-██║  ██║██║   ██║   ██║   █████╗  ██║██║     █████╗  ███████╗
-██║  ██║██║   ██║   ██║   ██╔══╝  ██║██║     ██╔══╝  ╚════██║
-██████╔╝╚██████╔╝   ██║   ██║     ██║███████╗███████╗███████║
-╚═════╝  ╚═════╝    ╚═╝   ╚═╝     ╚═╝╚══════╝╚══════╝╚══════╝
+  ███████╗██████╗ ██╗██╗  ██╗███████╗ ███████╗
+  ██╔════╝██╔══██╗██║██║ ██╔╝██╔════╝ ██╔════╝
+  ███████╗██████╔╝██║█████╔╝ █████╗   ███████╗
+  ╚════██║██╔═══╝ ██║██╔═██╗ ██╔══╝   ╚════██║
+  ███████║██║     ██║██║  ██╗███████╗ ███████║
+  ╚══════╝╚═╝     ╚═╝╚═╝  ╚═╝╚══════╝ ╚══════╝
+  ██████╗  ██████╗ ████████╗███████╗██╗██╗     ███████╗███████╗
+  ██╔══██╗██╔═══██╗╚══██╔══╝██╔════╝██║██║     ██╔════╝██╔════╝
+  ██║  ██║██║   ██║   ██║   █████╗  ██║██║     █████╗  ███████╗
+  ██║  ██║██║   ██║   ██║   ██╔══╝  ██║██║     ██╔══╝  ╚════██║
+  ██████╔╝╚██████╔╝   ██║   ██║     ██║███████╗███████╗███████║
+  ╚═════╝  ╚═════╝    ╚═╝   ╚═╝     ╚═╝╚══════╝╚══════╝╚══════╝
 
 ┌─────────────────────────────────────────────────────────────┐
-│ ▼ SYSTEM CONFIGURATION                                      │
-│                                                             │
-│ ┌─────────────────────────────────────────────────────────┐ │
+│ ┌──▼ SYSTEM CONFIGURATION─────────────────────────────────┐ │
 │ │ OS:       nixos                                         │ │
 │ │ WM:       i3                                            │ │
 │ │ Terminal: wezterm                                       │ │
@@ -26,9 +24,7 @@
 └─────────────────────────────────────────────────────────────┘
 
 ┌─────────────────────────────────────────────────────────────┐
-│ ▼ FILE STRUCTURE                                            │
-│                                                             │
-│ ┌─────────────────────────────────────────────────────────┐ │
+│ ┌──▼ FILE STRUCTURE───────────────────────────────────────┐ │
 │ │ /etc/nixos/configuration.nix                            │ │
 │ │ ~/.config/                                              │ │
 │ │ ├── i3/config                                           │ │
@@ -39,9 +35,7 @@
 └─────────────────────────────────────────────────────────────┘
 
 ┌─────────────────────────────────────────────────────────────┐
-│ ▼ SYSTEM UTILITIES                                          │
-│                                                             │
-│ ┌─────────────────────────────────────────────────────────┐ │
+│ ┌──▼ SYSTEM UTILITIES─────────────────────────────────────┐ │
 │ │ Network Management: nmtui                               │ │
 │ │ Brightness Control: brightnessctl                       │ │
 │ │ Audio:             pipewire + pulseaudio                │ │
@@ -51,9 +45,7 @@
 └─────────────────────────────────────────────────────────────┘
 
 ┌─────────────────────────────────────────────────────────────┐
-│ ▼ SYSTEM SERVICES                                           │
-│                                                             │
-│ ┌─────────────────────────────────────────────────────────┐ │
+│ ┌──▼ SYSTEM SERVICES──────────────────────────────────────┐ │
 │ │ POWER MANAGEMENT                                        │ │
 │ │ ├── tlp:                    battery optimization        │ │
 │ │ ├── thermald:               temperature control         │ │
@@ -75,9 +67,7 @@
 └─────────────────────────────────────────────────────────────┘
 
 ┌─────────────────────────────────────────────────────────────┐
-│ ▼ SYSTEM TASKS                                              │
-│                                                             │
-│ ┌─────────────────────────────────────────────────────────┐ │
+│ ┌──▼ SYSTEM TASKS─────────────────────────────────────────┐ │
 │ │ SYSTEM UPDATES                                          │ │
 │ │ $ sudo nixos-rebuild switch                             │ │
 │ │ $ nix-collect-garbage                                   │ │
@@ -94,13 +84,152 @@
 └─────────────────────────────────────────────────────────────┘
 
 ┌─────────────────────────────────────────────────────────────┐
-│ ▼ PACKAGE MANAGEMENT                                        │
-│                                                             │
-│ ┌─────────────────────────────────────────────────────────┐ │
+│ ┌──▼ PACKAGE MANAGEMENT───────────────────────────────────┐ │
 │ │ Location: /etc/nixos/configuration.nix                  │ │
 │ │                                                         │ │
 │ │ environment.systemPackages = with pkgs; [               │ │
 │ │   # package definitions                                 │ │
 │ │ ];                                                      │ │
+│ └─────────────────────────────────────────────────────────┘ │
+└─────────────────────────────────────────────────────────────┘
+
+
+┌─────────────────────────────────────────────────────────────┐
+│ ┌──▼ KEYBINDINGS──────────────────────────────────────────┐ │
+│ │ WINDOW MANAGER (i3)                                     │ │
+│ │ Mod Key = Super (Windows Key)                           │ │
+│ │                                                         │ │
+│ │ Core Operations                                         │ │
+│ │ mod + shift + return    terminal                        │ │
+│ │ mod + shift + q         kill window                     │ │
+│ │ mod + p                 application launcher            │ │
+│ │ mod + d                 window switcher                 │ │
+│ │ mod + shift + c         reload i3 config                │ │
+│ │ mod + shift + r         restart i3                      │ │
+│ │ mod + shift + escape    exit i3                         │ │
+│ │                                                         │ │
+│ │ Window Navigation                                       │ │
+│ │ mod + h                 focus left                      │ │
+│ │ mod + j                 focus down                      │ │
+│ │ mod + k                 focus up                        │ │
+│ │ mod + l                 focus right                     │ │
+│ │ mod + shift + h         move window left                │ │
+│ │ mod + shift + j         move window down                │ │
+│ │ mod + shift + k         move window up                  │ │
+│ │ mod + shift + l         move window right               │ │
+│ └─────────────────────────────────────────────────────────┘ │
+└─────────────────────────────────────────────────────────────┘
+
+┌─────────────────────────────────────────────────────────────┐
+│ ┌──▼ WINDOW MANAGEMENT────────────────────────────────────┐ │
+│ │ Layout Control                                          │ │
+│ │ mod + shift + o         split horizontal                │ │
+│ │ mod + shift + i         split vertical                  │ │
+│ │ mod + f                 toggle fullscreen               │ │
+│ │ mod + shift + space     toggle floating                 │ │
+│ │ mod + space             toggle focus floating/tiling    │ │
+│ │                                                         │ │
+│ │ Layout Modes                                            │ │
+│ │ mod + s                 layout: stacking                │ │
+│ │ mod + w                 layout: tabbed                  │ │
+│ │ mod + e                 layout: toggle split            │ │
+│ │                                                         │ │
+│ │ Resize Mode (mod + semicolon)                           │ │
+│ │     h                   shrink width                    │ │
+│ │     j                   grow height                     │ │
+│ │     k                   shrink height                   │ │
+│ │     l                   grow width                      │ │
+│ │     return/escape       exit resize mode                │ │
+│ └─────────────────────────────────────────────────────────┘ │
+└─────────────────────────────────────────────────────────────┘
+
+┌─────────────────────────────────────────────────────────────┐
+│ ┌──▼ WORKSPACES & HARDWARE────────────────────────────────┐ │
+│ │ Workspace Management                                    │ │
+│ │ mod + [0-9]            switch to workspace              │ │
+│ │ mod + shift + [0-9]    move window to workspace         │ │
+│ │                                                         │ │
+│ │ Hardware Controls                                       │ │
+│ │ XF86AudioRaiseVolume    volume up                       │ │
+│ │ XF86AudioLowerVolume    volume down                     │ │
+│ │ XF86AudioMute           toggle mute                     │ │
+│ │ XF86AudioMicMute        toggle mic mute                 │ │
+│ │ XF86MonBrightnessUp     brightness up                   │ │
+│ │ XF86MonBrightnessDown   brightness down                 │ │
+│ │ Print                   screenshot (flameshot)          │ │
+│ └─────────────────────────────────────────────────────────┘ │
+└─────────────────────────────────────────────────────────────┘
+
+┌─────────────────────────────────────────────────────────────┐
+│ ┌──▼ TERMINAL (WEZTERM)───────────────────────────────────┐ │
+│ │ Pane Management                                         │ │
+│ │ alt + -                split vertically                 │ │
+│ │ alt + =                split horizontally               │ │
+│ │ alt + q                close pane                       │ │
+│ │ alt + t                cycle theme                      │ │
+│ │                                                         │ │
+│ │ Navigation & Resizing                                   │ │
+│ │ alt + h                focus/resize left                │ │
+│ │ alt + j                focus/resize down                │ │
+│ │ alt + k                focus/resize up                  │ │
+│ │ alt + l                focus/resize right               │ │
+│ │                                                         │ │
+│ │ Text Navigation                                         │ │
+│ │ alt + b                word back                        │ │
+│ │ alt + w                word forward                     │ │
+│ │ alt + 0                start of line                    │ │
+│ │ alt + 4/$              end of line                      │ │
+│ │ alt + d                delete word forward              │ │
+│ │ alt + d                delete to end of line            │ │
+│ │ alt + x                delete character                 │ │
+│ │ alt + v                enter copy mode                  │ │
+│ └─────────────────────────────────────────────────────────┘ │
+└─────────────────────────────────────────────────────────────┘
+
+┌─────────────────────────────────────────────────────────────┐
+│ ┌──▼ EDITOR (NEOVIM)──────────────────────────────────────┐ │
+│ │ Leader Key = Space                                      │ │
+│ │                                                         │ │
+│ │ File Navigation                                         │ │
+│ │ <leader>ff             find files                       │ │
+│ │ <leader>fg             live grep                        │ │
+│ │ <leader>fb             browse buffers                   │ │
+│ │ <leader>fh             help tags                        │ │
+│ │                                                         │ │
+│ │ Editor Features                                         │ │
+│ │ <leader>n              toggle line numbers              │ │
+│ │ <leader>r              toggle relative numbers          │ │
+│ │ <leader>t2             set tab width to 2               │ │
+│ │ <leader>t4             set tab width to 4               │ │
+│ │ ctrl + b               toggle file tree                 │ │
+│ │ ctrl + j               move 10 lines down               │ │
+│ │ ctrl + k               move 10 lines up                 │ │
+│ └─────────────────────────────────────────────────────────┘ │
+└─────────────────────────────────────────────────────────────┘
+
+┌─────────────────────────────────────────────────────────────┐
+│ ┌──▼ SPECIAL CHARACTERS───────────────────────────────────┐ │
+│ │ Greek Letters                                           │ │
+│ │ \alpha, \beta, etc.    greek symbols                    │ │
+│ │                                                         │ │
+│ │ Math Symbols                                            │ │
+│ │ \in                    ∈ (element of)                   │ │
+│ │ \forall                ∀ (for all)                      │ │
+│ │ \exists                ∃ (exists)                       │ │
+│ │ \therefore             ∴ (therefore)                    │ │
+│ │ \sum                   ∑ (summation)                    │ │
+│ │ \prod                  ∏ (product)                      │ │
+│ │                                                         │ │
+│ │ Operators                                               │ │
+│ │ \union                 ∪ (union)                        │ │
+│ │ \intersect             ∩ (intersection)                 │ │
+│ │ \subset                ⊂ (subset)                       │ │
+│ │ \supset                ⊃ (superset)                     │ │
+│ │                                                         │ │
+│ │ Arrows                                                  │ │
+│ │ \implies               ⟹ (implies)                      │ │
+│ │ \iff                   ⟺ (if and only if)               │ │
+│ │ \to                    → (to)                           │ │
+│ │ \gets                  ← (gets)                         │ │
 │ └─────────────────────────────────────────────────────────┘ │
 └─────────────────────────────────────────────────────────────┘
