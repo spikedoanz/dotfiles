@@ -28,3 +28,12 @@ everything else is in:
     ├── settings.json
     └── themes
 ```
+
+## misc programs
+
+network management: nmtui
+
+file manager: yazi
+
+pdf reader: zathura
+

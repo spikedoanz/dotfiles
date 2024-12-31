@@ -35,12 +35,13 @@ client.focused_inactive $darkgray $darkgray $lightgray $darkgray $darkgray
 client.unfocused        $darkgray $darkgray $lightgray $darkgray $darkgray
 client.urgent           $red $red $white $red $red
 
-font pango:JetBrainsMono Nerd Font Mono 16
+font pango:JetBrainsMono Nerd Font Mono 14
 
 # system startup
 exec --no-startup-id dex --autostart --environment i3
 exec --no-startup-id xss-lock --transfer-sleep-lock -- i3lock --nofork
 exec --no-startup-id nm-applet
+exec_always --no-startup-id feh --bg-fill ~/.wallpaper.png
 set $refresh_i3status killall -SIGUSR1 i3status
 
 # volume controls
@@ -159,9 +160,8 @@ mode "resize" {
 bindsym $mod+semicolon mode "resize"
 
 # make firefox stacking
-for_window [class="firefox"] layout tabbed
-bindsym $mod+a exec ~/.local/bin/firefox-window-search.sh
-bindsym $mod+t exec firefox
-bindsym Mod4+Tab focus right
-bindsym Mod4+Shift+Tab focus left
+# bindsym $mod+a exec ~/.local/bin/firefox-window-search.sh
+# bindsym $mod+t exec firefox
+# bindsym Mod4+Tab focus right
+# bindsym Mod4+Shift+Tab focus left
 bindsym Print exec --no-startup-id flameshot gui
