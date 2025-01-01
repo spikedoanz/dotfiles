@@ -1,9 +1,9 @@
-  ███████╗██████╗ ██╗██╗  ██╗███████╗ ███████╗
-  ██╔════╝██╔══██╗██║██║ ██╔╝██╔════╝ ██╔════╝
-  ███████╗██████╔╝██║█████╔╝ █████╗   ███████╗
-  ╚════██║██╔═══╝ ██║██╔═██╗ ██╔══╝   ╚════██║
-  ███████║██║     ██║██║  ██╗███████╗ ███████║
-  ╚══════╝╚═╝     ╚═╝╚═╝  ╚═╝╚══════╝ ╚══════╝
+        ███████╗██████╗ ██╗██╗  ██╗███████╗ ███████╗
+        ██╔════╝██╔══██╗██║██║ ██╔╝██╔════╝ ██╔════╝
+        ███████╗██████╔╝██║█████╔╝ █████╗   ███████╗
+        ╚════██║██╔═══╝ ██║██╔═██╗ ██╔══╝   ╚════██║
+        ███████║██║     ██║██║  ██╗███████╗ ███████║
+        ╚══════╝╚═╝     ╚═╝╚═╝  ╚═╝╚══════╝ ╚══════╝
   ██████╗  ██████╗ ████████╗███████╗██╗██╗     ███████╗███████╗
   ██╔══██╗██╔═══██╗╚══██╔══╝██╔════╝██║██║     ██╔════╝██╔════╝
   ██║  ██║██║   ██║   ██║   █████╗  ██║██║     █████╗  ███████╗
@@ -11,91 +11,65 @@
   ██████╔╝╚██████╔╝   ██║   ██║     ██║███████╗███████╗███████║
   ╚═════╝  ╚═════╝    ╚═╝   ╚═╝     ╚═╝╚══════╝╚══════╝╚══════╝
 
-┌─────────────────────────────────────────────────────────────┐
-│ ┌──▼ SYSTEM CONFIGURATION─────────────────────────────────┐ │
-│ │ OS:       nixos                                         │ │
-│ │ WM:       i3                                            │ │
-│ │ Terminal: wezterm                                       │ │
-│ │ Shell:    zsh                                           │ │
-│ │ Editors:  neovim                                        │ │
-│ │ Theme:    gruvbox                                       │ │
-│ │ Font:     jetbrains mono nerd font                      │ │
-│ └─────────────────────────────────────────────────────────┘ │
-└─────────────────────────────────────────────────────────────┘
+  ┌─ ▼ OVERVIEW─────────────────────────────────────────────┐
+  │ OS:       nixos                                         │
+  │ WM:       i3                                            │
+  │ Terminal: wezterm                                       │
+  │ Shell:    zsh                                           │
+  │ Editors:  neovim                                        │
+  │ Theme:    gruvbox                                       │
+  │ Font:     jetbrains mono nerd font                      │
+  └─────────────────────────────────────────────────────────┘
 
-┌─────────────────────────────────────────────────────────────┐
-│ ┌──▼ FILE STRUCTURE───────────────────────────────────────┐ │
-│ │ /etc/nixos/configuration.nix                            │ │
-│ │ ~/.config/                                              │ │
-│ │ ├── i3/config                                           │ │
-│ │ ├── nvim/init.lua                                       │ │
-│ │ └── wezterm/wezterm.lua                                 │ │
-│ └─────────────────────────────────────────────────────────┘ │
-└─────────────────────────────────────────────────────────────┘
+  ┌─ ▼ FILE STRUCTURE ──────────────────────────────────────┐
+  │ /etc/nixos/configuration.nix                            │
+  │ ~/.config/                                              │
+  │ ├── i3/config                                           │
+  │ ├── nvim/init.lua                                       │
+  │ └── wezterm/wezterm.lua                                 │
+  └─────────────────────────────────────────────────────────┘
 
-┌─────────────────────────────────────────────────────────────┐
-│ ┌──▼ SYSTEM UTILITIES─────────────────────────────────────┐ │
-│ │ Network Management: nmtui                               │ │
-│ │ Brightness Control: brightnessctl                       │ │
-│ │ Audio:             pipewire + pulseaudio                │ │
-│ │ Screenshot:        flameshot                            │ │
-│ │ File Management:   yazi, syncthing                      │ │
-│ └─────────────────────────────────────────────────────────┘ │
-└─────────────────────────────────────────────────────────────┘
+  ┌──▼ SYSTEM UTILITIES─────────────────────────────────────┐
+  │ Network Management: nmtui                               │
+  │ Brightness Control: brightnessctl                       │
+  │ Audio:              pipewire + pulseaudio               │
+  │ Screenshot:         flameshot                           │
+  │ File Management:    yazi, syncthing                     │
+  └─────────────────────────────────────────────────────────┘
 
-┌─────────────────────────────────────────────────────────────┐
-│ ┌──▼ SYSTEM SERVICES──────────────────────────────────────┐ │
-│ │ POWER MANAGEMENT                                        │ │
-│ │ ├── tlp:                    battery optimization        │ │
-│ │ ├── thermald:               temperature control         │ │
-│ │ ├── auto-cpufreq:           cpu frequency scaling       │ │
-│ │ └── power-profiles-daemon:  power management            │ │
+  ┌──▼ SYSTEM SERVICES──────────────────────────────────────┐
+  │ POWER MANAGEMENT                                        │
+  │ ├── tlp:                    battery optimization        │
+  │ ├── thermald:               temperature control         │
+  │ ├── auto-cpufreq:           cpu frequency scaling       │
+  │ └── power-profiles-daemon:  power management            │
+  │                                                         │
+  │ SYSTEM MAINTENANCE                                      │
+  │ ├── Garbage Collection:    weekly                       │
+  │ ├── TRIM:                  weekly (ssd optimization)    │
+  │ ├── Health Monitoring:     smartd                       │
+  │ └── Updates:               automatic security patches   │
+  │                                                         │
+  │ SECURITY                                                │
+  │ ├── Firewall:              enabled by default           │
+  │ ├── GPG Agent:             configured for runtime       │
+  │ ├── SSH Agent:             configured for runtime       │
+  │ └── Syncthing:             secure default configuration │
+  └─────────────────────────────────────────────────────────┘
+
+┌──▼ KEYBINDS─────────────────────────────────────────────────┐
+│                                                             │
+│ ┌─────────────────────────────────────────────────────────┐ │
 │ │                                                         │ │
-│ │ SYSTEM MAINTENANCE                                      │ │
-│ │ ├── Garbage Collection:    weekly                       │ │
-│ │ ├── TRIM:                  weekly (ssd optimization)    │ │
-│ │ ├── Health Monitoring:     smartd                       │ │
-│ │ └── Updates:               automatic security patches   │ │
+│ │ MOD is reserved for window manager                      │ │
+│ │ ALT is reserved for client applications                 │ │
+│ │ CTL is reserved for apps inside apps                    │ │
 │ │                                                         │ │
-│ │ SECURITY                                                │ │
-│ │ ├── Firewall:              enabled by default           │ │
-│ │ ├── GPG Agent:             configured for runtime       │ │
-│ │ ├── SSH Agent:             configured for runtime       │ │
-│ │ └── Syncthing:             secure default configuration │ │
 │ └─────────────────────────────────────────────────────────┘ │
-└─────────────────────────────────────────────────────────────┘
-
-┌─────────────────────────────────────────────────────────────┐
-│ ┌──▼ SYSTEM TASKS─────────────────────────────────────────┐ │
-│ │ SYSTEM UPDATES                                          │ │
-│ │ $ sudo nixos-rebuild switch                             │ │
-│ │ $ nix-collect-garbage                                   │ │
+│                                                             │
+│                                                             │
+│ ┌─ ▼ WINDOW MANAGER (i3) ─────────────────────────────────┐ │
 │ │                                                         │ │
-│ │ SERVICE STATUS                                          │ │
-│ │ $ systemctl --user status pipewire                      │ │
-│ │ $ systemctl --user status syncthing                     │ │
-│ │                                                         │ │
-│ │ SYSTEM LOGS                                             │ │
-│ │ System:  journalctl -xeu                                │ │
-│ │ WM:      ~/.i3/i3log                                    │ │
-│ │ Display: /var/log/xorg.0.log                            │ │
-│ └─────────────────────────────────────────────────────────┘ │
-└─────────────────────────────────────────────────────────────┘
-
-┌─────────────────────────────────────────────────────────────┐
-│ ┌──▼ PACKAGE MANAGEMENT───────────────────────────────────┐ │
-│ │ Location: /etc/nixos/configuration.nix                  │ │
-│ │                                                         │ │
-│ │ environment.systemPackages = with pkgs; [               │ │
-│ │   # package definitions                                 │ │
-│ │ ];                                                      │ │
-│ └─────────────────────────────────────────────────────────┘ │
-└─────────────────────────────────────────────────────────────┘
-
-
-┌─────────────────────────────────────────────────────────────┐
-│ ┌──▼ KEYBINDINGS──────────────────────────────────────────┐ │
-│ │ WINDOW MANAGER (i3)                                     │ │
 │ │ Mod Key = Super (Windows Key)                           │ │
 │ │                                                         │ │
 │ │ Core Operations                                         │ │
@@ -116,11 +90,7 @@
 │ │ mod + shift + j         move window down                │ │
 │ │ mod + shift + k         move window up                  │ │
 │ │ mod + shift + l         move window right               │ │
-│ └─────────────────────────────────────────────────────────┘ │
-└─────────────────────────────────────────────────────────────┘
-
-┌─────────────────────────────────────────────────────────────┐
-│ ┌──▼ WINDOW MANAGEMENT────────────────────────────────────┐ │
+│ │                                                         │ │
 │ │ Layout Control                                          │ │
 │ │ mod + shift + o         split horizontal                │ │
 │ │ mod + shift + i         split vertical                  │ │
@@ -139,11 +109,7 @@
 │ │     k                   shrink height                   │ │
 │ │     l                   grow width                      │ │
 │ │     return/escape       exit resize mode                │ │
-│ └─────────────────────────────────────────────────────────┘ │
-└─────────────────────────────────────────────────────────────┘
-
-┌─────────────────────────────────────────────────────────────┐
-│ ┌──▼ WORKSPACES & HARDWARE────────────────────────────────┐ │
+│ │                                                         │ │
 │ │ Workspace Management                                    │ │
 │ │ mod + [0-9]            switch to workspace              │ │
 │ │ mod + shift + [0-9]    move window to workspace         │ │
@@ -157,10 +123,9 @@
 │ │ XF86MonBrightnessDown   brightness down                 │ │
 │ │ Print                   screenshot (flameshot)          │ │
 │ └─────────────────────────────────────────────────────────┘ │
-└─────────────────────────────────────────────────────────────┘
-
-┌─────────────────────────────────────────────────────────────┐
-│ ┌──▼ TERMINAL (WEZTERM)───────────────────────────────────┐ │
+│                                                             │
+│                                                             │
+│ ┌─ ▼ TERMINAL (WEZTERM) ──────────────────────────────────┐ │
 │ │ Pane Management                                         │ │
 │ │ alt + -                split vertically                 │ │
 │ │ alt + =                split horizontally               │ │
@@ -183,10 +148,9 @@
 │ │ alt + x                delete character                 │ │
 │ │ alt + v                enter copy mode                  │ │
 │ └─────────────────────────────────────────────────────────┘ │
-└─────────────────────────────────────────────────────────────┘
-
-┌─────────────────────────────────────────────────────────────┐
-│ ┌──▼ EDITOR (NEOVIM)──────────────────────────────────────┐ │
+│                                                             │
+│                                                             │
+│ ┌─ ▼ VIM ─────────────────────────────────────────────────┐ │
 │ │ Leader Key = Space                                      │ │
 │ │                                                         │ │
 │ │ File Navigation                                         │ │
@@ -203,32 +167,5 @@
 │ │ ctrl + b               toggle file tree                 │ │
 │ │ ctrl + j               move 10 lines down               │ │
 │ │ ctrl + k               move 10 lines up                 │ │
-│ └─────────────────────────────────────────────────────────┘ │
-└─────────────────────────────────────────────────────────────┘
-
-┌─────────────────────────────────────────────────────────────┐
-│ ┌──▼ SPECIAL CHARACTERS───────────────────────────────────┐ │
-│ │ Greek Letters                                           │ │
-│ │ \alpha, \beta, etc.    greek symbols                    │ │
-│ │                                                         │ │
-│ │ Math Symbols                                            │ │
-│ │ \in                    ∈ (element of)                   │ │
-│ │ \forall                ∀ (for all)                      │ │
-│ │ \exists                ∃ (exists)                       │ │
-│ │ \therefore             ∴ (therefore)                    │ │
-│ │ \sum                   ∑ (summation)                    │ │
-│ │ \prod                  ∏ (product)                      │ │
-│ │                                                         │ │
-│ │ Operators                                               │ │
-│ │ \union                 ∪ (union)                        │ │
-│ │ \intersect             ∩ (intersection)                 │ │
-│ │ \subset                ⊂ (subset)                       │ │
-│ │ \supset                ⊃ (superset)                     │ │
-│ │                                                         │ │
-│ │ Arrows                                                  │ │
-│ │ \implies               ⟹ (implies)                      │ │
-│ │ \iff                   ⟺ (if and only if)               │ │
-│ │ \to                    → (to)                           │ │
-│ │ \gets                  ← (gets)                         │ │
 │ └─────────────────────────────────────────────────────────┘ │
 └─────────────────────────────────────────────────────────────┘
