@@ -130,6 +130,7 @@
     systemPackages = with pkgs; [
       # Utils
       home-manager    # config manager
+      pulseaudio      # audio manager
       brightnessctl   # brightness manager
       flameshot       # screenshot tool
       feh             # background image manager
@@ -154,7 +155,6 @@
       pinentry-curses # in terminal prompts
       neovim          # editor number one
       yazi            # tui file browser
-      zoxide          # better cd   
     
       # Apps
       wezterm         # terminal emulator
@@ -162,6 +162,7 @@
       syncthing       # file syncing
       zathura         # pdf reader
       zed-editor      # editor number two
+      nemo            # gui file browser
 
       # Media
       ffmpeg          # video/gif/etc editor

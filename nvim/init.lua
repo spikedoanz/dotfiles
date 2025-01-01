@@ -151,6 +151,7 @@ local symbols = {
     copyright = '©',
     dot = '·',
     n = '\\n',
+    sec = '§'
   },
 }
 
