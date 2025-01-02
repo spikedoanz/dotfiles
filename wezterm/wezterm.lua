@@ -78,5 +78,6 @@ c.keys = {
   { key = 'D', mods = 'ALT', action = act.SendString '\x0b' },
   { key = 'x', mods = 'ALT', action = act.SendString '\x1b[3~' },
   { key = 'v', mods = 'ALT', action = wezterm.action.ActivateCopyMode, },
+  { key = 'u', mods = 'ALT', action = act.CopyMode 'ClearPattern' },
 }
 return c

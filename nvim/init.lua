@@ -21,6 +21,9 @@ opt.signcolumn = "no"
 opt.shortmess:append("I")
 opt.clipboard = "unnamedplus"
 opt.autoread = true
+opt.scrolloff = 999       -- Keep cursor centered vertically
+opt.sidescrolloff = 8     -- Keep some horizontal context visible
+vim.opt.ruler = true
 
 -- inherit term colors
 opt.termguicolors = false
@@ -196,10 +199,5 @@ require("lazy").setup({
         desc = "Buffer Local Keymaps (which-key)",
       },
     },
-  },
-
-  { 'Julian/lean.nvim', event = { 'BufReadPre *.lean', 'BufNewFile *.lean' },
-    dependencies = { 'neovim/nvim-lspconfig', 'nvim-lua/plenary.nvim', },
-    opts = { lsp = {}, mappings = true, }
   },
 })

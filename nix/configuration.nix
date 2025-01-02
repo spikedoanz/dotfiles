@@ -137,7 +137,8 @@
       wmctrl          # window manager manager
 
       # General
-      zsh             # shell 
+      bash            # shell 
+      zsh             # backup shell
       git             # version control tool
       ripgrep         # better grep
       tree            # file tree visualizer
@@ -155,7 +156,7 @@
       pinentry-curses # in terminal prompts
       neovim          # editor number one
       yazi            # tui file browser
-    
+
       # Apps
       wezterm         # terminal emulator
       firefox         # browser
@@ -196,6 +197,14 @@
       extra-cmake-modules
       pkg-config
       gcc
+      ispc
+
+      xorg.libX11.dev
+      xorg.libXrandr.dev
+      xorg.libXinerama
+      xorg.libXcursor
+      xorg.libXi
+      xorg.libXext
       
       # Haskell
       ghc
@@ -210,6 +219,7 @@
     vimAlias = true;
   };
 
+  
   # Fonts
   fonts.packages = with pkgs; [ nerdfonts ];
 
@@ -219,7 +229,7 @@
     isNormalUser = true;
     description = "spike";
     extraGroups = [ "networkmanager" "wheel" ];
-    shell = pkgs.zsh;
+    shell = pkgs.bash;
     packages = with pkgs; [];
   };
 }

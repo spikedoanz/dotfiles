@@ -25,19 +25,15 @@
     GDK_DPI_SCALE = "1.25";
   };
 
-  programs.zsh = {
+  programs.bash= {
     enable = true;
     
     initExtra = ''
       # Custom prompt
-      PS1="%{%F{blue}%}%2~%{%f%} § "
+      PS1="\[\033[34m\]\W\[\033[0m\] § "
 
       # FZF integration (make sure fzf is in home.packages)
-      eval "$(fzf --zsh)"
-
-      # Key bindings for command history navigation
-      bindkey '^P' up-line-or-history
-      bindkey '^N' down-line-or-history
+      eval "$(fzf --bash)"
     '';
 
     shellAliases = {
@@ -46,6 +42,7 @@
       ll = "eza -l";
       la = "eza -a";
       l = "eza";
+      daily="vim ~/Global/Vault/daily/$(date +%Y-%m-%d).md";
 
       # Clipboard aliases
       copy = "xclip -selection clipboard";
@@ -58,6 +55,7 @@
       nixedit = "sudoedit /etc/nixos/configuration.nix";
     };
   };
+
 
   fonts.fontconfig.enable = true;        
 }
