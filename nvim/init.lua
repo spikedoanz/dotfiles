@@ -4,14 +4,6 @@
 
 local opt = vim.opt
 
--- disable swap/backup
-opt.swapfile = false
-opt.backup = false
-opt.writebackup = false
-
--- disable error highlighting
-vim.diagnostic.disable()
-
 -- editor settings
 opt.number = false
 opt.expandtab = true
@@ -19,18 +11,22 @@ opt.shiftwidth = 2
 opt.tabstop = 2
 opt.signcolumn = "no"
 opt.shortmess:append("I")
-opt.clipboard = "unnamedplus"
 opt.autoread = true
-opt.scrolloff = 999       -- Keep cursor centered vertically
-opt.sidescrolloff = 8     -- Keep some horizontal context visible
-vim.opt.ruler = true
+opt.clipboard = "unnamedplus" -- use shared system clipboard
+opt.scrolloff = 999           -- Keep cursor centered vertically
+opt.sidescrolloff = 8         -- Keep some horizontal context visible
 
--- inherit term colors
+-- inherit terminal colors
 opt.termguicolors = false
 opt.hlsearch = true
 
--- file extensions
+-- extra file extensions
 vim.filetype.add({ extension = { ispc = "c", }, }) -- ispc
+
+-- disable swap/backup
+opt.swapfile = false
+opt.backup = false
+opt.writebackup = false
 
 -- persistent undo
 local undodir = vim.fn.stdpath("data") .. "/undodir"
@@ -38,10 +34,10 @@ if not vim.fn.isdirectory(undodir) then
   vim.fn.mkdir(undodir, "p")
 end
 
-vim.opt.undofile = true        -- Enable persistent undo
-vim.opt.undodir = undodir      -- Set undo directory
-vim.opt.undolevels = 10000     -- Maximum number of changes that can be undone
-vim.opt.undoreload = 10000     -- Maximum number lines to save for undo on buffer reload
+opt.undofile = true        -- Enable persistent undo
+opt.undodir = undodir      -- Set undo directory
+opt.undolevels = 10000     -- Maximum number of changes that can be undone
+opt.undoreload = 10000     -- Maximum number lines to save for undo on buffer reload
 
 -- tab spacing shortcuts
 local function set_tab_width(width)
@@ -54,16 +50,16 @@ end
 local map = vim.keymap.set
 vim.g.mapleader = " "
 
-map("n", "<C-b>", ":NvimTreeToggle<CR>", { silent = true })
+map("n","<C-b>",":NvimTreeToggle<CR>",{silent=true})
 
-map({ 'n', 'i', 'v' }, '<C-J>', '10j', { noremap = true, silent = true })
-map({ 'n', 'i', 'v' }, '<C-K>', '10k', { noremap = true, silent = true })
+map({'n','i','v'},'<C-J>','10j',{noremap=true,silent=true})
+map({'n','i','v'},'<C-K>','10k',{noremap=true,silent=true})
 
-map('n', '<leader>n', ':set number!<CR>', { noremap = true, silent = true })
-map('n', '<leader>r', ':set relativenumber!<CR>', { noremap = true, silent = true })
+map('n','<leader>n',':setnumber!<CR>',{noremap=true,silent=true})
+map('n','<leader>r',':setrelativenumber!<CR>',{noremap=true,silent=true})
 
-map('n','<leader>t2',function() set_tab_width(2) end,{ noremap=true, silent=true })
-map('n','<leader>t4',function() set_tab_width(4) end,{ noremap=true, silent=true })
+map('n','<leader>t2',function()set_tab_width(2)end,{noremap=true,silent=true})
+map('n','<leader>t4',function()set_tab_width(4)end,{noremap=true,silent=true})
 
 local function setup_symbols(symbols)
   for trigger, symbol in pairs(symbols) do
@@ -75,15 +71,15 @@ end
 local symbols = {
   -- Greek lowercase
   greek_lower = {
-    alpha = 'α', a = 'α',  -- sugar
-    beta = 'β', b = 'β',   -- sugar
+    alpha = 'α', a = 'α',
+    beta = 'β', b = 'β',
     gamma = 'γ',
     delta = 'δ',
     epsilon = 'ε',
     zeta = 'ζ',
     eta = 'η',
     theta = 'θ',
-    lambda = 'λ', lam = 'λ', -- sugar
+    lambda = 'λ', lam = 'λ',
     mu = 'μ',
     nu = 'ν',
     xi = 'ξ',
@@ -199,5 +195,53 @@ require("lazy").setup({
         desc = "Buffer Local Keymaps (which-key)",
       },
     },
+  },
+
+  -- LSP Support
+  {
+    "neovim/nvim-lspconfig",
+    dependencies = {
+      "hrsh7th/cmp-nvim-lsp",
+      "hrsh7th/nvim-cmp",
+    },
+    config = function()
+      local lspconfig = require('lspconfig')
+      local capabilities = require('cmp_nvim_lsp').default_capabilities()
+
+      -- Pyright setup
+      lspconfig.pyright.setup({
+        capabilities = capabilities,
+        settings = {
+          python = {
+            analysis = {
+              typeCheckingMode = "basic",
+              autoSearchPaths = true,
+              useLibraryCodeForTypes = true,
+            },
+          },
+        },
+      })
+
+      -- Clangd setup
+      lspconfig.clangd.setup({
+        capabilities = capabilities,
+        cmd = {
+          "clangd",
+          "--background-index",
+          "--clang-tidy",
+          "--completion-style=detailed",
+          "--header-insertion=iwyu",
+        },
+      })
+
+      -- LSP keybindings
+      local opts = { noremap = true, silent = true }
+      map('n', 'gD', vim.lsp.buf.declaration, opts)
+      map('n', 'gd', vim.lsp.buf.definition, opts)
+      map('n', 'K', vim.lsp.buf.hover, opts)
+      -- Diagnostic navigation
+      map('n', '[d', vim.diagnostic.goto_prev, opts)
+      map('n', ']d', vim.diagnostic.goto_next, opts)
+    end,
   },
 })
