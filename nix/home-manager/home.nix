@@ -42,7 +42,7 @@
       ll = "eza -l";
       la = "eza -a";
       l = "eza";
-      daily="vim ~/Global/Vault/daily/$(date +%Y-%m-%d).md";
+      daily="vim + ~/Global/Vault/daily/$(date +%Y-%m-%d).md";
 
       # Clipboard aliases
       copy = "xclip -selection clipboard";

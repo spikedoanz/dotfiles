@@ -79,7 +79,12 @@
 
   # X11 and desktop environment
   services.libinput.enable = true;
+  services.libinput.touchpad.disableWhileTyping = true;
   services.xserver = {
+    deviceSection = ''
+      Option "TearFree" "true"
+      Option "DRI" "3"
+      '';
     enable = true;
     windowManager.i3 = {
       enable = true;
@@ -117,6 +122,17 @@
   };
   services.dbus.enable = true;
 
+  # Display compositor
+  services.picom = {
+    enable = true;
+    vSync = true;
+    backend = "glx";
+    settings = {
+      glx-no-stencil = true;
+      glx-no-rebind-pixmap = true;
+    };
+  };
+
   # System maintenance
   nix.gc = {
     automatic = true;
@@ -135,6 +151,7 @@
       flameshot       # screenshot tool
       feh             # background image manager
       wmctrl          # window manager manager
+      picom           # compositor
 
       # General
       bash            # shell 
@@ -191,23 +208,22 @@
       pyright
 
       # C
+      gcc
+      clang
+      clang-tools
+
       cmake
       gnumake
-      clang
       extra-cmake-modules
-      pkg-config
-      gcc
-      ispc
 
-      xorg.libX11.dev
-      xorg.libXrandr.dev
-      xorg.libXinerama
-      xorg.libXcursor
-      xorg.libXi
-      xorg.libXext
-      
+      gdb
+
+
       # Haskell
       ghc
+
+      # Julia
+      julia
     ];
     pathsToLink = [ "/libexec" ];
   };

@@ -60,7 +60,6 @@ bindsym XF86MonBrightnessDown exec --no-startup-id brightnessctl set 5%-
 # keybinds
 set $mod Mod4
 
-
 bindsym $mod+Shift+Return exec wezterm
 bindsym $mod+Shift+q kill
 bindsym $mod+p exec "rofi -show drun"
@@ -159,9 +158,6 @@ mode "resize" {
 
 bindsym $mod+semicolon mode "resize"
 
-# make firefox stacking
-# bindsym $mod+a exec ~/.local/bin/firefox-window-search.sh
-# bindsym $mod+t exec firefox
-# bindsym Mod4+Tab focus right
-# bindsym Mod4+Shift+Tab focus left
+bindsym Mod4+Tab focus right
+bindsym Mod4+Shift+Tab focus left
 bindsym Print exec --no-startup-id flameshot gui

@@ -148,6 +148,7 @@ local symbols = {
   misc = {
     trademark = '™',
     copyright = '©',
+    top = '⊤',
     dot = '·',
     n = '\\n',
     sec = '§'
@@ -244,4 +245,12 @@ require("lazy").setup({
       map('n', ']d', vim.diagnostic.goto_next, opts)
     end,
   },
+})
+
+-- disable error higlighting in markdown
+vim.api.nvim_create_autocmd("FileType", {
+  pattern = "markdown",
+  callback = function()
+    vim.cmd("highlight link markdownError NONE")
+  end,
 })
