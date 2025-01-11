@@ -14,7 +14,7 @@
   ┌─ ▼ OVERVIEW─────────────────────────────────────────────┐
   │ OS:       nixos                                         │
   │ WM:       i3                                            │
-  │ Terminal: wezterm                                       │
+  │ Terminal: ghostty                                       │
   │ Shell:    zsh                                           │
   │ Editors:  neovim                                        │
   │ Theme:    gruvbox                                       │
