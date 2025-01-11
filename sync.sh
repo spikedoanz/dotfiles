@@ -16,9 +16,8 @@ cfg() {
 
 # source                              dest                file
 cfg ~/.config/nvim/init.lua           nvim                init.lua
-cfg ~/.config/wezterm/wezterm.lua     wezterm             wezterm.lua
+cfg ~/.config/ghostty/config          ghostty             config
 cfg ~/.config/zed/settings.json       zed                 settings.json
-cfg ~/.shrc                           .                   .shrc
 
 cfg /etc/nixos/configuration.nix      nix                 configuration.nix
 cfg ~/.config/home-manager/home.nix   nix/home-manager    home.nix

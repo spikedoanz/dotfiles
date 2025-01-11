@@ -7,7 +7,7 @@
 
   # Core system configuration
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
-  system.stateVersion = "unstable";
+  system.stateVersion = "24.11";
   nixpkgs.config.allowUnfree = false;
 
   # Boot and hardware
@@ -15,6 +15,28 @@
     systemd-boot.enable = true;
     efi.canTouchEfiVariables = true;
   };
+
+  # Power management
+  services = {
+    tlp = {
+      enable = true;
+      settings = {
+        CPU_SCALING_GOVERNOR_ON_AC = "performance";
+        CPU_SCALING_GOVERNOR_ON_BAT = "powersave";
+      };
+    };
+    thermald.enable = true;
+    auto-cpufreq.enable = true;
+    fstrim = {
+      enable = true;
+      interval = "weekly";
+    };
+    smartd = {
+      enable = true;
+      notifications.x11.enable = true;
+    };
+  };
+  powerManagement.powertop.enable = true;
 
   # Networking
   networking = {
@@ -59,6 +81,10 @@
   services.libinput.enable = true;
   services.libinput.touchpad.disableWhileTyping = true;
   services.xserver = {
+    deviceSection = ''
+      Option "TearFree" "true"
+      Option "DRI" "3"
+      '';
     enable = true;
     windowManager.i3 = {
       enable = true;
@@ -71,6 +97,7 @@
     xkb = {
       layout = "us";
       variant = "";
+      options = "ctrl:nocaps,terminate:ctrl_alt_bksp,lv3:ralt_switch,altwin:swap_alt_win";
     };
   };
   services.displayManager.defaultSession = "none+i3";
@@ -86,11 +113,6 @@
     overrideFolders = true;
     settings.gui.theme = "dark";
   };
-
-  # automounting
-  services.devmon.enable = true;
-  services.gvfs.enable = true; 
-  services.udisks2.enable = true;
 
   # Security and agents
   programs.ssh.startAgent = true;
@@ -130,8 +152,6 @@
       feh             # background image manager
       wmctrl          # window manager manager
       picom           # compositor
-      udisks2
-      usbutils
 
       # General
       bash            # shell 
@@ -155,7 +175,7 @@
       yazi            # tui file browser
 
       # Apps
-      ghostty
+      wezterm         # terminal emulator
       firefox         # browser
       syncthing       # file syncing
       zathura         # pdf reader
@@ -224,7 +244,7 @@
   users.users.spike = {
     isNormalUser = true;
     description = "spike";
-    extraGroups = [ "networkmanager" "wheel"];
+    extraGroups = [ "networkmanager" "wheel" ];
     shell = pkgs.bash;
     packages = with pkgs; [];
   };

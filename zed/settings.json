@@ -11,8 +11,7 @@
   "buffer_font_size": 16,
   "theme": {
     "mode": "system",
-    "light": "Gruvbox Dark",
+    "light": "One Light",
     "dark": "One Dark"
-  },
-  "vim_mode": true
+  }
 }

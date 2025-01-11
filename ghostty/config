@@ -1,0 +1,3 @@
+theme = GruvboxDark
+window-decoration = false
+copy-on-select = true 

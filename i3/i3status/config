@@ -7,7 +7,6 @@ general {
 }
 
 order += "volume master"
-order += "battery 0"
 order += "cpu_usage"
 order += "memory"
 order += "tztime local"

@@ -35,7 +35,7 @@ client.focused_inactive $darkgray $darkgray $lightgray $darkgray $darkgray
 client.unfocused        $darkgray $darkgray $lightgray $darkgray $darkgray
 client.urgent           $red $red $white $red $red
 
-font pango:JetBrainsMono Nerd Font Mono 14
+font pango:JetBrainsMono Nerd Font Mono 10
 
 # system startup
 exec --no-startup-id dex --autostart --environment i3
