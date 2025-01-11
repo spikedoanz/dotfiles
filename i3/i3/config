@@ -60,7 +60,7 @@ bindsym XF86MonBrightnessDown exec --no-startup-id brightnessctl set 5%-
 # keybinds
 set $mod Mod4
 
-bindsym $mod+Shift+Return exec wezterm
+bindsym $mod+Shift+Return exec ghostty
 bindsym $mod+Shift+q kill
 bindsym $mod+p exec "rofi -show drun"
 bindsym $mod+d exec "rofi -show window"

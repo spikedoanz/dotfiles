@@ -4,122 +4,30 @@
 { config, pkgs, ... }:
 {
   imports = [ ./hardware-configuration.nix ];
+  nix.settings.experimental-features = [ "nix-command" "flakes" ];
 
   # Core system configuration
-  nix.settings.experimental-features = [ "nix-command" "flakes" ];
   system.stateVersion = "unstable";
-  nixpkgs.config.allowUnfree = false;
-
-  # Boot and hardware
+  nixpkgs.config.allowUnfree = true;
+  system.autoUpgrade.enable = true;
   boot.loader = {
     systemd-boot.enable = true;
     efi.canTouchEfiVariables = true;
   };
 
-  # Networking
-  networking = {
-    hostName = "nixos";
-    networkmanager.enable = true;
-    firewall.enable = true;
+  hardware = {
+      graphics.enable = true;
+      nvidia = {
+          modesetting.enable = true;
+          powerManagement.enable = false;
+          powerManagement.finegrained = false;
+          open = true;
+          nvidiaSettings = true;
+          package = config.boot.kernelPackages.nvidiaPackages.stable;
+      };
+      pulseaudio.enable = false;
   };
 
-  # Audio
-  hardware.pulseaudio.enable = false;
-  security.rtkit.enable = true;
-  services.pipewire = {
-    enable = true;
-    alsa = {
-      enable = true;
-      support32Bit = true;
-    };
-    pulse.enable = true;
-  };
-
-  # Bluetooth
-  services.blueman.enable = true;
-
-  # Locale and time
-  time.timeZone = "America/New_York";
-  i18n = {
-    defaultLocale = "en_US.UTF-8";
-    extraLocaleSettings = {
-      LC_ADDRESS = "en_US.UTF-8";
-      LC_IDENTIFICATION = "en_US.UTF-8";
-      LC_MEASUREMENT = "en_US.UTF-8";
-      LC_MONETARY = "en_US.UTF-8";
-      LC_NAME = "en_US.UTF-8";
-      LC_NUMERIC = "en_US.UTF-8";
-      LC_PAPER = "en_US.UTF-8";
-      LC_TELEPHONE = "en_US.UTF-8";
-      LC_TIME = "en_US.UTF-8";
-    };
-  };
-
-  # X11 and desktop environment
-  services.libinput.enable = true;
-  services.libinput.touchpad.disableWhileTyping = true;
-  services.xserver = {
-    enable = true;
-    windowManager.i3 = {
-      enable = true;
-      package = pkgs.i3;
-      extraPackages = with pkgs; [
-        i3status
-        i3lock
-      ];
-    };
-    xkb = {
-      layout = "us";
-      variant = "";
-    };
-  };
-  services.displayManager.defaultSession = "none+i3";
-
-  # System services
-  services.printing.enable = true;
-  services.syncthing = {
-    enable = true;
-    user = "spike";
-    dataDir = "/home/spike/Documents";
-    configDir = "/home/spike/.config/syncthing";
-    overrideDevices = true;
-    overrideFolders = true;
-    settings.gui.theme = "dark";
-  };
-
-  # automounting
-  services.devmon.enable = true;
-  services.gvfs.enable = true; 
-  services.udisks2.enable = true;
-
-  # Security and agents
-  programs.ssh.startAgent = true;
-  programs.gnupg.agent = {
-    enable = true;
-    pinentryPackage = pkgs.pinentry-curses;
-  };
-  services.dbus.enable = true;
-
-  # Display compositor
-  services.picom = {
-    enable = true;
-    vSync = true;
-    backend = "glx";
-    settings = {
-      glx-no-stencil = true;
-      glx-no-rebind-pixmap = true;
-    };
-  };
-
-  # System maintenance
-  nix.gc = {
-    automatic = true;
-    dates = "weekly";
-    options = "--delete-older-than 30d";
-  };
-  system.autoUpgrade.enable = true;
-
-  # System packages
   environment = {
     systemPackages = with pkgs; [
       # Utils
@@ -132,6 +40,17 @@
       picom           # compositor
       udisks2
       usbutils
+
+      # cuda tools
+      cudatoolkit
+      linuxPackages.nvidia_x11
+      gcc
+      gnumake
+      libGLU libGL
+      xorg.libXi xorg.libXmu freeglut
+      xorg.libXext xorg.libX11 xorg.libXv xorg.libXrandr
+      zlib
+      nvtopPackages.nvidia
 
       # General
       bash            # shell 
@@ -208,19 +127,120 @@
     pathsToLink = [ "/libexec" ];
   };
 
-  # Program configurations
-  programs.neovim = {
-    enable = true;
-    defaultEditor = true;
-    vimAlias = true;
-  };
-
-  
-  # Fonts
   fonts.packages = with pkgs; [ nerdfonts ];
 
-  # User configuration
-  programs.zsh.enable = true;
+  networking = {
+    hostName = "nixos";
+    networkmanager.enable = true;
+    firewall.enable = true;
+  };
+  security.rtkit.enable = true;
+
+  services = {
+    displayManager.defaultSession = "none+i3";
+    xserver.videoDrivers = [ "nvidia" ];
+    libinput.enable = true;
+    libinput.touchpad.disableWhileTyping = true;
+
+    pipewire = {
+      enable = true;
+      alsa = {
+        enable = true;
+        support32Bit = true;
+      };
+      pulse.enable = true; # audio
+    };
+
+    blueman.enable = true; # bluetooth
+
+    xserver = {
+      enable = true;
+      windowManager.i3 = {
+        enable = true;
+        package = pkgs.i3;
+        extraPackages = with pkgs; [
+          i3status
+          i3lock
+        ];
+      };
+      xkb = {
+        layout = "us";
+        variant = "";
+      };
+    };
+
+    syncthing = {
+      enable = true;
+      user = "spike";
+      dataDir = "/home/spike/Documents";
+      configDir = "/home/spike/.config/syncthing";
+      overrideDevices = true;
+      overrideFolders = true;
+      settings.gui.theme = "dark";
+    };
+
+    # auto mounting
+    devmon.enable = true;
+    gvfs.enable = true; 
+    udisks2.enable = true;
+
+    picom = {
+      enable = true;
+      vSync = true;
+      backend = "glx";
+      settings = {
+        glx-no-stencil = true;
+        glx-no-rebind-pixmap = true;
+      };
+    };
+
+    dbus.enable = true;
+  };
+
+  time.timeZone = "America/New_York";
+  i18n = {
+    defaultLocale = "en_US.UTF-8";
+    extraLocaleSettings = {
+      LC_ADDRESS = "en_US.UTF-8";
+      LC_IDENTIFICATION = "en_US.UTF-8";
+      LC_MEASUREMENT = "en_US.UTF-8";
+      LC_MONETARY = "en_US.UTF-8";
+      LC_NAME = "en_US.UTF-8";
+      LC_NUMERIC = "en_US.UTF-8";
+      LC_PAPER = "en_US.UTF-8";
+      LC_TELEPHONE = "en_US.UTF-8";
+      LC_TIME = "en_US.UTF-8";
+    };
+  };
+
+  nix.settings = {
+    substituters = [
+      "https://cuda-maintainers.cachix.org"
+    ];
+    trusted-public-keys = [
+      "cuda-maintainers.cachix.org-1:0dq3bujKpuEPMCX6U4WylrUDZ9JyUG0VpVZa7CNfq5E="
+    ];
+  };
+
+  nix.gc = {
+    automatic = true;
+    dates = "weekly";
+    options = "--delete-older-than 30d";
+  };
+
+  programs = {
+    ssh.startAgent = true;
+    gnupg.agent = {
+      enable = true;
+      pinentryPackage = pkgs.pinentry-curses;
+    };
+    neovim = {
+      enable = true;
+      defaultEditor = true;
+      vimAlias = true;
+    };
+  };
+
   users.users.spike = {
     isNormalUser = true;
     description = "spike";
