@@ -22,7 +22,7 @@
     initExtra = ''
       PS1="\[\033[34m\]\W\[\033[0m\] § "
       eval "$(fzf --bash)"
-      ssh-add ~/.ssh/gh
+      ssh-add -q ~/.ssh/gh
     '';
 
     shellAliases = {

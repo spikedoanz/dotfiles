@@ -10,11 +10,17 @@
   system.stateVersion = "unstable";
   nixpkgs.config.allowUnfree = true;
   system.autoUpgrade.enable = true;
-  boot.loader = {
-    systemd-boot.enable = true;
-    efi.canTouchEfiVariables = true;
+  boot = {
+    loader = {
+      systemd-boot.enable = true;
+      efi.canTouchEfiVariables = true;
+    };
+    supportedFilesystems = [ "ntfs" ];
+    extraModulePackages = [ 
+        config.boot.kernelPackages.nvidia_x11
+    ];
   };
-  boot.supportedFilesystems = [ "ntfs" ];
+  
   fileSystems."/media/hdd0" = {
     device = "/dev/sda1";
     fsType = "ntfs-3g";
@@ -30,7 +36,7 @@
           modesetting.enable = true;
           powerManagement.enable = false;
           powerManagement.finegrained = false;
-          open = true;
+          open = false;                        # change to true when this is stable
           nvidiaSettings = true;
           package = config.boot.kernelPackages.nvidiaPackages.stable;
       };
@@ -53,11 +59,15 @@
       ntfs3g
       mullvad-vpn
 
-      # cuda tools
+      # cuda
+      cudaPackages.cuda_cudart
+      cudaPackages.cuda_cupti
+      cudaPackages.cuda_nvcc
+      cudaPackages.cuda_nvtx
+      cudaPackages.tensorrt
+      cudaPackages.cudnn
       cudatoolkit
       linuxPackages.nvidia_x11
-      gcc
-      gnumake
       libGLU libGL
       xorg.libXi xorg.libXmu freeglut
       xorg.libXext xorg.libX11 xorg.libXv xorg.libXrandr
@@ -143,7 +153,12 @@
       julia
     ];
     pathsToLink = [ "/libexec" ];
+    sessionVariables = {
+        CUDA_PATH = "${pkgs.cudaPackages.cuda_cudart}";
+        LD_LIBRARY_PATH = "${pkgs.cudaPackages.cuda_cudart}/lib:${pkgs.cudaPackages.cudnn}/lib:${pkgs.linuxPackages.nvidia_x11}/lib";
+    };
   };
+
 
   fonts.packages = with pkgs; [ nerdfonts ];
 
