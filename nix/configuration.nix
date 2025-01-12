@@ -3,7 +3,7 @@
 ########################
 { config, pkgs, ... }:
 {
-  imports = [ ./hardware-configuration.nix ];
+  imports = [ ./hardware-configuration.nix ./cachix.nix];
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
 
   # Core system configuration
@@ -14,9 +14,18 @@
     systemd-boot.enable = true;
     efi.canTouchEfiVariables = true;
   };
+  boot.supportedFilesystems = [ "ntfs" ];
+  fileSystems."/media/hdd0" = {
+    device = "/dev/sda1";
+    fsType = "ntfs-3g";
+    options = [ "defaults" ];
+  };
 
   hardware = {
-      graphics.enable = true;
+      graphics = {
+        enable = true;
+        enable32Bit = true;
+      };
       nvidia = {
           modesetting.enable = true;
           powerManagement.enable = false;
@@ -38,8 +47,11 @@
       feh             # background image manager
       wmctrl          # window manager manager
       picom           # compositor
+      cudaPackages.cudatoolkit
       udisks2
       usbutils
+      ntfs3g
+      mullvad-vpn
 
       # cuda tools
       cudatoolkit
@@ -51,6 +63,12 @@
       xorg.libXext xorg.libX11 xorg.libXv xorg.libXrandr
       zlib
       nvtopPackages.nvidia
+
+      # Gaming
+      steam
+      wineWowPackages.stable
+      winetricks
+      lutris
 
       # General
       bash            # shell 
@@ -80,6 +98,7 @@
       zathura         # pdf reader
       zed-editor      # editor number two
       nemo            # gui file browser
+      obsidian
 
       # Media
       ffmpeg          # video/gif/etc editor
@@ -90,13 +109,15 @@
       inkscape        # svg editor
 
       # Python
-      (python311.withPackages (ps: with ps; [
+      (python312.withPackages (ps: with ps; [
         requests
         datasets
         numpy
         pandas
         pillow
         torch
+        torchvision
+        matplotlib
         pip
         pyarrow
         selenium
@@ -110,13 +131,10 @@
       gcc
       clang
       clang-tools
-
       cmake
       gnumake
       extra-cmake-modules
-
       gdb
-
 
       # Haskell
       ghc
@@ -137,6 +155,7 @@
   security.rtkit.enable = true;
 
   services = {
+    mullvad-vpn.enable = true;
     displayManager.defaultSession = "none+i3";
     xserver.videoDrivers = [ "nvidia" ];
     libinput.enable = true;

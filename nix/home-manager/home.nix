@@ -20,11 +20,9 @@
     enable = true;
     
     initExtra = ''
-      # Custom prompt
       PS1="\[\033[34m\]\W\[\033[0m\] § "
-
-      # FZF integration (make sure fzf is in home.packages)
       eval "$(fzf --bash)"
+      ssh-add ~/.ssh/gh
     '';
 
     shellAliases = {
@@ -44,6 +42,7 @@
       gg = "git add . && git commit -m \"wp\" && git push origin $(git branch --show-current)";
       rebuild = "sudo nixos-rebuild switch";
       nixedit = "sudoedit /etc/nixos/configuration.nix";
+
     };
   };
 
