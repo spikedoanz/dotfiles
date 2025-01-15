@@ -115,11 +115,6 @@
   };
 
   # Security and agents
-  programs.ssh.startAgent = true;
-  programs.gnupg.agent = {
-    enable = true;
-    pinentryPackage = pkgs.pinentry-curses;
-  };
   services.dbus.enable = true;
 
   # Display compositor
@@ -144,7 +139,7 @@
   # System packages
   environment = {
     systemPackages = with pkgs; [
-      # Utils
+      # System utils
       home-manager    # config manager
       pulseaudio      # audio manager
       brightnessctl   # brightness manager
@@ -152,6 +147,9 @@
       feh             # background image manager
       wmctrl          # window manager manager
       picom           # compositor
+      udisks2
+      usbutils
+      mullvad-vpn
 
       # General
       bash            # shell 
@@ -176,6 +174,7 @@
 
       # Apps
       wezterm         # terminal emulator
+      ghostty         # other terminal emulator
       firefox         # browser
       syncthing       # file syncing
       zathura         # pdf reader
@@ -191,7 +190,7 @@
       inkscape        # svg editor
 
       # Python
-      (python311.withPackages (ps: with ps; [
+      (python312.withPackages (ps: with ps; [
         requests
         datasets
         numpy
@@ -204,6 +203,10 @@
         tiktoken
         bottle
         tinygrad
+        matplotlib
+
+        # cancer
+        nibabel
       ]))
       pyright
 
@@ -227,17 +230,20 @@
     ];
     pathsToLink = [ "/libexec" ];
   };
-
-  # Program configurations
-  programs.neovim = {
-    enable = true;
-    defaultEditor = true;
-    vimAlias = true;
-  };
-
-  
-  # Fonts
   fonts.packages = with pkgs; [ nerdfonts ];
+
+  programs = {
+    ssh.startAgent = true;
+    gnupg.agent = {
+      enable = true;
+      pinentryPackage = pkgs.pinentry-curses;
+    };
+    neovim = {
+      enable = true;
+      defaultEditor = true;
+      vimAlias = true;
+    };
+  };
 
   # User configuration
   programs.zsh.enable = true;
