@@ -10,26 +10,16 @@ if wezterm.config_builder then
 end
 local act = wezterm.action
 
--- Appearance
-c.font = wezterm.font('JetBrainsMono Nerd Font Mono')
-c.font_size = 16
-c.window_padding = { left = 0, right = 0, top = 0, bottom = 0, }
-c.use_fancy_tab_bar = false
-c.window_decorations = "RESIZE"
-c.hide_tab_bar_if_only_one_tab = true
-c.enable_wayland = false
-
 -- Theme switching
 local themes = {
-  "GruvboxDark",
-  "GruvboxLight",
+  'GruvboxDark',
+  'GruvboxLight',
 }
 
 local current_theme_index = 1
 local last_switch_time = 0
 c.color_scheme = themes[current_theme_index]
 c.front_end = "WebGpu"
-
 local function cycle_theme()
   return wezterm.action_callback(function(window, pane)
     local current_time = os.time()
@@ -46,28 +36,25 @@ local function cycle_theme()
     })
   end)
 end
-
 c.adjust_window_size_when_changing_font_size = false
 -- Keybinding
 c.keys = {
   -- Theme cycling
   { key = 'T', mods = 'ALT', action = cycle_theme() },
+  -- Split management
   { key = "-", mods = "ALT", action = act.SplitVertical({ domain = "CurrentPaneDomain" }) },
   { key = "=", mods = "ALT", action = act.SplitHorizontal({ domain = "CurrentPaneDomain" }) },
   { key = "Q", mods = "ALT", action = act.CloseCurrentPane({ confirm = true }) },
-  
   -- Window focus (hjkl)
   { key = "h", mods = "ALT", action = act.ActivatePaneDirection("Left") },
   { key = "j", mods = "ALT", action = act.ActivatePaneDirection("Down") },
   { key = "k", mods = "ALT", action = act.ActivatePaneDirection("Up") },
   { key = "l", mods = "ALT", action = act.ActivatePaneDirection("Right") },
-  
   -- Window resizing (HJKL)
   { key = "H", mods = "ALT", action = act.AdjustPaneSize({ "Left", 5 }) },
   { key = "J", mods = "ALT", action = act.AdjustPaneSize({ "Down", 5 }) },
   { key = "K", mods = "ALT", action = act.AdjustPaneSize({ "Up", 5 }) },
   { key = "L", mods = "ALT", action = act.AdjustPaneSize({ "Right", 5 }) },
-  
   -- vim bindings
   { key = 'b', mods = 'ALT', action = act.SendString '\x1bb' },
   { key = 'w', mods = 'ALT', action = act.SendString '\x1bf' },
@@ -80,4 +67,16 @@ c.keys = {
   { key = 'v', mods = 'ALT', action = wezterm.action.ActivateCopyMode, },
   { key = 'u', mods = 'ALT', action = act.CopyMode 'ClearPattern' },
 }
+-- Appearance
+c.font = wezterm.font('JetBrainsMono Nerd Font Mono')
+c.font_size = 12
+c.window_padding = {
+  left = 0,
+  right = 0,
+  top = 0,
+  bottom = 0,
+}
+c.use_fancy_tab_bar = false
+c.hide_tab_bar_if_only_one_tab = true
+c.enable_wayland = false
 return c

@@ -55,8 +55,8 @@ map("n","<C-b>",":NvimTreeToggle<CR>",{silent=true})
 map({'n','i','v'},'<C-J>','10j',{noremap=true,silent=true})
 map({'n','i','v'},'<C-K>','10k',{noremap=true,silent=true})
 
-map('n','<leader>n',':setnumber!<CR>',{noremap=true,silent=true})
-map('n','<leader>r',':setrelativenumber!<CR>',{noremap=true,silent=true})
+map('n', '<leader>n', ':set number!<CR>', { noremap = true, silent = true })
+map('n', '<leader>r', ':set relativenumber!<CR>', { noremap = true, silent = true })
 
 map('n','<leader>t2',function()set_tab_width(2)end,{noremap=true,silent=true})
 map('n','<leader>t4',function()set_tab_width(4)end,{noremap=true,silent=true})

@@ -7,7 +7,7 @@
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
 
   # Core system configuration
-  system.stateVersion = "unstable";
+  system.stateVersion = "24.11";
   nixpkgs.config.allowUnfree = true;
   system.autoUpgrade.enable = true;
   boot = {
@@ -40,8 +40,15 @@
           nvidiaSettings = true;
           package = config.boot.kernelPackages.nvidiaPackages.stable;
       };
-      pulseaudio.enable = false;
+      bluetooth.enable = true;
   };
+
+  powerManagement = {
+    enable = true;
+    powertop.enable = false;
+    cpuFreqGovernor = "performance";
+  };
+
 
   environment = {
     systemPackages = with pkgs; [
@@ -53,18 +60,20 @@
       feh             # background image manager
       wmctrl          # window manager manager
       picom           # compositor
-      cudaPackages.cudatoolkit
       udisks2
       usbutils
       ntfs3g
       mullvad-vpn
+      lxappearance
+      pavucontrol
+      bluetuith
 
       # cuda
-      cudaPackages.cuda_cudart
+      #cudaPackages.cuda_cudart
       cudaPackages.cuda_cupti
       cudaPackages.cuda_nvcc
       cudaPackages.cuda_nvtx
-      cudaPackages.tensorrt
+      #cudaPackages.tensorrt
       cudaPackages.cudnn
       cudatoolkit
       linuxPackages.nvidia_x11
@@ -102,6 +111,7 @@
       yazi            # tui file browser
 
       # Apps
+      wezterm
       ghostty
       firefox         # browser
       syncthing       # file syncing
@@ -125,8 +135,8 @@
         numpy
         pandas
         pillow
-        torch
-        torchvision
+        pytorch-bin
+        torchvision-bin
         matplotlib
         pip
         pyarrow
@@ -151,6 +161,7 @@
 
       # Julia
       julia
+      nerd-fonts.jetbrains-mono
     ];
     pathsToLink = [ "/libexec" ];
     sessionVariables = {
@@ -158,9 +169,6 @@
         LD_LIBRARY_PATH = "${pkgs.cudaPackages.cuda_cudart}/lib:${pkgs.cudaPackages.cudnn}/lib:${pkgs.linuxPackages.nvidia_x11}/lib";
     };
   };
-
-
-  fonts.packages = with pkgs; [ nerdfonts ];
 
   networking = {
     hostName = "nixos";
@@ -170,6 +178,15 @@
   security.rtkit.enable = true;
 
   services = {
+    logind = {
+      lidSwitch = "ignore";
+      extraConfig = ''
+        HandleSuspendKey=ignore
+        HandleHibernateKey=ignore
+        HandleLidSwitch=ignore
+        IdleAction=ignore
+      '';
+    };
     mullvad-vpn.enable = true;
     displayManager.defaultSession = "none+i3";
     xserver.videoDrivers = [ "nvidia" ];
