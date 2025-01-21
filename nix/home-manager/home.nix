@@ -22,9 +22,7 @@
     initExtra = ''
       PS1="\[\033[34m\]\W\[\033[0m\] § "
       eval "$(fzf --bash)"
-      eval $(ssh-agent) > /dev/null
       ssh-add -q ~/.ssh/gh
-      ssh-add -q ~/.ssh/id_mdoan4
     '';
 
     shellAliases = {

@@ -42,6 +42,7 @@ exec --no-startup-id dex --autostart --environment i3
 exec --no-startup-id xss-lock --transfer-sleep-lock -- i3lock --nofork
 exec --no-startup-id nm-applet
 exec_always --no-startup-id feh --bg-fill ~/.wallpaper.png
+exec --no-startup-id xrandr --output HDMI-0 --mode 1920x1080 --rate 144
 set $refresh_i3status killall -SIGUSR1 i3status
 
 # volume controls

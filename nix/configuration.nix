@@ -69,19 +69,19 @@
       bluetuith
 
       # cuda
-      #cudaPackages.cuda_cudart
+      cudaPackages.cuda_cudart
       cudaPackages.cuda_cupti
       cudaPackages.cuda_nvcc
       cudaPackages.cuda_nvtx
-      #cudaPackages.tensorrt
+      cudaPackages.tensorrt
       cudaPackages.cudnn
+      nvtopPackages.nvidia
       cudatoolkit
       linuxPackages.nvidia_x11
       libGLU libGL
       xorg.libXi xorg.libXmu freeglut
       xorg.libXext xorg.libX11 xorg.libXv xorg.libXrandr
       zlib
-      nvtopPackages.nvidia
 
       # Gaming
       steam
@@ -119,6 +119,8 @@
       zed-editor      # editor number two
       nemo            # gui file browser
       obsidian
+      vscode
+      ollama
 
       # Media
       ffmpeg          # video/gif/etc editor
@@ -137,6 +139,7 @@
         pillow
         pytorch-bin
         torchvision-bin
+        jupyterlab
         matplotlib
         pip
         pyarrow
@@ -144,8 +147,10 @@
         tiktoken
         bottle
         tinygrad
+        manim
       ]))
       pyright
+      
 
       # C
       gcc
@@ -162,11 +167,18 @@
       # Julia
       julia
       nerd-fonts.jetbrains-mono
+
+      # Lean4
+      lean4
+      elan
     ];
     pathsToLink = [ "/libexec" ];
     sessionVariables = {
         CUDA_PATH = "${pkgs.cudaPackages.cuda_cudart}";
         LD_LIBRARY_PATH = "${pkgs.cudaPackages.cuda_cudart}/lib:${pkgs.cudaPackages.cudnn}/lib:${pkgs.linuxPackages.nvidia_x11}/lib";
+        e_GLX_VENDOR_LIBRARY_NAME = "nvidia";
+        GBM_BACKEND = "nvidia-drm";
+        LIBGL_DRIVER_NAME = "nvidia";
     };
   };
 
@@ -174,6 +186,11 @@
     hostName = "nixos";
     networkmanager.enable = true;
     firewall.enable = true;
+    extraHosts = ''
+      127.0.0.1 www.reddit.com
+      127.0.0.1 old.reddit.com
+      127.0.0.1 new.reddit.com
+    '';
   };
   security.rtkit.enable = true;
 
@@ -189,7 +206,6 @@
     };
     mullvad-vpn.enable = true;
     displayManager.defaultSession = "none+i3";
-    xserver.videoDrivers = [ "nvidia" ];
     libinput.enable = true;
     libinput.touchpad.disableWhileTyping = true;
 
@@ -205,6 +221,7 @@
     blueman.enable = true; # bluetooth
 
     xserver = {
+      videoDrivers = [ "nvidia" ];
       enable = true;
       windowManager.i3 = {
         enable = true;
@@ -246,6 +263,16 @@
     };
 
     dbus.enable = true;
+    redshift = {
+      enable = true;
+      temperature.day = 5500;
+      temperature.night = 3700;
+    };
+  };
+
+  location = {
+      latitude = 40.7128;
+      longitude = -74.0060;
   };
 
   time.timeZone = "America/New_York";
@@ -280,6 +307,7 @@
   };
 
   programs = {
+    nix-ld.enable = true;
     ssh.startAgent = true;
     gnupg.agent = {
       enable = true;
