@@ -8,7 +8,7 @@
   # Core system configuration
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
   system.stateVersion = "24.11";
-  nixpkgs.config.allowUnfree = false;
+  nixpkgs.config.allowUnfree = true;
 
   # Boot and hardware
   boot.loader = {
@@ -17,36 +17,43 @@
   };
 
   # Power management
+  powerManagement = {
+    enable = true;
+    cpuFreqGovernor = "powersave"; # Better for laptops
+    powertop.enable = true; # Optimize power usage
+  };
+
   services = {
     tlp = {
-      enable = true;
+      enable = true; # TLP for power management
       settings = {
         CPU_SCALING_GOVERNOR_ON_AC = "performance";
         CPU_SCALING_GOVERNOR_ON_BAT = "powersave";
       };
     };
-    thermald.enable = true;
-    auto-cpufreq.enable = true;
-    fstrim = {
-      enable = true;
-      interval = "weekly";
-    };
-    smartd = {
-      enable = true;
-      notifications.x11.enable = true;
-    };
+    thermald.enable = true; # Thermal management
+    auto-cpufreq.enable = true; # Auto CPU frequency scaling
+    fstrim.enable = true; # SSD trimming
+    smartd.enable = true; # SMART monitoring
   };
-  powerManagement.powertop.enable = true;
 
   # Networking
   networking = {
     hostName = "nixos";
     networkmanager.enable = true;
     firewall.enable = true;
+
+    # Block distracting sites
+    extraHosts = ''
+      127.0.0.1 reddit.com
+      127.0.0.1 www.reddit.com
+      127.0.0.1 youtube.com
+      127.0.0.1 www.youtube.com
+    '';
   };
 
   # Audio
-  hardware.pulseaudio.enable = false;
+  hardware.pulseaudio.enable = false; # Disable PulseAudio in favor of PipeWire
   security.rtkit.enable = true;
   services.pipewire = {
     enable = true;
@@ -54,10 +61,11 @@
       enable = true;
       support32Bit = true;
     };
-    pulse.enable = true;
+    pulse.enable = true; # PipeWire as a PulseAudio replacement
   };
 
   # Bluetooth
+  hardware.bluetooth.enable = true;
   services.blueman.enable = true;
 
   # Locale and time
@@ -78,13 +86,9 @@
   };
 
   # X11 and desktop environment
-  services.libinput.enable = true;
+  services.libinput.enable = true; # Touchpad support
   services.libinput.touchpad.disableWhileTyping = true;
   services.xserver = {
-    deviceSection = ''
-      Option "TearFree" "true"
-      Option "DRI" "3"
-      '';
     enable = true;
     windowManager.i3 = {
       enable = true;
@@ -102,8 +106,13 @@
   };
   services.displayManager.defaultSession = "none+i3";
 
+  # Drive automounting
+  services.devmon.enable = true; # Automount removable drives
+  services.gvfs.enable = true; # GNOME Virtual File System for automounting
+  services.udisks2.enable = true; # Disk management service
+
   # System services
-  services.printing.enable = true;
+  services.printing.enable = true; # Enable CUPS for printing
   services.syncthing = {
     enable = true;
     user = "spike";
@@ -113,9 +122,6 @@
     overrideFolders = true;
     settings.gui.theme = "dark";
   };
-
-  # Security and agents
-  services.dbus.enable = true;
 
   # Display compositor
   services.picom = {
@@ -141,15 +147,14 @@
     systemPackages = with pkgs; [
       # System utils
       home-manager    # config manager
-      pulseaudio      # audio manager
       brightnessctl   # brightness manager
       flameshot       # screenshot tool
       feh             # background image manager
       wmctrl          # window manager manager
       picom           # compositor
-      udisks2
-      usbutils
-      mullvad-vpn
+      udisks2         # disk management
+      usbutils        # USB utilities
+      mullvad-vpn     # VPN client
 
       # General
       bash            # shell 
@@ -188,6 +193,10 @@
       obs-studio      # screen recording
       qbittorrent     # file "sharing"
       inkscape        # svg editor
+      zotero          # reference manager
+      qemu            # virtualization
+      virt-manager    # VM manager
+      lutris
 
       # Python
       (python312.withPackages (ps: with ps; [
@@ -204,8 +213,8 @@
         bottle
         tinygrad
         matplotlib
-
-        # cancer
+        build
+        twine
         nibabel
       ]))
       pyright
@@ -214,25 +223,33 @@
       gcc
       clang
       clang-tools
-
       cmake
       gnumake
       extra-cmake-modules
-
       gdb
-
 
       # Haskell
       ghc
 
       # Julia
       julia
+
+      # Lean4
+      lean4
+      elan
+      vscode
     ];
     pathsToLink = [ "/libexec" ];
   };
   fonts.packages = with pkgs; [ nerdfonts ];
 
+  # VM
+  virtualisation.libvirtd.enable = true; # Enable libvirt for VMs
+  virtualisation.spiceUSBRedirection.enable = true; # USB redirection for VMs
+
   programs = {
+    virt-manager.enable = true; # GUI for managing VMs
+    nix-ld.enable = true; # Enable running dynamically linked libraries
     ssh.startAgent = true;
     gnupg.agent = {
       enable = true;
@@ -250,7 +267,7 @@
   users.users.spike = {
     isNormalUser = true;
     description = "spike";
-    extraGroups = [ "networkmanager" "wheel" ];
+    extraGroups = [ "networkmanager" "wheel" "libvirtd" ];
     shell = pkgs.bash;
     packages = with pkgs; [];
   };
