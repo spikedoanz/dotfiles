@@ -23,6 +23,7 @@
       PS1="\[\033[34m\]\W\[\033[0m\] § "
       eval "$(fzf --bash)"
       ssh-add -q ~/.ssh/gh
+      export PATH="$HOME/.bin:$PATH"
     '';
 
     shellAliases = {

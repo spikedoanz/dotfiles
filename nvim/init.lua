@@ -151,7 +151,8 @@ local symbols = {
     top = '⊤',
     dot = '·',
     n = '\\n',
-    sec = '§'
+    sec = '§',
+    approx = '≈'
   },
 }
 

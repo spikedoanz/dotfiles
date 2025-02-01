@@ -18,9 +18,7 @@
       efi.canTouchEfiVariables = true;
     };
     supportedFilesystems = [ "ntfs" ];
-    extraModulePackages = [ 
-      config.boot.kernelPackages.nvidia_x11
-    ];
+    extraModulePackages = [ config.boot.kernelPackages.nvidia_x11 ];
   };
 
   fileSystems."/media/hdd0" = {
@@ -34,10 +32,7 @@
     graphics = {
       enable = true;
       enable32Bit = true;
-      extraPackages = with pkgs; [
-        vaapiVdpau
-        nvidia-vaapi-driver
-      ];
+      extraPackages = with pkgs; [ vaapiVdpau nvidia-vaapi-driver ];
     };
     nvidia-container-toolkit.enable = true;
     nvidia = {
@@ -48,10 +43,17 @@
       nvidiaSettings = true;
       package = config.boot.kernelPackages.nvidiaPackages.stable;
     };
-    bluetooth.enable = true;
+    bluetooth = {
+      enable = true;
+      settings = {
+        General = {
+          Enable = "Source,Sink,Media,Socket";
+          Disable = "Headset,Gateway,Control";
+        };
+      };
+    };
   };
 
-  # Enable Docker with NVIDIA support
   virtualisation.docker.enable = true;
 
   powerManagement = {
@@ -81,7 +83,7 @@
 
       hinting = {
         enable = true;
-        style = "slight"; # Light hinting for better readability
+        style = "slight";
       };
 
       subpixel = {
@@ -102,6 +104,7 @@
     QT_AUTO_SCREEN_SCALE_FACTOR = "1"; # Auto-scale for high-DPI displays
     GDK_SCALE = "1"; # Scale factor for GTK applications
     GDK_DPI_SCALE = "1"; # DPI scaling for GTK applications
+    PULSE_LATENCY_MSEC = "60"; # Reduce audio latency
   };
 
   # System packages
@@ -130,6 +133,7 @@
     ocl-icd
     opencl-headers
     clinfo
+    nvtopPackages.nvidia
 
     # Gaming
     steam
@@ -162,6 +166,8 @@
       torchvision-bin
       jupyterlab
       matplotlib
+      einops
+      pytest
       pip
       pyarrow
       selenium
@@ -172,6 +178,10 @@
       opencv4
       nibabel
       flask
+
+      transformers
+      datasets
+      wandb
     ]))
     pyright
 
@@ -179,11 +189,9 @@
     gcc clang cmake gnumake
     ghc julia elan
     sqlite
-    obsidian
 
     qemu
     virt-manager
-
   ];
 
   # Networking
@@ -199,6 +207,16 @@
 
   # Services
   services = {
+    pulseaudio = {
+      enable = true;
+      package = pkgs.pulseaudioFull;
+      support32Bit = true;
+      extraConfig = ''
+        # Force A2DP profile
+        load-module module-bluetooth-policy auto_switch=false
+        load-module module-bluetooth-discover headset=off
+      '';
+    };
     logind = {
       lidSwitch = "ignore";
       extraConfig = ''
@@ -213,27 +231,17 @@
     libinput.enable = true;
     libinput.touchpad.disableWhileTyping = true;
 
-    pipewire = {
-      enable = true;
-      alsa = {
-        enable = true;
-        support32Bit = true;
-      };
-      pulse.enable = true;
-    };
+    # Disable PipeWire
+    pipewire.enable = false;
 
     blueman.enable = true;
-
     xserver = {
       videoDrivers = [ "nvidia" ];
       enable = true;
       windowManager.i3 = {
         enable = true;
         package = pkgs.i3;
-        extraPackages = with pkgs; [
-          i3status
-          i3lock
-        ];
+        extraPackages = with pkgs; [ i3status i3lock ];
       };
       xkb.layout = "us";
     };
@@ -277,11 +285,8 @@
   time.timeZone = "America/New_York";
   i18n.defaultLocale = "en_US.UTF-8";
 
-  # Nix settings
   nix.settings = {
-    substituters = [
-      "https://cuda-maintainers.cachix.org"
-    ];
+    substituters = [ "https://cuda-maintainers.cachix.org" ];
     trusted-public-keys = [
       "cuda-maintainers.cachix.org-1:0dq3bujKpuEPMCX6U4WylrUDZ9JyUG0VpVZa7CNfq5E="
     ];
@@ -294,7 +299,6 @@
     options = "--delete-older-than 30d";
   };
 
-  # Programs
   programs = {
     nix-ld = {
       enable = true;
@@ -318,11 +322,10 @@
     };
   };
 
-  # User configuration
   users.users.spike = {
     isNormalUser = true;
     description = "spike";
-    extraGroups = [ "networkmanager" "wheel" "video" "render" ];
+    extraGroups = [ "networkmanager" "wheel" "video" "render" "audio" ];
     shell = pkgs.bash;
   };
 }
