@@ -37,8 +37,7 @@
     nvidia-container-toolkit.enable = true;
     nvidia = {
       modesetting.enable = true;
-      powerManagement.enable = false;
-      
+      powerManagement.enable = true;
       open = false;
       nvidiaSettings = true;
       package = config.boot.kernelPackages.nvidiaPackages.stable;
@@ -54,7 +53,45 @@
     };
   };
 
-  virtualisation.docker.enable = true;
+  virtualisation = {
+    docker = {
+      enable = true;
+      autoPrune = {
+        enable = true;
+        dates = "weekly";
+
+      };
+    };
+
+    # QEMU/KVM configuration
+    libvirtd = {
+      enable = true;
+      qemu = {
+        package = pkgs.qemu;
+        ovmf = {
+          enable = true;
+          packages = [pkgs.OVMFFull];
+        };
+        swtpm.enable = true;
+      };
+      onBoot = "ignore";
+      onShutdown = "shutdown";
+    };
+
+    # Podman configuration (alternative to Docker)
+    podman = {
+      enable = true;
+      defaultNetwork.settings = {
+        dns_enabled = true;
+      };
+    };
+
+    # Waydroid for Android apps (optional)
+    waydroid.enable = true;
+
+    # Add Spice support for virtual machines
+    spiceUSBRedirection.enable = true;
+  };
 
   powerManagement = {
     enable = true;
@@ -70,6 +107,9 @@
       noto-fonts-cjk-sans # For CJK characters
       noto-fonts-emoji # For emojis
       font-awesome # For icons
+      comic-neue # Comic Neue font
+      comic-relief # Open source Comic Sans alternative
+      xkcd-font # XKCD font
     ];
 
     fontconfig = {
@@ -105,6 +145,14 @@
     GDK_SCALE = "1"; # Scale factor for GTK applications
     GDK_DPI_SCALE = "1"; # DPI scaling for GTK applications
     PULSE_LATENCY_MSEC = "60"; # Reduce audio latency
+    GTK_IM_MODULE = "fcitx";
+    QT_IM_MODULE = "fcitx";
+    XMODIFIERS = "@im=fcitx";
+    SDL_IM_MODULE = "fcitx";
+  };
+
+  environment.shellAliases = {
+    dockerrun = "docker run --device=nvidia.com/gpu=all";
   };
 
   # System packages
@@ -145,7 +193,8 @@
     bash zsh git ripgrep tree curl fzf
     zip unzip eza lsof htop ncdu xclip
     rofi pass gnupg pinentry-curses neovim
-    yazi neofetch
+    yazi neofetch busybox texliveTeTeX
+    xzoom
 
     # Apps
     wezterm ghostty firefox syncthing
@@ -174,7 +223,6 @@
       tiktoken
       bottle
       tinygrad
-      manim
       opencv4
       nibabel
       flask
@@ -321,11 +369,13 @@
       vimAlias = true;
     };
   };
+  systemd.services.podman-python-cuda.enable = false;
+
 
   users.users.spike = {
     isNormalUser = true;
     description = "spike";
-    extraGroups = [ "networkmanager" "wheel" "video" "render" "audio" ];
+    extraGroups = [ "networkmanager" "wheel" "video" "render" "audio" "docker"];
     shell = pkgs.bash;
   };
 }

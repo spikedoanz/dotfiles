@@ -6,8 +6,7 @@ local opt = vim.opt
 
 -- editor settings
 opt.number = false
-opt.expandtab = true
-opt.shiftwidth = 2
+opt.expandtab = true opt.shiftwidth = 2
 opt.tabstop = 2
 opt.signcolumn = "no"
 opt.shortmess:append("I")
@@ -152,7 +151,10 @@ local symbols = {
     dot = '·',
     n = '\\n',
     sec = '§',
-    approx = '≈'
+    approx = '≈',
+    inf = '∞',
+    qed = '□',
+    partial = '∂', par = '∂'
   },
 }
 

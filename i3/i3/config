@@ -162,3 +162,6 @@ bindsym $mod+semicolon mode "resize"
 bindsym Mod4+Tab focus right
 bindsym Mod4+Shift+Tab focus left
 bindsym Print exec --no-startup-id flameshot gui
+bindsym $mod+equal exec xzoom
+bindsym $mod+minus exec xzoom -out
+bindsym $mod+Alt+0 exec xzoom -reset
