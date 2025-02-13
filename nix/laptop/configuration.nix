@@ -47,8 +47,6 @@
     extraHosts = ''
       127.0.0.1 reddit.com
       127.0.0.1 www.reddit.com
-      127.0.0.1 youtube.com
-      127.0.0.1 www.youtube.com
     '';
   };
 
@@ -61,7 +59,7 @@
       enable = true;
       support32Bit = true;
     };
-    pulse.enable = true; # PipeWire as a PulseAudio replacement
+    pulse.enable = true;
   };
 
   # Bluetooth
@@ -142,6 +140,7 @@
   };
   system.autoUpgrade.enable = true;
 
+
   # System packages
   environment = {
     systemPackages = with pkgs; [
@@ -185,6 +184,8 @@
       zathura         # pdf reader
       zed-editor      # editor number two
       nemo            # gui file browser
+      obsidian
+      discord
 
       # Media
       ffmpeg          # video/gif/etc editor
@@ -203,9 +204,11 @@
         requests
         datasets
         numpy
+        jupyterlab
         pandas
         pillow
         torch
+        torchvision
         pip
         pyarrow
         selenium
@@ -216,6 +219,10 @@
         build
         twine
         nibabel
+        pytest
+        einops
+        transformers
+        wandb
       ]))
       pyright
 
@@ -234,8 +241,6 @@
       # Julia
       julia
 
-      # Lean4
-      lean4
       elan
       vscode
     ];
@@ -246,6 +251,7 @@
   # VM
   virtualisation.libvirtd.enable = true; # Enable libvirt for VMs
   virtualisation.spiceUSBRedirection.enable = true; # USB redirection for VMs
+  virtualisation.docker.enable = true;
 
   programs = {
     virt-manager.enable = true; # GUI for managing VMs
@@ -267,7 +273,7 @@
   users.users.spike = {
     isNormalUser = true;
     description = "spike";
-    extraGroups = [ "networkmanager" "wheel" "libvirtd" ];
+    extraGroups = [ "networkmanager" "wheel" "libvirtd" "docker"];
     shell = pkgs.bash;
     packages = with pkgs; [];
   };
