@@ -3,198 +3,268 @@
 ########################
 { config, pkgs, ... }:
 {
-  imports = [ ./hardware-configuration.nix ./cachix.nix];
+  imports = [ ./hardware-configuration.nix ./cachix.nix ];
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
 
   # Core system configuration
   system.stateVersion = "24.11";
   nixpkgs.config.allowUnfree = true;
   system.autoUpgrade.enable = true;
+
+  # Boot configuration
   boot = {
     loader = {
       systemd-boot.enable = true;
       efi.canTouchEfiVariables = true;
     };
     supportedFilesystems = [ "ntfs" ];
-    extraModulePackages = [ 
-        config.boot.kernelPackages.nvidia_x11
-    ];
+    extraModulePackages = [ config.boot.kernelPackages.nvidia_x11 ];
   };
-  
+
   fileSystems."/media/hdd0" = {
     device = "/dev/sda1";
     fsType = "ntfs-3g";
     options = [ "defaults" ];
   };
 
+  # Hardware configuration
   hardware = {
-      graphics = {
+    graphics = {
+      enable = true;
+      enable32Bit = true;
+      extraPackages = with pkgs; [ vaapiVdpau nvidia-vaapi-driver ];
+    };
+    nvidia-container-toolkit.enable = true;
+    nvidia = {
+      modesetting.enable = true;
+      powerManagement.enable = true;
+      open = false;
+      nvidiaSettings = true;
+      package = config.boot.kernelPackages.nvidiaPackages.stable;
+    };
+    bluetooth = {
+      enable = true;
+      settings = {
+        General = {
+          Enable = "Source,Sink,Media,Socket";
+          Disable = "Headset,Gateway,Control";
+        };
+      };
+    };
+  };
+
+  virtualisation = {
+    docker = {
+      enable = true;
+      autoPrune = {
         enable = true;
-        enable32Bit = true;
+        dates = "weekly";
+
       };
-      nvidia = {
-          modesetting.enable = true;
-          powerManagement.enable = false;
-          powerManagement.finegrained = false;
-          open = false;                        # change to true when this is stable
-          nvidiaSettings = true;
-          package = config.boot.kernelPackages.nvidiaPackages.stable;
+    };
+
+    # QEMU/KVM configuration
+    libvirtd = {
+      enable = true;
+      qemu = {
+        package = pkgs.qemu;
+        ovmf = {
+          enable = true;
+          packages = [pkgs.OVMFFull];
+        };
+        swtpm.enable = true;
       };
-      bluetooth.enable = true;
+      onBoot = "ignore";
+      onShutdown = "shutdown";
+    };
+
+    # Podman configuration (alternative to Docker)
+    podman = {
+      enable = true;
+      defaultNetwork.settings = {
+        dns_enabled = true;
+      };
+    };
+
+    # Waydroid for Android apps (optional)
+    waydroid.enable = true;
+
+    # Add Spice support for virtual machines
+    spiceUSBRedirection.enable = true;
   };
 
   powerManagement = {
     enable = true;
-    powertop.enable = false;
     cpuFreqGovernor = "performance";
   };
 
-
-  environment = {
-    systemPackages = with pkgs; [
-      # Utils
-      home-manager    # config manager
-      pulseaudio      # audio manager
-      brightnessctl   # brightness manager
-      flameshot       # screenshot tool
-      feh             # background image manager
-      wmctrl          # window manager manager
-      picom           # compositor
-      udisks2
-      usbutils
-      ntfs3g
-      mullvad-vpn
-      lxappearance
-      pavucontrol
-      bluetuith
-
-      # cuda
-      cudaPackages.cuda_cudart
-      cudaPackages.cuda_cupti
-      cudaPackages.cuda_nvcc
-      cudaPackages.cuda_nvtx
-      cudaPackages.tensorrt
-      cudaPackages.cudnn
-      nvtopPackages.nvidia
-      cudatoolkit
-      linuxPackages.nvidia_x11
-      libGLU libGL
-      xorg.libXi xorg.libXmu freeglut
-      xorg.libXext xorg.libX11 xorg.libXv xorg.libXrandr
-      zlib
-
-      # Gaming
-      steam
-      wineWowPackages.stable
-      winetricks
-      lutris
-
-      # General
-      bash            # shell 
-      zsh             # backup shell
-      git             # version control tool
-      ripgrep         # better grep
-      tree            # file tree visualizer
-      curl            # download tool
-      fzf             # fuzzy file searching
-      zip unzip       # compression tools
-      eza             # better "ls"
-      lsof            # list open files
-      htop            # system utilization tool
-      ncdu            # disk usage monitoring
-      xclip           # clipboard
-      rofi            # window switcher util tool
-      pass            # password manager
-      gnupg           # private key creator
-      pinentry-curses # in terminal prompts
-      neovim          # editor number one
-      yazi            # tui file browser
-
-      # Apps
-      wezterm
-      ghostty
-      firefox         # browser
-      syncthing       # file syncing
-      zathura         # pdf reader
-      zed-editor      # editor number two
-      nemo            # gui file browser
-      obsidian
-      vscode
-      ollama
-
-      # Media
-      ffmpeg          # video/gif/etc editor
-      gimp            # image editor
-      mpv             # video viewer
-      obs-studio      # screen recording
-      qbittorrent     # file "sharing"
-      inkscape        # svg editor
-
-      # Python
-      (python312.withPackages (ps: with ps; [
-        requests
-        datasets
-        numpy
-        pandas
-        pillow
-        pytorch-bin
-        torchvision-bin
-        jupyterlab
-        matplotlib
-        pip
-        pyarrow
-        selenium
-        tiktoken
-        bottle
-        tinygrad
-        manim
-      ]))
-      pyright
-      
-
-      # C
-      gcc
-      clang
-      clang-tools
-      cmake
-      gnumake
-      extra-cmake-modules
-      gdb
-
-      # Haskell
-      ghc
-
-      # Julia
-      julia
-      nerd-fonts.jetbrains-mono
-
-      # Lean4
-      lean4
-      elan
+  # Font configuration
+  fonts = {
+    enableDefaultPackages = true;
+    packages = with pkgs; [
+      jetbrains-mono # Default monospace font
+      noto-fonts # Fallback for sans-serif and serif
+      noto-fonts-cjk-sans # For CJK characters
+      noto-fonts-emoji # For emojis
+      font-awesome # For icons
+      comic-neue # Comic Neue font
+      comic-relief # Open source Comic Sans alternative
+      xkcd-font # XKCD font
     ];
-    pathsToLink = [ "/libexec" ];
-    sessionVariables = {
-        CUDA_PATH = "${pkgs.cudaPackages.cuda_cudart}";
-        LD_LIBRARY_PATH = "${pkgs.cudaPackages.cuda_cudart}/lib:${pkgs.cudaPackages.cudnn}/lib:${pkgs.linuxPackages.nvidia_x11}/lib";
-        e_GLX_VENDOR_LIBRARY_NAME = "nvidia";
-        GBM_BACKEND = "nvidia-drm";
-        LIBGL_DRIVER_NAME = "nvidia";
+
+    fontconfig = {
+      enable = true;
+      defaultFonts = {
+        monospace = [ "JetBrains Mono" "Noto Sans Mono" ]; # Default to JetBrains Mono
+        sansSerif = [ "JetBrains Mono" "Noto Sans" ]; # Fallback to Noto Sans
+        serif = [ "JetBrains Mono" "Noto Serif" ]; # Fallback to Noto Serif
+        emoji = [ "Noto Color Emoji" ]; # For emojis
+      };
+
+      hinting = {
+        enable = true;
+        style = "slight";
+      };
+
+      subpixel = {
+        rgba = "rgb"; # Subpixel rendering for LCD screens
+        lcdfilter = "default"; # Default LCD filter
+      };
+
+      antialias = true; # Enable anti-aliasing
+      useEmbeddedBitmaps = true; # Use embedded bitmaps in fonts
+      allowBitmaps = true; # Allow bitmap fonts
     };
   };
 
+  # Environment variables for font rendering
+  environment.variables = {
+    GDK_USE_XFT = "1"; # Enable Xft for GTK applications
+    QT_XFT = "true"; # Enable Xft for Qt applications
+    QT_AUTO_SCREEN_SCALE_FACTOR = "1"; # Auto-scale for high-DPI displays
+    GDK_SCALE = "1"; # Scale factor for GTK applications
+    GDK_DPI_SCALE = "1"; # DPI scaling for GTK applications
+    PULSE_LATENCY_MSEC = "60"; # Reduce audio latency
+    GTK_IM_MODULE = "fcitx";
+    QT_IM_MODULE = "fcitx";
+    XMODIFIERS = "@im=fcitx";
+    SDL_IM_MODULE = "fcitx";
+  };
+
+  environment.shellAliases = {
+    dockerrun = "docker run --device=nvidia.com/gpu=all";
+  };
+
+  # System packages
+  environment.systemPackages = with pkgs; [
+    # Utils
+    home-manager
+    pulseaudio
+    brightnessctl
+    flameshot
+    feh
+    wmctrl
+    picom
+    udisks2
+    usbutils
+    ntfs3g
+    mullvad-vpn
+    lxappearance
+    pavucontrol
+    bluetuith
+
+    # CUDA/OpenCL
+    cudaPackages.cuda_cudart
+    cudaPackages.cuda_nvcc
+    cudaPackages.cudnn
+    cudatoolkit
+    ocl-icd
+    opencl-headers
+    clinfo
+    nvtopPackages.nvidia
+
+    # Gaming
+    steam
+    wineWowPackages.stable
+    winetricks
+    lutris
+
+    # General
+    bash zsh git ripgrep tree curl fzf
+    zip unzip eza lsof htop ncdu xclip
+    rofi pass gnupg pinentry-curses neovim
+    yazi neofetch busybox texliveTeTeX
+    xzoom
+
+    # Apps
+    wezterm ghostty firefox syncthing
+    zathura zed-editor nemo obsidian
+    vscode ollama
+
+    # Media
+    ffmpeg gimp mpv obs-studio qbittorrent
+    inkscape
+
+    # Python (with CUDA support)
+    (python312.withPackages (ps: with ps; [
+      requests
+      numpy
+      pandas
+      pillow
+      pytorch-bin
+      torchvision-bin
+      jupyterlab
+      matplotlib
+      einops
+      pytest
+      pip
+      pyarrow
+      selenium
+      tiktoken
+      bottle
+      tinygrad
+      opencv4
+      nibabel
+      flask
+
+      transformers
+      datasets
+      wandb
+    ]))
+    pyright
+
+    # Development tools
+    gcc clang cmake gnumake
+    ghc julia elan
+    sqlite
+
+    qemu
+    virt-manager
+  ];
+
+  # Networking
   networking = {
     hostName = "nixos";
     networkmanager.enable = true;
     firewall.enable = true;
     extraHosts = ''
-      127.0.0.1 www.reddit.com
-      127.0.0.1 old.reddit.com
-      127.0.0.1 new.reddit.com
     '';
   };
+
   security.rtkit.enable = true;
 
+  # Services
   services = {
+    pulseaudio = {
+      enable = true;
+      package = pkgs.pulseaudioFull;
+      support32Bit = true;
+      extraConfig = ''
+        # Force A2DP profile
+        load-module module-bluetooth-policy auto_switch=false
+        load-module module-bluetooth-discover headset=off
+      '';
+    };
     logind = {
       lidSwitch = "ignore";
       extraConfig = ''
@@ -209,32 +279,19 @@
     libinput.enable = true;
     libinput.touchpad.disableWhileTyping = true;
 
-    pipewire = {
-      enable = true;
-      alsa = {
-        enable = true;
-        support32Bit = true;
-      };
-      pulse.enable = true; # audio
-    };
+    # Disable PipeWire
+    pipewire.enable = false;
 
-    blueman.enable = true; # bluetooth
-
+    blueman.enable = true;
     xserver = {
       videoDrivers = [ "nvidia" ];
       enable = true;
       windowManager.i3 = {
         enable = true;
         package = pkgs.i3;
-        extraPackages = with pkgs; [
-          i3status
-          i3lock
-        ];
+        extraPackages = with pkgs; [ i3status i3lock ];
       };
-      xkb = {
-        layout = "us";
-        variant = "";
-      };
+      xkb.layout = "us";
     };
 
     syncthing = {
@@ -242,20 +299,17 @@
       user = "spike";
       dataDir = "/home/spike/Documents";
       configDir = "/home/spike/.config/syncthing";
-      overrideDevices = true;
-      overrideFolders = true;
       settings.gui.theme = "dark";
     };
 
-    # auto mounting
     devmon.enable = true;
-    gvfs.enable = true; 
+    gvfs.enable = true;
     udisks2.enable = true;
 
     picom = {
       enable = true;
-      vSync = true;
       backend = "glx";
+      vSync = true;
       settings = {
         glx-no-stencil = true;
         glx-no-rebind-pixmap = true;
@@ -270,34 +324,21 @@
     };
   };
 
+  # Location and time
   location = {
-      latitude = 40.7128;
-      longitude = -74.0060;
+    latitude = 40.7128;
+    longitude = -74.0060;
   };
 
   time.timeZone = "America/New_York";
-  i18n = {
-    defaultLocale = "en_US.UTF-8";
-    extraLocaleSettings = {
-      LC_ADDRESS = "en_US.UTF-8";
-      LC_IDENTIFICATION = "en_US.UTF-8";
-      LC_MEASUREMENT = "en_US.UTF-8";
-      LC_MONETARY = "en_US.UTF-8";
-      LC_NAME = "en_US.UTF-8";
-      LC_NUMERIC = "en_US.UTF-8";
-      LC_PAPER = "en_US.UTF-8";
-      LC_TELEPHONE = "en_US.UTF-8";
-      LC_TIME = "en_US.UTF-8";
-    };
-  };
+  i18n.defaultLocale = "en_US.UTF-8";
 
   nix.settings = {
-    substituters = [
-      "https://cuda-maintainers.cachix.org"
-    ];
+    substituters = [ "https://cuda-maintainers.cachix.org" ];
     trusted-public-keys = [
       "cuda-maintainers.cachix.org-1:0dq3bujKpuEPMCX6U4WylrUDZ9JyUG0VpVZa7CNfq5E="
     ];
+    auto-optimise-store = true;
   };
 
   nix.gc = {
@@ -307,7 +348,16 @@
   };
 
   programs = {
-    nix-ld.enable = true;
+    nix-ld = {
+      enable = true;
+      libraries = with pkgs; [
+        stdenv.cc.cc
+        zlib
+        glibc
+        openssl
+        libffi
+      ];
+    };
     ssh.startAgent = true;
     gnupg.agent = {
       enable = true;
@@ -319,12 +369,13 @@
       vimAlias = true;
     };
   };
+  systemd.services.podman-python-cuda.enable = false;
+
 
   users.users.spike = {
     isNormalUser = true;
     description = "spike";
-    extraGroups = [ "networkmanager" "wheel"];
+    extraGroups = [ "networkmanager" "wheel" "video" "render" "audio" "docker"];
     shell = pkgs.bash;
-    packages = with pkgs; [];
   };
 }
