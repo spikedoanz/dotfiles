@@ -63,7 +63,7 @@ set $mod Mod4
 
 bindsym $mod+Shift+Return exec wezterm
 bindsym $mod+Shift+q kill
-bindsym $mod+p exec "rofi -show drun"
+bindsym $mod+space exec "rofi -show drun"
 bindsym $mod+d exec "rofi -show window"
 
 # change focus
@@ -98,7 +98,6 @@ bindsym $mod+e layout toggle split
 bindsym $mod+Shift+space floating toggle
 
 # change focus between tiling / floating windows
-bindsym $mod+space focus mode_toggle
 
 
 ## workspaces

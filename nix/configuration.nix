@@ -59,8 +59,9 @@
       autoPrune = {
         enable = true;
         dates = "weekly";
-
       };
+      enableOnBoot = true;
+
     };
 
     # QEMU/KVM configuration
@@ -219,6 +220,8 @@
       pytest
       pip
       pyarrow
+      h5py
+      scikit-learn
       selenium
       tiktoken
       bottle
@@ -227,11 +230,13 @@
       nibabel
       flask
 
+      scikit-image
       transformers
       datasets
       wandb
     ]))
     pyright
+    nodejs_23
 
     # Development tools
     gcc clang cmake gnumake
@@ -369,7 +374,6 @@
       vimAlias = true;
     };
   };
-  systemd.services.podman-python-cuda.enable = false;
 
 
   users.users.spike = {

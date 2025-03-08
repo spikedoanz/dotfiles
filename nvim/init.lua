@@ -6,7 +6,8 @@ local opt = vim.opt
 
 -- editor settings
 opt.number = false
-opt.expandtab = true opt.shiftwidth = 2
+opt.expandtab = true
+opt.shiftwidth = 2
 opt.tabstop = 2
 opt.signcolumn = "no"
 opt.shortmess:append("I")
@@ -60,107 +61,17 @@ map('n', '<leader>r', ':set relativenumber!<CR>', { noremap = true, silent = tru
 map('n','<leader>t2',function()set_tab_width(2)end,{noremap=true,silent=true})
 map('n','<leader>t4',function()set_tab_width(4)end,{noremap=true,silent=true})
 
-local function setup_symbols(symbols)
-  for trigger, symbol in pairs(symbols) do
-    vim.keymap.set('i', '\\' .. trigger, symbol, {buffer = true})
-  end
-end
+-- Magma.nvim keybindings
+map('n', '<LocalLeader>r', ':MagmaEvaluateOperator<CR>', { noremap = true, silent = true })
+map('n', '<LocalLeader>rr', ':MagmaEvaluateLine<CR>', { noremap = true, silent = true })
+map('v', '<LocalLeader>r', ':MagmaEvaluateVisual<CR>', { noremap = true, silent = true })
+map('n', '<LocalLeader>rc', ':MagmaReevaluateCell<CR>', { noremap = true, silent = true })
+map('n', '<LocalLeader>rd', ':MagmaDelete<CR>', { noremap = true, silent = true })
+map('n', '<LocalLeader>ro', ':MagmaShowOutput<CR>', { noremap = true, silent = true })
 
--- Define symbols by category
-local symbols = {
-  -- Greek lowercase
-  greek_lower = {
-    alpha = 'α', a = 'α',
-    beta = 'β', b = 'β',
-    gamma = 'γ',
-    delta = 'δ',
-    epsilon = 'ε',
-    zeta = 'ζ',
-    eta = 'η',
-    theta = 'θ',
-    lambda = 'λ', lam = 'λ',
-    mu = 'μ',
-    nu = 'ν',
-    xi = 'ξ',
-    pi = 'π',
-    rho = 'ρ',
-    sigma = 'σ',
-    tau = 'τ',
-    phi = 'φ',
-    chi = 'χ',
-    psi = 'ψ',
-    omega = 'ω',
-  },
-
-  -- Greek uppercase
-  greek_upper = {
-    Alpha = 'Α',
-    Beta = 'Β',
-    Gamma = 'Γ',
-    Delta = 'Δ',
-    Epsilon = 'Ε',
-    Zeta = 'Ζ',
-    Eta = 'Η',
-    Theta = 'Θ',
-    Iota = 'Ι',
-    Kappa = 'Κ',
-    Lambda = 'Λ',
-    Mu = 'Μ',
-    Nu = 'Ν',
-    Xi = 'Ξ',
-    Omicron = 'Ο',
-    Pi = 'Π',
-    Rho = 'Ρ',
-    Sigma = 'Σ',
-    Tau = 'Τ',
-    Upsilon = 'Υ',
-    Phi = 'Φ',
-    Chi = 'Χ',
-    Psi = 'Ψ',
-    Omega = 'Ω',
-  },
-
-  -- Operators
-  operators = {
-    ['in'] = '∈',
-    notin = '∉',
-    union = '∪',
-    intersect = '∩',
-    subset = '⊂',
-    supset = '⊃',
-    forall = '∀',
-    exists = '∃',
-    therefore = '∴',
-    sum = '∑',
-    prod = '∏',
-  },
-
-  -- Arrows
-  arrows = {
-    implies = '⟹',
-    iff = '⟺',
-    to = '→',
-    gets = '←',
-  },
-
-  -- Misc
-  misc = {
-    trademark = '™',
-    copyright = '©',
-    top = '⊤',
-    dot = '·',
-    n = '\\n',
-    sec = '§',
-    approx = '≈',
-    inf = '∞',
-    qed = '□',
-    partial = '∂', par = '∂'
-  },
-}
-
-for _, category in pairs(symbols) do
-  setup_symbols(category)
-end
+-- Magma.nvim settings
+vim.g.magma_automatically_open_output = false
+vim.g.magma_image_provider = "ueberzug"
 
 -- bootstrap lazy.nvim
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
@@ -250,7 +161,7 @@ require("lazy").setup({
   },
 })
 
--- disable error higlighting in markdown
+-- disable error highlighting in markdown
 vim.api.nvim_create_autocmd("FileType", {
   pattern = "markdown",
   callback = function()
