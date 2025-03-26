@@ -1,0 +1,65 @@
+after-login-command = []
+after-startup-command = []
+start-at-login = true
+enable-normalization-flatten-containers = true
+enable-normalization-opposite-orientation-for-nested-containers = true
+accordion-padding = 30
+default-root-container-layout = 'tiles'
+default-root-container-orientation = 'auto'
+on-focused-monitor-changed = ['move-mouse monitor-lazy-center']
+automatically-unhide-macos-hidden-apps = false
+[key-mapping]
+preset = 'qwerty'
+[gaps]
+inner.horizontal = 0
+inner.vertical =   0
+outer.left =       0
+outer.bottom =     0
+outer.top =        0
+outer.right =      0
+[mode.main.binding]
+cmd-shift-y = 'layout tiles horizontal vertical'
+cmd-shift-a = 'layout accordion horizontal vertical'
+cmd-shift-h = 'focus left'
+cmd-shift-j = 'focus down'
+cmd-shift-k = 'focus up'
+cmd-shift-l = 'focus right'
+cmd-shift-minus = 'resize smart -50'
+cmd-shift-equal = 'resize smart +50'
+cmd-shift-1 = 'workspace 1'
+cmd-shift-2 = 'workspace 2'
+cmd-shift-3 = 'workspace 3'
+cmd-shift-4 = 'workspace 4'
+cmd-shift-5 = 'workspace 5'
+cmd-shift-6 = 'workspace 6'
+cmd-shift-7 = 'workspace 7'
+cmd-shift-8 = 'workspace 8'
+cmd-shift-9 = 'workspace 9'
+# see: https://nikitabobko.github.io/aerospace/commands#move-node-to-workspace
+cmd-alt-shift-1 = 'move-node-to-workspace 1'
+cmd-alt-shift-2 = 'move-node-to-workspace 2'
+cmd-alt-shift-3 = 'move-node-to-workspace 3'
+cmd-alt-shift-4 = 'move-node-to-workspace 4'
+cmd-alt-shift-5 = 'move-node-to-workspace 5'
+cmd-alt-shift-6 = 'move-node-to-workspace 6'
+cmd-alt-shift-7 = 'move-node-to-workspace 7'
+cmd-alt-shift-8 = 'move-node-to-workspace 8'
+cmd-alt-shift-9 = 'move-node-to-workspace 9'
+cmd-tab = 'workspace-back-and-forth'
+cmd-shift-tab = 'move-workspace-to-monitor --wrap-around next'
+cmd-shift-semicolon = 'mode service'
+[mode.service.binding]
+esc = ['reload-config', 'mode main']
+r = ['flatten-workspace-tree', 'mode main'] # reset layout
+f = ['layout floating tiling', 'mode main'] # toggle between floating and tiling layout
+backspace = ['close-all-windows-but-current', 'mode main']
+[[on-window-detected]]
+if.app-id = "com.mitchellh.ghostty"
+run = [
+  # FIX: this is a workaround for https://github.com/nikitabobko/AeroSpace/issues/68
+  # this was also observed in:
+  # - https://github.com/ghostty-org/ghostty/issues/1840
+  # - https://github.com/ghostty-org/ghostty/issues/2006
+  "layout floating",
+  "move-node-to-workspace T",
+]
