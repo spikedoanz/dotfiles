@@ -54,3 +54,10 @@ fi
 alias icat='wezterm imgcat'
 alias v='source .venv/bin/activate'
 alias gg='git add . && git commit -m "wp" && git push origin $(git branch --show-current)'
+
+alias ga='git add '
+alias gc='git commit -m '
+alias gp='git push origin $(git branch --show-current)'
+alias gl='git pull'
+alias gb='git branch '
+alias gt='git checkout '
