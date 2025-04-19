@@ -16,12 +16,13 @@ cfg() {
 
 # source                              dest                file
 cfg ~/.config/nvim/init.lua           nvim                init.lua
-cfg ~/.config/ghostty/config          ghostty             config
-cfg ~/.config/zed/settings.json       zed                 settings.json
+cfg ~/.config/wezterm/wezterm.lua     wezterm             wezterm.lua 
+cfg ~/.config/zed                     zed                 settings.json
+cfg ~/.config/karabiner/karabiner.json karabiner          karabiner.json
+cfg ~/.aerospace.toml                 aerospace           .aerospace.toml
 
 cfg /etc/nixos/configuration.nix      nix                 configuration.nix
 cfg ~/.config/home-manager/home.nix   nix/home-manager    home.nix
-
 
 cfg ~/.config/i3/config               i3/i3               config
 cfg ~/.config/i3status/config         i3/i3status         config

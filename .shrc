@@ -24,12 +24,12 @@ else
     echo "Unknown shell type"
 fi
 
-# Set up exa aliases if it exists
-if command -v exa >/dev/null 2>&1; then
-    alias ls='exa'
-    alias ll='exa -l'
-    alias la='exa -a'
-    alias l='exa'
+# Set up eza aliases if it exists
+if command -v eza >/dev/null 2>&1; then
+    alias ls='eza'
+    alias ll='eza -l'
+    alias la='eza -a'
+    alias l='eza'
 fi
 
 # Detect OS and set up clipboard aliases

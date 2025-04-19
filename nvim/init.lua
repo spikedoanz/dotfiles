@@ -52,6 +52,8 @@ map("n","<C-b>",":NvimTreeToggle<CR>",{silent=true})
 
 map({'n','i','v'},'<C-J>','10j',{noremap=true,silent=true})
 map({'n','i','v'},'<C-K>','10k',{noremap=true,silent=true})
+map({'n','i','v'},'<C-H>','_',{noremap=true,silent=true})
+map({'n','i','v'},'<C-L>','$',{noremap=true,silent=true})
 
 map('n', '<leader>n', ':set number!<CR>', { noremap = true, silent = true })
 map('n', '<leader>r', ':set relativenumber!<CR>', { noremap = true, silent = true })
@@ -217,7 +219,7 @@ require("lazy").setup({
         settings = {
           python = {
             analysis = {
-              typeCheckingMode = "off",
+              typeCheckingMode = "standard",
               autoSearchPaths = true,
               useLibraryCodeForTypes = true,
             },

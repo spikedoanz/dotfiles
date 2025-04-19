@@ -36,40 +36,40 @@ local function cycle_theme()
     })
   end)
 end
+
 c.adjust_window_size_when_changing_font_size = false
+
 -- Keybinding
 c.keys = {
+  { key = 'm', mods = 'CMD', action = wezterm.action.DisableDefaultAssignment, },
+  { key = 'h', mods = 'CMD', action = wezterm.action.DisableDefaultAssignment, },
+  { key = 'l', mods = 'CMD', action = wezterm.action.DisableDefaultAssignment, },
+  { key = '-', mods = 'CMD', action = wezterm.action.DisableDefaultAssignment, },
+  { key = '=', mods = 'CMD', action = wezterm.action.DisableDefaultAssignment, },
+  --------------------------------------------------------------------------------------------
+  { key = "-", mods = "CMD", action = act.SplitVertical({ domain = "CurrentPaneDomain" }) },
+  { key = "=", mods = "CMD", action = act.SplitHorizontal({ domain = "CurrentPaneDomain" }) },
   -- Theme cycling
   { key = 'T', mods = 'ALT', action = cycle_theme() },
   -- Split management
-  { key = "-", mods = "ALT", action = act.SplitVertical({ domain = "CurrentPaneDomain" }) },
-  { key = "=", mods = "ALT", action = act.SplitHorizontal({ domain = "CurrentPaneDomain" }) },
-  { key = "Q", mods = "ALT", action = act.CloseCurrentPane({ confirm = true }) },
+  { key = "d", mods = "CMD", action = act.CloseCurrentPane({ confirm = true }) },
   -- Window focus (hjkl)
-  { key = "h", mods = "ALT", action = act.ActivatePaneDirection("Left") },
-  { key = "j", mods = "ALT", action = act.ActivatePaneDirection("Down") },
-  { key = "k", mods = "ALT", action = act.ActivatePaneDirection("Up") },
-  { key = "l", mods = "ALT", action = act.ActivatePaneDirection("Right") },
+  { key = "h", mods = "CMD", action = act.ActivatePaneDirection("Left") },
+  { key = "j", mods = "CMD", action = act.ActivatePaneDirection("Down") },
+  { key = "k", mods = "CMD", action = act.ActivatePaneDirection("Up") },
+  { key = "l", mods = "CMD", action = act.ActivatePaneDirection("Right") },
   -- Window resizing (HJKL)
-  { key = "H", mods = "ALT", action = act.AdjustPaneSize({ "Left", 5 }) },
-  { key = "J", mods = "ALT", action = act.AdjustPaneSize({ "Down", 5 }) },
-  { key = "K", mods = "ALT", action = act.AdjustPaneSize({ "Up", 5 }) },
-  { key = "L", mods = "ALT", action = act.AdjustPaneSize({ "Right", 5 }) },
-  -- vim bindings
-  { key = 'b', mods = 'ALT', action = act.SendString '\x1bb' },
-  { key = 'w', mods = 'ALT', action = act.SendString '\x1bf' },
-  { key = '0', mods = 'ALT', action = act.SendString '\x01' },
-  { key = '4', mods = 'ALT', action = act.SendString '\x05' },
-  { key = '$', mods = 'ALT', action = act.SendString '\x05' },
-  { key = 'd', mods = 'ALT', action = act.SendString '\x17' },
-  { key = 'D', mods = 'ALT', action = act.SendString '\x0b' },
-  { key = 'x', mods = 'ALT', action = act.SendString '\x1b[3~' },
+  { key = "H", mods = "CMD", action = act.AdjustPaneSize({ "Left", 5 }) },
+  { key = "J", mods = "CMD", action = act.AdjustPaneSize({ "Down", 5 }) },
+  { key = "K", mods = "CMD", action = act.AdjustPaneSize({ "Up", 5 }) },
+  { key = "L", mods = "CMD", action = act.AdjustPaneSize({ "Right", 5 }) },
+  -- Select mode
   { key = 'v', mods = 'ALT', action = wezterm.action.ActivateCopyMode, },
   { key = 'u', mods = 'ALT', action = act.CopyMode 'ClearPattern' },
 }
 -- Appearance
-c.font = wezterm.font('JetBrainsMono Nerd Font Mono')
-c.font_size = 12
+-- c.font = wezterm.font('JetBrainsMono Nerd Font Mono')
+c.font_size = 20
 c.window_padding = {
   left = 0,
   right = 0,
