@@ -12,8 +12,12 @@ local act = wezterm.action
 
 -- Theme switching
 local themes = {
-  'GruvboxDark',
-  'GruvboxLight',
+    'Rosé Pine (base16)',
+    'Rosé Pine Dawn (base16)',
+--  'GruvboxDark',
+--  'GruvboxLight',
+--  'catppuccin-mocha',
+--  'catppuccin-latte',
 }
 
 local current_theme_index = 1

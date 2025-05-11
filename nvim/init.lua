@@ -16,7 +16,7 @@ opt.sidescrolloff = 8         -- Keep some horizontal context visible
 
 -- inherit terminal colors
 opt.termguicolors = false
-opt.hlsearch = true
+--opt.hlsearch = true
 
 -- extra file extensions
 vim.filetype.add({ extension = { ispc = "c", }, }) -- ispc
@@ -121,7 +121,7 @@ local symbols = {
     Omega = 'Ω',
   },
 
-  -- Operators
+  -- Sets
   operators = {
     ['in'] = '∈',
     notin = '∉',
@@ -156,6 +156,11 @@ local symbols = {
     inf = '∞',
     qed = '□',
     partial = '∂', par = '∂'
+
+  },
+  -- Linear algebra
+  linear = {
+    otimes = '⊗',
   },
 }
 
