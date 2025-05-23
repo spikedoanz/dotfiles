@@ -48,11 +48,9 @@ c.keys = {
   { key = 'm', mods = 'CMD', action = wezterm.action.DisableDefaultAssignment, },
   { key = 'h', mods = 'CMD', action = wezterm.action.DisableDefaultAssignment, },
   { key = 'l', mods = 'CMD', action = wezterm.action.DisableDefaultAssignment, },
-  { key = '-', mods = 'CMD', action = wezterm.action.DisableDefaultAssignment, },
-  { key = '=', mods = 'CMD', action = wezterm.action.DisableDefaultAssignment, },
   --------------------------------------------------------------------------------------------
-  { key = "-", mods = "CMD", action = act.SplitVertical({ domain = "CurrentPaneDomain" }) },
-  { key = "=", mods = "CMD", action = act.SplitHorizontal({ domain = "CurrentPaneDomain" }) },
+  { key = "]", mods = "CMD", action = act.SplitVertical({ domain = "CurrentPaneDomain" }) },
+  { key = "[", mods = "CMD", action = act.SplitHorizontal({ domain = "CurrentPaneDomain" }) },
   -- Theme cycling
   { key = 'T', mods = 'ALT', action = cycle_theme() },
   -- Split management
@@ -73,7 +71,7 @@ c.keys = {
 }
 -- Appearance
 -- c.font = wezterm.font('JetBrainsMono Nerd Font Mono')
-c.font_size = 20
+c.font_size = 18
 c.window_padding = {
   left = 0,
   right = 0,
