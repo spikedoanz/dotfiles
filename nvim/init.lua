@@ -32,6 +32,8 @@ if not vim.fn.isdirectory(undodir) then
   vim.fn.mkdir(undodir, "p")
 end
 
+vim.cmd("highlight Comment ctermfg=3 gui=none")
+
 opt.undofile = true        -- Enable persistent undo
 opt.undodir = undodir      -- Set undo directory
 opt.undolevels = 10000     -- Maximum number of changes that can be undone
@@ -66,6 +68,31 @@ local function setup_symbols(symbols)
     vim.keymap.set('i', '\\' .. trigger, symbol, {buffer = true})
   end
 end
+
+local function auto_fix()
+  local params = vim.lsp.util.make_range_params()
+  params.context = { only = { "quickfix" } }
+  
+  local result = vim.lsp.buf_request_sync(0, "textDocument/codeAction", params, 1000)
+  if not result then return end
+  
+  for _, res in pairs(result) do
+    if res.result and #res.result > 0 then
+      local action = res.result[1]  -- Take the first action
+      if action.edit then
+        vim.lsp.util.apply_workspace_edit(action.edit, "utf-8")
+      elseif action.command then
+        vim.lsp.buf.execute_command(action.command)
+      end
+      break
+    end
+  end
+end
+
+-- split behavior
+vim.opt.splitright = true  -- vertical splits open on the right
+vim.opt.splitbelow = true  -- horizontal splits open below
+
 
 -- Define symbols by category
 local symbols = {
@@ -178,6 +205,22 @@ if not vim.loop.fs_stat(lazypath) then
 end
 vim.opt.rtp:prepend(lazypath)
 
+-- get diagnostics
+map('n', 'gh', function()
+  vim.diagnostic.open_float(nil, { border = "double", scope = "line" })
+end, { noremap = true, silent = true })
+
+-- get type info
+map('n', 'gt', function()
+  local opts = {
+    border = "double",  -- More visible border style
+    max_width = 80,
+    pad_left = 1,
+    pad_right = 1
+  }
+  vim.lsp.buf.hover(opts)
+end, { noremap = true, silent = true })
+
 -- plugins
 require("lazy").setup({
   { "nvim-tree/nvim-tree.lua",
@@ -249,6 +292,7 @@ require("lazy").setup({
       map('n', 'gD', vim.lsp.buf.declaration, opts)
       map('n', 'gd', vim.lsp.buf.definition, opts)
       map('n', 'K', vim.lsp.buf.hover, opts)
+      map('n', 'gf', auto_fix, opts)
       -- Diagnostic navigation
       map('n', '[d', vim.diagnostic.goto_prev, opts)
       map('n', ']d', vim.diagnostic.goto_next, opts)
