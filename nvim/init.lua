@@ -13,13 +13,7 @@ opt.autoread = true
 opt.clipboard = "unnamedplus" -- use shared system clipboard
 opt.scrolloff = 999           -- Keep cursor centered vertically
 opt.sidescrolloff = 8         -- Keep some horizontal context visible
-
--- inherit terminal colors
-opt.termguicolors = false
---opt.hlsearch = true
-
--- extra file extensions
-vim.filetype.add({ extension = { ispc = "c", }, }) -- ispc
+opt.termguicolors = false     -- inherit terminal colors
 
 -- disable swap/backup
 opt.swapfile = false
@@ -85,29 +79,46 @@ local function setup_symbols(symbols)
   end
 end
 
-local function auto_fix()
-  local params = vim.lsp.util.make_range_params()
-  params.context = { only = { "quickfix" } }
+-- split behavior
+vim.opt.splitright = true  
+vim.opt.splitbelow = true  
+
+-- Native indentation guides
+opt.list = true
+opt.listchars = {
+  leadmultispace = "│ ", -- Show vertical lines for indentation
+  tab = "│ ",           -- Show vertical lines for tabs
+  trail = "·",          -- Show trailing spaces
+}
+
+-- Set up colorful indentation guide colors using ANSI colors
+vim.cmd([[
+  highlight IndentGuide1 ctermfg=1
+  highlight IndentGuide2 ctermfg=2
+  highlight IndentGuide3 ctermfg=3
+  highlight IndentGuide4 ctermfg=4
+  highlight IndentGuide5 ctermfg=5
+  highlight IndentGuide6 ctermfg=6
+  highlight IndentGuide7 ctermfg=7
+  highlight IndentGuide8 ctermfg=8
+]])
+
+-- Function to cycle through indent colors
+local function setup_indent_colors()
+  local colors = {"IndentGuide1", "IndentGuide2", "IndentGuide3", "IndentGuide4", 
+                  "IndentGuide5", "IndentGuide6", "IndentGuide7", "IndentGuide8"}
   
-  local result = vim.lsp.buf_request_sync(0, "textDocument/codeAction", params, 1000)
-  if not result then return end
-  
-  for _, res in pairs(result) do
-    if res.result and #res.result > 0 then
-      local action = res.result[1]  -- Take the first action
-      if action.edit then
-        vim.lsp.util.apply_workspace_edit(action.edit, "utf-8")
-      elseif action.command then
-        vim.lsp.buf.execute_command(action.command)
-      end
-      break
-    end
+  -- Set up match patterns for different indentation levels
+  for i = 1, 8 do
+    local pattern = string.rep("  ", i) .. "\\zs "
+    vim.fn.matchadd(colors[i], pattern)
   end
 end
 
--- split behavior
-vim.opt.splitright = true  -- vertical splits open on the right
-vim.opt.splitbelow = true  -- horizontal splits open below
+-- Apply indent colors after plugins load
+vim.api.nvim_create_autocmd("VimEnter", {
+  callback = setup_indent_colors
+})
 
 
 -- Define symbols by category
@@ -199,7 +210,6 @@ local symbols = {
     inf = '∞',
     qed = '□',
     partial = '∂', par = '∂'
-
   },
   -- Linear algebra
   linear = {
@@ -239,160 +249,179 @@ end, { noremap = true, silent = true })
 
 -- plugins
 require("lazy").setup({
-  { "nvim-tree/nvim-tree.lua",
-    dependencies = { "nvim-tree/nvim-web-devicons" },
-    config = true,
-  },
-
-  { "nvim-telescope/telescope.nvim",
-    dependencies = { "nvim-lua/plenary.nvim" },
-    config = function()
-      local builtin = require("telescope.builtin")
-      map("n", "<leader>ff", builtin.find_files)
-      map("n", "<leader>fg", builtin.live_grep)
-      map("n", "<leader>fb", builtin.buffers)
-      map("n", "<leader>fh", builtin.help_tags)
-      
-      -- Add more telescope pickers for navigation
-      map("n", "<leader>fd", function() 
-        builtin.find_files({ cwd = vim.fn.expand("%:p:h") }) 
-      end, { desc = "Find files in current directory" })
-      
-      map("n", "<leader>fc", function()
-        builtin.find_files({ 
-          prompt_title = "Change Directory",
-          find_command = {'fd', '--type', 'd', '--hidden', '--exclude', '.git'},
-          attach_mappings = function(prompt_bufnr, map)
-            local actions = require('telescope.actions')
-            local action_state = require('telescope.actions.state')
-            
-            actions.select_default:replace(function()
-              actions.close(prompt_bufnr)
-              local selection = action_state.get_selected_entry()
-              if selection then
-                vim.cmd('cd ' .. selection[1])
-                print('Changed directory to: ' .. selection[1])
-              end
-            end)
-            return true
-          end,
-        })
-      end, { desc = "Change directory with telescope" })
-    end,
-  },
-
-  { "folke/which-key.nvim",
-    event = "VeryLazy",
-    opts = {},
-    keys = {
-      { "<leader>?",
-        function() require("which-key").show({ global = false }) end,
-        desc = "Buffer Local Keymaps (which-key)",
-      },
-    },
-  },
-
-  -- Floaterm
-  { 
-    "voldikss/vim-floaterm",
-    config = function()
-      -- Floaterm settings
-      vim.g.floaterm_width = 0.8
-      vim.g.floaterm_height = 0.8
-      vim.g.floaterm_position = 'center'
-      vim.g.floaterm_borderchars = '─│─│╭╮╯╰'
-      vim.g.floaterm_title = ' Terminal '
-      
-      -- Don't auto close when job exits (so you can see output)
-      vim.g.floaterm_autoclose = 0
-      
-      -- VS Code style toggle with Ctrl-`
-      map({'n', 't', 'i'}, '<C-`>', '<Cmd>FloatermToggle<CR>', { noremap = true, silent = true })
-      
-      -- Additional floaterm keybindings
-      map('n', '<leader>tn', ':FloatermNew<CR>', { noremap = true, silent = true, desc = "New floaterm" })
-      map('n', '<leader>tt', ':FloatermToggle<CR>', { noremap = true, silent = true, desc = "Toggle floaterm" })
-      map('n', '<leader>tk', ':FloatermKill<CR>', { noremap = true, silent = true, desc = "Kill floaterm" })
-      map('n', '<leader>t]', ':FloatermNext<CR>', { noremap = true, silent = true, desc = "Next floaterm" })
-      map('n', '<leader>t[', ':FloatermPrev<CR>', { noremap = true, silent = true, desc = "Previous floaterm" })
-      
-      -- Open floaterm in specific directories
-      map('n', '<leader>th', function()
-        vim.cmd('FloatermNew --cwd=~')
-      end, { noremap = true, silent = true, desc = "Floaterm in home" })
-      
-      map('n', '<leader>t.', function()
-        vim.cmd('FloatermNew --cwd=' .. vim.fn.expand('%:p:h'))
-      end, { noremap = true, silent = true, desc = "Floaterm in current file's directory" })
-      
-      -- Send current line or selection to floaterm
-      map('n', '<leader>ts', ':FloatermSend<CR>', { noremap = true, silent = true, desc = "Send line to floaterm" })
-      map('v', '<leader>ts', ':FloatermSend<CR>', { noremap = true, silent = true, desc = "Send selection to floaterm" })
-    end,
-  },
-
-  -- LSP Support
-  {
-    "neovim/nvim-lspconfig",
-    dependencies = {
-      "hrsh7th/cmp-nvim-lsp",
-      "hrsh7th/nvim-cmp",
-    },
-    config = function()
-      local lspconfig = require('lspconfig')
-      local capabilities = require('cmp_nvim_lsp').default_capabilities()
-
-      -- Pyright setup
-      lspconfig.pyright.setup({
-        capabilities = capabilities,
-        settings = {
-          python = {
-            analysis = {
-              typeCheckingMode = "standard",
-              autoSearchPaths = true,
-              useLibraryCodeForTypes = true,
-            },
+{ "nvim-tree/nvim-tree.lua",
+  config = function()
+    require("nvim-tree").setup({
+      renderer = {
+        icons = {
+          show = {
+            file = false,
+            folder = false,
+            folder_arrow = false,
+            git = false,
           },
         },
-      })
-
-      -- Clangd setup
-      lspconfig.clangd.setup({
-        capabilities = capabilities,
-        cmd = {
-          "clangd",
-          "--background-index",
-          "--clang-tidy",
-          "--completion-style=detailed",
-          "--header-insertion=iwyu",
+        indent_markers = {
+          enable = true,
+          icons = {
+            corner = "└──",
+            edge = "│",
+            item = "├──",
+            none = " ",
+          },
         },
+      },
+    })
+  end,
+},
+
+{ "nvim-telescope/telescope.nvim",
+  dependencies = { "nvim-lua/plenary.nvim" },
+  config = function()
+    local builtin = require("telescope.builtin")
+    map("n", "<leader>ff", builtin.find_files)
+    map("n", "<leader>fg", builtin.live_grep)
+    map("n", "<leader>fb", builtin.buffers)
+    map("n", "<leader>fh", builtin.help_tags)
+    
+    -- Add more telescope pickers for navigation
+    map("n", "<leader>fd", function() 
+      builtin.find_files({ cwd = vim.fn.expand("%:p:h") }) 
+    end, { desc = "Find files in current directory" })
+    
+    map("n", "<leader>fc", function()
+      builtin.find_files({ 
+        prompt_title = "Change Directory",
+        find_command = {'fd', '--type', 'd', '--hidden', '--exclude', '.git'},
+        attach_mappings = function(prompt_bufnr, map)
+          local actions = require('telescope.actions')
+          local action_state = require('telescope.actions.state')
+          
+          actions.select_default:replace(function()
+            actions.close(prompt_bufnr)
+            local selection = action_state.get_selected_entry()
+            if selection then
+              vim.cmd('cd ' .. selection[1])
+              print('Changed directory to: ' .. selection[1])
+            end
+          end)
+          return true
+        end,
       })
+    end, { desc = "Change directory with telescope" })
+  end,
+},
 
-      -- LSP keybindings
-      local opts = { noremap = true, silent = true }
-      map('n', 'gD', vim.lsp.buf.declaration, opts)
-      map('n', 'gd', vim.lsp.buf.definition, opts)
-      map('n', 'K', vim.lsp.buf.hover, opts)
-      map('n', 'gf', auto_fix, opts)
-      -- Diagnostic navigation
-      map('n', '[d', vim.diagnostic.goto_prev, opts)
-      map('n', ']d', vim.diagnostic.goto_next, opts)
-    end,
-  },
-  {
-    'Julian/lean.nvim',
-    event = { 'BufReadPre *.lean', 'BufNewFile *.lean' },
-
-    dependencies = {
-      'neovim/nvim-lspconfig',
-      'nvim-lua/plenary.nvim',
+{ "folke/which-key.nvim",
+  event = "VeryLazy",
+  opts = {},
+  keys = {
+    { "<leader>?",
+      function() require("which-key").show({ global = false }) end,
+      desc = "Buffer Local Keymaps (which-key)",
     },
-
-    ---@type lean.Config
-    opts = { -- see below for full configuration options
-      mappings = true,
-    }
   },
+},
+
+-- Floaterm
+{ 
+  "voldikss/vim-floaterm",
+  config = function()
+    -- Floaterm settings
+    vim.g.floaterm_width = 0.9
+    vim.g.floaterm_height = 0.9
+    vim.g.floaterm_position = 'center'
+    vim.g.floaterm_title = ' Terminal '
+    
+    -- Don't auto close when job exits (so you can see output)
+    vim.g.floaterm_autoclose = 0
+    
+    -- VS Code style toggle with Ctrl-`
+    map({'n', 't', 'i'}, '<C-`>', '<Cmd>FloatermToggle<CR>', { noremap = true, silent = true })
+    
+    -- Additional floaterm keybindings
+    map('n', '<leader>tn', ':FloatermNew<CR>', { noremap = true, silent = true, desc = "New floaterm" })
+    map('n', '<leader>tt', ':FloatermToggle<CR>', { noremap = true, silent = true, desc = "Toggle floaterm" })
+    map('n', '<leader>tk', ':FloatermKill<CR>', { noremap = true, silent = true, desc = "Kill floaterm" })
+    map('n', '<leader>t]', ':FloatermNext<CR>', { noremap = true, silent = true, desc = "Next floaterm" })
+    map('n', '<leader>t[', ':FloatermPrev<CR>', { noremap = true, silent = true, desc = "Previous floaterm" })
+    
+    -- Open floaterm in specific directories
+    map('n', '<leader>th', function()
+      vim.cmd('FloatermNew --cwd=~')
+    end, { noremap = true, silent = true, desc = "Floaterm in home" })
+    
+    map('n', '<leader>t.', function()
+      vim.cmd('FloatermNew --cwd=' .. vim.fn.expand('%:p:h'))
+    end, { noremap = true, silent = true, desc = "Floaterm in current file's directory" })
+    
+    -- Send current line or selection to floaterm
+    map('n', '<leader>ts', ':FloatermSend<CR>', { noremap = true, silent = true, desc = "Send line to floaterm" })
+    map('v', '<leader>ts', ':FloatermSend<CR>', { noremap = true, silent = true, desc = "Send selection to floaterm" })
+  end,
+},
+
+-- LSP Support
+{
+  "neovim/nvim-lspconfig",
+  dependencies = {
+    "hrsh7th/cmp-nvim-lsp",
+    "hrsh7th/nvim-cmp",
+  },
+  config = function()
+    local lspconfig = require('lspconfig')
+    local capabilities = require('cmp_nvim_lsp').default_capabilities()
+
+    -- Pyright setup
+    lspconfig.pyright.setup({
+      capabilities = capabilities,
+      settings = {
+        python = {
+          analysis = {
+            typeCheckingMode = "standard",
+            autoSearchPaths = true,
+            useLibraryCodeForTypes = true,
+          },
+        },
+      },
+    })
+
+    -- Clangd setup
+    lspconfig.clangd.setup({
+      capabilities = capabilities,
+      cmd = {
+        "clangd",
+        "--background-index",
+        "--clang-tidy",
+        "--completion-style=detailed",
+        "--header-insertion=iwyu",
+      },
+    })
+
+    -- LSP keybindings
+    local opts = { noremap = true, silent = true }
+    map('n', 'gD', vim.lsp.buf.declaration, opts)
+    map('n', 'gd', vim.lsp.buf.definition, opts)
+    map('n', 'K', vim.lsp.buf.hover, opts)
+    -- Diagnostic navigation
+    map('n', '[d', vim.diagnostic.goto_prev, opts)
+    map('n', ']d', vim.diagnostic.goto_next, opts)
+  end,
+},
+{
+  'Julian/lean.nvim',
+  event = { 'BufReadPre *.lean', 'BufNewFile *.lean' },
+
+  dependencies = {
+    'neovim/nvim-lspconfig',
+    'nvim-lua/plenary.nvim',
+  },
+
+  ---@type lean.Config
+  opts = { -- see below for full configuration options
+    mappings = true,
+  }
+},
 })
 
 -- disable error higlighting in markdown
