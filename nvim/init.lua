@@ -63,6 +63,22 @@ map('n', '<leader>r', ':set relativenumber!<CR>', { noremap = true, silent = tru
 map('n','<leader>t2',function()set_tab_width(2)end,{noremap=true,silent=true})
 map('n','<leader>t4',function()set_tab_width(4)end,{noremap=true,silent=true})
 
+-- CWD Management
+map('n', '<leader>cd', ':cd %:p:h<CR>:pwd<CR>', { noremap = true, silent = false, desc = "cd to current file's directory" })
+map('n', '<leader>cD', ':cd ..<CR>:pwd<CR>', { noremap = true, silent = false, desc = "cd to parent directory" })
+map('n', '<leader>cr', ':cd -<CR>:pwd<CR>', { noremap = true, silent = false, desc = "cd to previous directory" })
+map('n', '<leader>cp', ':pwd<CR>', { noremap = true, silent = false, desc = "print working directory" })
+
+-- Terminal mode mappings (applies to all terminals, including floaterm)
+map('t', '<C-[>', '<C-\\><C-n>', { noremap = true, silent = true })
+map('t', '<Esc>', '<C-\\><C-n>', { noremap = true, silent = true })
+
+-- Better terminal window navigation from terminal mode
+map('t', '<C-w>h', '<C-\\><C-n><C-w>h', { noremap = true, silent = true })
+map('t', '<C-w>j', '<C-\\><C-n><C-w>j', { noremap = true, silent = true })
+map('t', '<C-w>k', '<C-\\><C-n><C-w>k', { noremap = true, silent = true })
+map('t', '<C-w>l', '<C-\\><C-n><C-w>l', { noremap = true, silent = true })
+
 local function setup_symbols(symbols)
   for trigger, symbol in pairs(symbols) do
     vim.keymap.set('i', '\\' .. trigger, symbol, {buffer = true})
@@ -236,6 +252,32 @@ require("lazy").setup({
       map("n", "<leader>fg", builtin.live_grep)
       map("n", "<leader>fb", builtin.buffers)
       map("n", "<leader>fh", builtin.help_tags)
+      
+      -- Add more telescope pickers for navigation
+      map("n", "<leader>fd", function() 
+        builtin.find_files({ cwd = vim.fn.expand("%:p:h") }) 
+      end, { desc = "Find files in current directory" })
+      
+      map("n", "<leader>fc", function()
+        builtin.find_files({ 
+          prompt_title = "Change Directory",
+          find_command = {'fd', '--type', 'd', '--hidden', '--exclude', '.git'},
+          attach_mappings = function(prompt_bufnr, map)
+            local actions = require('telescope.actions')
+            local action_state = require('telescope.actions.state')
+            
+            actions.select_default:replace(function()
+              actions.close(prompt_bufnr)
+              local selection = action_state.get_selected_entry()
+              if selection then
+                vim.cmd('cd ' .. selection[1])
+                print('Changed directory to: ' .. selection[1])
+              end
+            end)
+            return true
+          end,
+        })
+      end, { desc = "Change directory with telescope" })
     end,
   },
 
@@ -248,6 +290,45 @@ require("lazy").setup({
         desc = "Buffer Local Keymaps (which-key)",
       },
     },
+  },
+
+  -- Floaterm
+  { 
+    "voldikss/vim-floaterm",
+    config = function()
+      -- Floaterm settings
+      vim.g.floaterm_width = 0.8
+      vim.g.floaterm_height = 0.8
+      vim.g.floaterm_position = 'center'
+      vim.g.floaterm_borderchars = '─│─│╭╮╯╰'
+      vim.g.floaterm_title = ' Terminal '
+      
+      -- Don't auto close when job exits (so you can see output)
+      vim.g.floaterm_autoclose = 0
+      
+      -- VS Code style toggle with Ctrl-`
+      map({'n', 't', 'i'}, '<C-`>', '<Cmd>FloatermToggle<CR>', { noremap = true, silent = true })
+      
+      -- Additional floaterm keybindings
+      map('n', '<leader>tn', ':FloatermNew<CR>', { noremap = true, silent = true, desc = "New floaterm" })
+      map('n', '<leader>tt', ':FloatermToggle<CR>', { noremap = true, silent = true, desc = "Toggle floaterm" })
+      map('n', '<leader>tk', ':FloatermKill<CR>', { noremap = true, silent = true, desc = "Kill floaterm" })
+      map('n', '<leader>t]', ':FloatermNext<CR>', { noremap = true, silent = true, desc = "Next floaterm" })
+      map('n', '<leader>t[', ':FloatermPrev<CR>', { noremap = true, silent = true, desc = "Previous floaterm" })
+      
+      -- Open floaterm in specific directories
+      map('n', '<leader>th', function()
+        vim.cmd('FloatermNew --cwd=~')
+      end, { noremap = true, silent = true, desc = "Floaterm in home" })
+      
+      map('n', '<leader>t.', function()
+        vim.cmd('FloatermNew --cwd=' .. vim.fn.expand('%:p:h'))
+      end, { noremap = true, silent = true, desc = "Floaterm in current file's directory" })
+      
+      -- Send current line or selection to floaterm
+      map('n', '<leader>ts', ':FloatermSend<CR>', { noremap = true, silent = true, desc = "Send line to floaterm" })
+      map('v', '<leader>ts', ':FloatermSend<CR>', { noremap = true, silent = true, desc = "Send selection to floaterm" })
+    end,
   },
 
   -- LSP Support
@@ -319,5 +400,26 @@ vim.api.nvim_create_autocmd("FileType", {
   pattern = "markdown",
   callback = function()
     vim.cmd("highlight link markdownError NONE")
+  end,
+})
+
+-- Auto enter insert mode when opening terminal
+vim.api.nvim_create_autocmd("TermOpen", {
+  pattern = "*",
+  callback = function()
+    vim.cmd("startinsert")
+    -- Also set local options for terminal buffers
+    vim.opt_local.number = false
+    vim.opt_local.relativenumber = false
+    vim.opt_local.signcolumn = "no"
+  end,
+})
+
+-- Detect if we're running inside neovim terminal and set env var
+vim.api.nvim_create_autocmd("TermOpen", {
+  pattern = "*",
+  callback = function()
+    vim.fn.setenv("NVIM_LISTEN_ADDRESS", vim.v.servername)
+    vim.fn.setenv("NVIM", vim.fn.getpid())
   end,
 })

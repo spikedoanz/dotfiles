@@ -14,10 +14,6 @@ local act = wezterm.action
 local themes = {
     'Rosé Pine (base16)',
     'Rosé Pine Dawn (base16)',
---  'GruvboxDark',
---  'GruvboxLight',
---  'catppuccin-mocha',
---  'catppuccin-latte',
 }
 
 local current_theme_index = 1
@@ -48,7 +44,9 @@ c.keys = {
   { key = 'm', mods = 'CMD', action = wezterm.action.DisableDefaultAssignment, },
   { key = 'h', mods = 'CMD', action = wezterm.action.DisableDefaultAssignment, },
   { key = 'l', mods = 'CMD', action = wezterm.action.DisableDefaultAssignment, },
-  --------------------------------------------------------------------------------------------
+  { key = 'f', mods = 'CMD', action = wezterm.action.DisableDefaultAssignment, },
+  -----------------------------------------------------------------------------
+  { key = 'f', mods = 'CMD', action = wezterm.action.TogglePaneZoomState },
   { key = "]", mods = "CMD", action = act.SplitVertical({ domain = "CurrentPaneDomain" }) },
   { key = "[", mods = "CMD", action = act.SplitHorizontal({ domain = "CurrentPaneDomain" }) },
   -- Theme cycling
