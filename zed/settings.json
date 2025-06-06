@@ -1,34 +1,30 @@
-// Zed settings
+// Zed keymap
 //
-// For information on how to configure Zed, see the Zed
-// documentation: https://zed.dev/docs/configuring-zed //
-// To see all of Zed's default settings without changing your
-// custom settings, run `zed: open default settings` from the
-// command palette (cmd-shift-p / ctrl-shift-p)
-{
-  "telemetry": {
-    "diagnostics": false,
-    "metrics": false
-  },
-  "vim_mode": true,
-  "ui_font_size": 14,
-  "buffer_font_size": 14,
-  "lsp": {
-    "pyright": {
-      "settings": {
-        "python.analysis": {
-          "diagnosticMode": "workspace",
-          "typeCheckingMode": "off"
-        },
-        "python": {
-          "pythonPath": ".venv/bin/python"
-        }
-      }
+// For information on binding keys, see the Zed
+// documentation: https://zed.dev/docs/key-bindings
+//
+// To see the default key bindings run `zed: open default keymap`
+// from the command palette.
+[
+  {
+    "context": "Workspace",
+    "bindings": {
+      //
     }
   },
-  "theme": {
-    "mode": "system",
-    "light": "Gruvbox Dark",
-    "dark": "One Dark"
+
+  {
+    "context": "Editor && vim_mode == normal && !menu",
+    "bindings": {
+      // "j k": ["workspace::SendKeystrokes", "escape"]
+      "g d": "editor::GoToDeclaration",
+      "g t": "editor::GoToTypeDefinition",
+      "g .": "editor::ToggleCodeActions",
+      "[ d": "editor::GoToPreviousDiagnostic",
+      "] d": "editor::GoToDiagnostic",
+      "space f f": "file_finder::Toggle",
+      "spsace f c": "workspace::Open",
+      "ctrl-b": "project_panel::ToggleFocus"
+    }
   }
-}
+]

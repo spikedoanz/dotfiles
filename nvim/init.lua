@@ -44,12 +44,16 @@ end
 local map = vim.keymap.set
 vim.g.mapleader = " "
 
+-- backspace hurts my fingers
+map('i', '<C-h>', '<BS>', { noremap = true, silent = true })
+map('i', '<C-S-H>', '<C-w>', { noremap = true, silent = true })
+
 map("n","<C-b>",":NvimTreeToggle<CR>",{silent=true})
 
-map({'n','i','v'},'<C-J>','10j',{noremap=true,silent=true})
-map({'n','i','v'},'<C-K>','10k',{noremap=true,silent=true})
-map({'n','i','v'},'<C-H>','_',{noremap=true,silent=true})
-map({'n','i','v'},'<C-L>','$',{noremap=true,silent=true})
+map({'n','v'},'<C-J>','10j',{noremap=true,silent=true})
+map({'n','v'},'<C-K>','10k',{noremap=true,silent=true})
+map({'n','v'},'<C-H>','_',{noremap=true,silent=true})
+map({'n','v'},'<C-L>','$',{noremap=true,silent=true})
 
 map('n', '<leader>n', ':set number!<CR>', { noremap = true, silent = true })
 map('n', '<leader>r', ':set relativenumber!<CR>', { noremap = true, silent = true })
@@ -82,43 +86,6 @@ end
 -- split behavior
 vim.opt.splitright = true  
 vim.opt.splitbelow = true  
-
--- Native indentation guides
-opt.list = true
-opt.listchars = {
-  leadmultispace = "│ ", -- Show vertical lines for indentation
-  tab = "│ ",           -- Show vertical lines for tabs
-  trail = "·",          -- Show trailing spaces
-}
-
--- Set up colorful indentation guide colors using ANSI colors
-vim.cmd([[
-  highlight IndentGuide1 ctermfg=1
-  highlight IndentGuide2 ctermfg=2
-  highlight IndentGuide3 ctermfg=3
-  highlight IndentGuide4 ctermfg=4
-  highlight IndentGuide5 ctermfg=5
-  highlight IndentGuide6 ctermfg=6
-  highlight IndentGuide7 ctermfg=7
-  highlight IndentGuide8 ctermfg=8
-]])
-
--- Function to cycle through indent colors
-local function setup_indent_colors()
-  local colors = {"IndentGuide1", "IndentGuide2", "IndentGuide3", "IndentGuide4", 
-                  "IndentGuide5", "IndentGuide6", "IndentGuide7", "IndentGuide8"}
-  
-  -- Set up match patterns for different indentation levels
-  for i = 1, 8 do
-    local pattern = string.rep("  ", i) .. "\\zs "
-    vim.fn.matchadd(colors[i], pattern)
-  end
-end
-
--- Apply indent colors after plugins load
-vim.api.nvim_create_autocmd("VimEnter", {
-  callback = setup_indent_colors
-})
 
 
 -- Define symbols by category
@@ -422,6 +389,7 @@ require("lazy").setup({
     mappings = true,
   }
 },
+{ 'vuciv/golf' },
 })
 
 -- disable error higlighting in markdown

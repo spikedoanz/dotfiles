@@ -17,7 +17,8 @@ cfg() {
 # source                              dest                file
 cfg ~/.config/nvim/init.lua           nvim                init.lua
 cfg ~/.config/wezterm/wezterm.lua     wezterm             wezterm.lua 
-cfg ~/.config/zed                     zed                 settings.json
+cfg ~/.config/zed/settings.json       zed                 settings.json
+cfg ~/.config/zed/keymap.json         zed                 settings.json
 cfg ~/.config/karabiner/karabiner.json karabiner          karabiner.json
 cfg ~/.aerospace.toml                 aerospace           .aerospace.toml
 

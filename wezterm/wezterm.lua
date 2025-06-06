@@ -45,6 +45,9 @@ c.keys = {
   { key = 'h', mods = 'CMD', action = wezterm.action.DisableDefaultAssignment, },
   { key = 'l', mods = 'CMD', action = wezterm.action.DisableDefaultAssignment, },
   { key = 'f', mods = 'CMD', action = wezterm.action.DisableDefaultAssignment, },
+  { key = 'h', mods = 'CTRL', action = wezterm.action.DisableDefaultAssignment, },
+  { key = 'h', mods = 'CTRL|SHIFT', action = wezterm.action.DisableDefaultAssignment, },
+  -----------------------------------------------------------------------------
   -----------------------------------------------------------------------------
   { key = 'f', mods = 'CMD', action = wezterm.action.TogglePaneZoomState },
   { key = "]", mods = "CMD", action = act.SplitVertical({ domain = "CurrentPaneDomain" }) },
@@ -68,7 +71,7 @@ c.keys = {
   { key = 'u', mods = 'ALT', action = act.CopyMode 'ClearPattern' },
 }
 -- Appearance
--- c.font = wezterm.font('JetBrainsMono Nerd Font Mono')
+---  c.font = wezterm.font('SF Mono')
 c.font_size = 18
 c.window_padding = {
   left = 0,
