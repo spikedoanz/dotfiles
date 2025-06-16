@@ -12,14 +12,15 @@ local act = wezterm.action
 
 -- Theme switching
 local themes = {
-    'Rosé Pine (base16)',
-    'Rosé Pine Dawn (base16)',
+    'Pastel White (terminal.sexy)',
+    'Paper (Gogh)',
 }
 
 local current_theme_index = 1
 local last_switch_time = 0
 c.color_scheme = themes[current_theme_index]
 c.front_end = "WebGpu"
+
 local function cycle_theme()
   return wezterm.action_callback(function(window, pane)
     local current_time = os.time()
@@ -48,7 +49,6 @@ c.keys = {
   { key = 'h', mods = 'CTRL', action = wezterm.action.DisableDefaultAssignment, },
   { key = 'h', mods = 'CTRL|SHIFT', action = wezterm.action.DisableDefaultAssignment, },
   -----------------------------------------------------------------------------
-  -----------------------------------------------------------------------------
   { key = 'f', mods = 'CMD', action = wezterm.action.TogglePaneZoomState },
   { key = "]", mods = "CMD", action = act.SplitVertical({ domain = "CurrentPaneDomain" }) },
   { key = "[", mods = "CMD", action = act.SplitHorizontal({ domain = "CurrentPaneDomain" }) },
@@ -71,7 +71,7 @@ c.keys = {
   { key = 'u', mods = 'ALT', action = act.CopyMode 'ClearPattern' },
 }
 -- Appearance
----  c.font = wezterm.font('SF Mono')
+--  c.font = wezterm.font('SF Mono')
 c.font_size = 18
 c.window_padding = {
   left = 0,
@@ -79,6 +79,17 @@ c.window_padding = {
   top = 0,
   bottom = 0,
 }
+
+c.colors = {
+  tab_bar = {
+    background    = '#000000',
+    active_tab    = { bg_color = '#111111', fg_color = '#ffffff', },
+    inactive_tab  = { bg_color = '#000000', fg_color = '#888888', },
+    new_tab       = { bg_color = '#000000', fg_color = '#000000', },
+  },
+}
+
+c.window_decorations = "RESIZE"
 c.use_fancy_tab_bar = false
 c.hide_tab_bar_if_only_one_tab = true
 c.enable_wayland = false

@@ -216,6 +216,18 @@ end, { noremap = true, silent = true })
 
 -- plugins
 require("lazy").setup({
+{
+  "nvim-treesitter/nvim-treesitter",
+  build = ":TSUpdate",
+  config = function()
+    require("nvim-treesitter.configs").setup({
+      ensure_installed = { "markdown", "markdown_inline" },
+      highlight = {
+        enable = true,
+      },
+    })
+  end,
+},
 { "nvim-tree/nvim-tree.lua",
   config = function()
     require("nvim-tree").setup({
@@ -392,13 +404,6 @@ require("lazy").setup({
 { 'vuciv/golf' },
 })
 
--- disable error higlighting in markdown
-vim.api.nvim_create_autocmd("FileType", {
-  pattern = "markdown",
-  callback = function()
-    vim.cmd("highlight link markdownError NONE")
-  end,
-})
 
 -- Auto enter insert mode when opening terminal
 vim.api.nvim_create_autocmd("TermOpen", {
