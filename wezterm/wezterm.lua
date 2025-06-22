@@ -9,11 +9,10 @@ if wezterm.config_builder then
   c:set_strict_mode(true)
 end
 local act = wezterm.action
-
 -- Theme switching
 local themes = {
-    'Pastel White (terminal.sexy)',
-    'Paper (Gogh)',
+  'rose-pine',
+  'rose-pine-dawn',
 }
 
 local current_theme_index = 1

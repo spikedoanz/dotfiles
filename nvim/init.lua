@@ -216,18 +216,6 @@ end, { noremap = true, silent = true })
 
 -- plugins
 require("lazy").setup({
-{
-  "nvim-treesitter/nvim-treesitter",
-  build = ":TSUpdate",
-  config = function()
-    require("nvim-treesitter.configs").setup({
-      ensure_installed = { "markdown", "markdown_inline" },
-      highlight = {
-        enable = true,
-      },
-    })
-  end,
-},
 { "nvim-tree/nvim-tree.lua",
   config = function()
     require("nvim-tree").setup({
@@ -346,9 +334,65 @@ require("lazy").setup({
   dependencies = {
     "hrsh7th/cmp-nvim-lsp",
     "hrsh7th/nvim-cmp",
+    "hrsh7th/cmp-buffer",      -- Buffer completions
+    "hrsh7th/cmp-path",        -- Path completions
+    "hrsh7th/cmp-cmdline",     -- Cmdline completions
+    "L3MON4D3/LuaSnip",        -- Snippet engine
+    "saadparwaiz1/cmp_luasnip", -- Snippet completions
   },
   config = function()
     local lspconfig = require('lspconfig')
+    local cmp = require('cmp')
+    local luasnip = require('luasnip')
+    
+    -- nvim-cmp setup
+    cmp.setup({
+      snippet = {
+        expand = function(args)
+          luasnip.lsp_expand(args.body)
+        end,
+      },
+      mapping = cmp.mapping.preset.insert({
+        ['<C-b>'] = cmp.mapping.scroll_docs(-4),
+        ['<C-f>'] = cmp.mapping.scroll_docs(4),
+        ['<C-Space>'] = cmp.mapping.complete(),
+        ['<C-e>'] = cmp.mapping.abort(),
+        ['<CR>'] = cmp.mapping.confirm({ select = true }),
+        -- Tab/Shift-Tab to navigate through completion items
+        ['<Tab>'] = cmp.mapping.select_next_item(),
+        ['<S-Tab>'] = cmp.mapping.select_prev_item(),
+      }),
+      sources = cmp.config.sources({
+        { name = 'nvim_lsp' },
+        { name = 'luasnip' },
+      }, {
+        { name = 'buffer' },
+        { name = 'path' },
+      }),
+      -- Disable completion menu from automatically showing
+      completion = {
+        autocomplete = false,  -- This disables auto-popup
+      },
+    })
+
+    -- Use buffer source for `/` and `?`
+    cmp.setup.cmdline({ '/', '?' }, {
+      mapping = cmp.mapping.preset.cmdline(),
+      sources = {
+        { name = 'buffer' }
+      }
+    })
+
+    -- Use cmdline & path source for ':'
+    cmp.setup.cmdline(':', {
+      mapping = cmp.mapping.preset.cmdline(),
+      sources = cmp.config.sources({
+        { name = 'path' }
+      }, {
+        { name = 'cmdline' }
+      })
+    })
+
     local capabilities = require('cmp_nvim_lsp').default_capabilities()
 
     -- Pyright setup
@@ -404,6 +448,13 @@ require("lazy").setup({
 { 'vuciv/golf' },
 })
 
+-- disable error higlighting in markdown
+vim.api.nvim_create_autocmd("FileType", {
+  pattern = "markdown",
+  callback = function()
+    vim.cmd("highlight link markdownError NONE")
+  end,
+})
 
 -- Auto enter insert mode when opening terminal
 vim.api.nvim_create_autocmd("TermOpen", {
