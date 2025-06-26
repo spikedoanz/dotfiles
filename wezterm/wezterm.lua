@@ -11,8 +11,8 @@ end
 local act = wezterm.action
 -- Theme switching
 local themes = {
-  'rose-pine',
-  'rose-pine-dawn',
+  'Cloud (terminal.sexy)',
+  'Rosé Pine Dawn (Gogh)',
 }
 
 local current_theme_index = 1
@@ -48,7 +48,7 @@ c.keys = {
   { key = 'h', mods = 'CTRL', action = wezterm.action.DisableDefaultAssignment, },
   { key = 'h', mods = 'CTRL|SHIFT', action = wezterm.action.DisableDefaultAssignment, },
   -----------------------------------------------------------------------------
-  { key = 'f', mods = 'CMD', action = wezterm.action.TogglePaneZoomState },
+  { key = 'z', mods = 'CMD', action = wezterm.action.TogglePaneZoomState },
   { key = "]", mods = "CMD", action = act.SplitVertical({ domain = "CurrentPaneDomain" }) },
   { key = "[", mods = "CMD", action = act.SplitHorizontal({ domain = "CurrentPaneDomain" }) },
   -- Theme cycling
