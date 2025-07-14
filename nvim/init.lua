@@ -328,6 +328,7 @@ require("lazy").setup({
   end,
 },
 
+
 -- LSP Support
 {
   "neovim/nvim-lspconfig",
