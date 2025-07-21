@@ -335,10 +335,10 @@ require("lazy").setup({
   dependencies = {
     "hrsh7th/cmp-nvim-lsp",
     "hrsh7th/nvim-cmp",
-    "hrsh7th/cmp-buffer",      -- Buffer completions
-    "hrsh7th/cmp-path",        -- Path completions
-    "hrsh7th/cmp-cmdline",     -- Cmdline completions
-    "L3MON4D3/LuaSnip",        -- Snippet engine
+    "hrsh7th/cmp-buffer",       -- Buffer completions
+    "hrsh7th/cmp-path",         -- Path completions
+    "hrsh7th/cmp-cmdline",      -- Cmdline completions
+    "L3MON4D3/LuaSnip",         -- Snippet engine
     "saadparwaiz1/cmp_luasnip", -- Snippet completions
   },
   config = function()
@@ -396,7 +396,7 @@ require("lazy").setup({
 
     local capabilities = require('cmp_nvim_lsp').default_capabilities()
 
-    -- Pyright setup
+    -- AUTO :: Pyright setup
     lspconfig.pyright.setup({
       capabilities = capabilities,
       settings = {
@@ -410,7 +410,7 @@ require("lazy").setup({
       },
     })
 
-    -- Clangd setup
+    -- AUTO :: Clangd setup
     lspconfig.clangd.setup({
       capabilities = capabilities,
       cmd = {
@@ -421,43 +421,39 @@ require("lazy").setup({
         "--header-insertion=iwyu",
       },
     })
+    lspconfig.marksman.setup({
+      capabilities = capabilities,
+    })
 
-    -- LSP keybindings
     local opts = { noremap = true, silent = true }
-    map('n', 'gD', vim.lsp.buf.declaration, opts)
-    map('n', 'gd', vim.lsp.buf.definition, opts)
-    map('n', 'K', vim.lsp.buf.hover, opts)
-    -- Diagnostic navigation
-    map('n', '[d', vim.diagnostic.goto_prev, opts)
-    map('n', ']d', vim.diagnostic.goto_next, opts)
+    map('n', 'gD', vim.lsp.buf.declaration, opts)   -- BINDING :: [g]oto [D]efinition
+    map('n', 'gd', vim.lsp.buf.definition, opts)    -- BINDING :: [g]oto [d]efinition
+    map('n', '[d', vim.diagnostic.goto_prev, opts)  -- BINDING :: [[]next [d]iagnostic
+    map('n', ']d', vim.diagnostic.goto_next, opts)  -- BINDING :: []]last [d]iagnostic 
+    map('n', 'K', vim.lsp.buf.hover, opts)          -- BINDING :: hover
   end,
 },
-{
-  'Julian/lean.nvim',
-  event = { 'BufReadPre *.lean', 'BufNewFile *.lean' },
-
-  dependencies = {
-    'neovim/nvim-lspconfig',
-    'nvim-lua/plenary.nvim',
-  },
-
-  ---@type lean.Config
-  opts = { -- see below for full configuration options
-    mappings = true,
-  }
-},
-{ 'vuciv/golf' },
 })
+-- BINDING :: [d]irectory [r]elative
+vim.keymap.set('n', '<leader>dr', function() 
+  vim.fn.setreg('+', vim.fn.expand('%'))
+end, { desc = 'Copy relative path' })
 
--- disable error higlighting in markdown
-vim.api.nvim_create_autocmd("FileType", {
-  pattern = "markdown",
+-- BINDING :: [d]irectory [a]bsolute
+vim.keymap.set('n', '<leader>da', function() 
+  vim.fn.setreg('+', vim.fn.expand('%'))
+end, { desc = 'Copy relative path' })
+
+-- AUTO :: detect if we're running inside neovim terminal and set env var
+vim.api.nvim_create_autocmd("TermOpen", {
+  pattern = "*",
   callback = function()
-    vim.cmd("highlight link markdownError NONE")
+    vim.fn.setenv("NVIM_LISTEN_ADDRESS", vim.v.servername)
+    vim.fn.setenv("NVIM", vim.fn.getpid())
   end,
 })
 
--- Auto enter insert mode when opening terminal
+-- AUTO :: enter insert mode when opening terminal
 vim.api.nvim_create_autocmd("TermOpen", {
   pattern = "*",
   callback = function()
@@ -469,11 +465,10 @@ vim.api.nvim_create_autocmd("TermOpen", {
   end,
 })
 
--- Detect if we're running inside neovim terminal and set env var
-vim.api.nvim_create_autocmd("TermOpen", {
-  pattern = "*",
+-- AUTO :: disable error higlighting in markdown
+vim.api.nvim_create_autocmd("FileType", {
+  pattern = "markdown",
   callback = function()
-    vim.fn.setenv("NVIM_LISTEN_ADDRESS", vim.v.servername)
-    vim.fn.setenv("NVIM", vim.fn.getpid())
+    vim.cmd("highlight link markdownError NONE")
   end,
 })
