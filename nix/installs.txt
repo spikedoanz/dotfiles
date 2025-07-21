@@ -1,0 +1,17 @@
+ascii-image-converter-1.13.1
+bat-0.25.0
+btop-1.4.3
+eza-0.21.3
+fzf-0.62.0
+gitingest-0.1.4
+marksman-2024-12-18
+neofetch-unstable-2021-12-10
+neovim-0.11.1
+pyright-1.1.399
+ripgrep-14.1.1
+ruff-0.11.11
+runpodctl-1.14.4
+tmux-3.5a
+tokei-13.0.0-alpha.8
+uv-0.7.8
+visidata-3.1.1
