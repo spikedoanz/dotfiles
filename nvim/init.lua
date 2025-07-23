@@ -20,6 +20,14 @@ opt.swapfile = false
 opt.backup = false
 opt.writebackup = false
 
+-- Share status line with cmd line
+opt.cmdheight = 0             -- Make command line float (requires Neovim 0.8+)
+opt.laststatus = 3            -- Global statusline
+
+-- Make statusline blend with background
+vim.cmd("highlight StatusLine cterm=NONE ctermbg=NONE ctermfg=NONE gui=NONE guibg=NONE guifg=NONE")
+vim.cmd("highlight StatusLineNC cterm=NONE ctermbg=NONE ctermfg=NONE gui=NONE guibg=NONE guifg=NONE")
+
 -- persistent undo
 local undodir = vim.fn.stdpath("data") .. "/undodir"
 if not vim.fn.isdirectory(undodir) then
@@ -27,6 +35,7 @@ if not vim.fn.isdirectory(undodir) then
 end
 
 vim.cmd("highlight Comment ctermfg=3 gui=none")
+
 
 opt.undofile = true        -- Enable persistent undo
 opt.undodir = undodir      -- Set undo directory

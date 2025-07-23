@@ -11,7 +11,8 @@ end
 local act = wezterm.action
 -- Theme switching
 local themes = {
-  'Cloud (terminal.sexy)',
+--  'Cloud (terminal.sexy)',
+  'Rosé Pine (Gogh)',
   'Rosé Pine Dawn (Gogh)',
 }
 
@@ -70,8 +71,7 @@ c.keys = {
   { key = 'u', mods = 'ALT', action = act.CopyMode 'ClearPattern' },
 }
 -- Appearance
---  c.font = wezterm.font('SF Mono')
-c.font_size = 18
+c.font_size = 30
 c.window_padding = {
   left = 0,
   right = 0,
