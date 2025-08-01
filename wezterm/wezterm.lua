@@ -9,11 +9,11 @@ if wezterm.config_builder then
   c:set_strict_mode(true)
 end
 local act = wezterm.action
+
 -- Theme switching
 local themes = {
---  'Cloud (terminal.sexy)',
-  'Rosé Pine (Gogh)',
-  'Rosé Pine Dawn (Gogh)',
+  'Cloud (terminal.sexy)',
+  'Paper (Gogh)',
 }
 
 local current_theme_index = 1
@@ -49,7 +49,7 @@ c.keys = {
   { key = 'h', mods = 'CTRL', action = wezterm.action.DisableDefaultAssignment, },
   { key = 'h', mods = 'CTRL|SHIFT', action = wezterm.action.DisableDefaultAssignment, },
   -----------------------------------------------------------------------------
-  { key = 'z', mods = 'CMD', action = wezterm.action.TogglePaneZoomState },
+  { key = 'f', mods = 'CMD', action = wezterm.action.TogglePaneZoomState },
   { key = "]", mods = "CMD", action = act.SplitVertical({ domain = "CurrentPaneDomain" }) },
   { key = "[", mods = "CMD", action = act.SplitHorizontal({ domain = "CurrentPaneDomain" }) },
   -- Theme cycling
@@ -71,7 +71,8 @@ c.keys = {
   { key = 'u', mods = 'ALT', action = act.CopyMode 'ClearPattern' },
 }
 -- Appearance
-c.font_size = 30
+--  c.font = wezterm.font('SF Mono')
+c.font_size = 18
 c.window_padding = {
   left = 0,
   right = 0,

@@ -453,6 +453,17 @@ vim.keymap.set('n', '<leader>da', function()
   vim.fn.setreg('+', vim.fn.expand('%'))
 end, { desc = 'Copy relative path' })
 
+-- BINDING :: [c]olor [c]olumn
+map('n', '<leader>cc', function()
+  if vim.opt.colorcolumn:get()[1] then
+    vim.opt.colorcolumn = ""
+    print("Colorcolumn off")
+  else
+    vim.opt.colorcolumn = "80"
+    print("Colorcolumn on")
+  end
+end, { noremap = true, silent = false, desc = "Toggle colorcolumn" })
+
 -- AUTO :: detect if we're running inside neovim terminal and set env var
 vim.api.nvim_create_autocmd("TermOpen", {
   pattern = "*",
