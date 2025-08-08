@@ -1,7 +1,7 @@
 ########################
 ## spike's nix config ##
 ########################
-{ config, pkgs, ... }:
+{ config, pkgs, lib,... }:
 {
   imports = [ ./hardware-configuration.nix ./cachix.nix ];
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
@@ -18,7 +18,13 @@
       efi.canTouchEfiVariables = true;
     };
     supportedFilesystems = [ "ntfs" ];
-    extraModulePackages = [ config.boot.kernelPackages.nvidia_x11 ];
+    #extraModulePackages = [ config.boot.kernelPackages.nvidia_x11 ];
+    extraModulePackages = [];
+    kernel.sysctl = {
+      "kernel.sysrq" = 1; # REISUB
+      "vm.swappiness" = 60;  # Default swappiness
+      "vm.vfs_cache_pressure" = 100;
+    };
   };
 
   fileSystems."/media/hdd0" = {
@@ -26,6 +32,12 @@
     fsType = "ntfs-3g";
     options = [ "defaults" ];
   };
+  swapDevices = [ 
+    { 
+      device = "/var/swapfile";  # Use /var instead of root
+      size = 16384;  # Increase to 16GB for better headroom
+    }
+  ];
 
   # Hardware configuration
   hardware = {
@@ -40,7 +52,7 @@
       powerManagement.enable = true;
       open = false;
       nvidiaSettings = true;
-      package = config.boot.kernelPackages.nvidiaPackages.stable;
+      package = config.boot.kernelPackages.nvidiaPackages.latest;
     };
     bluetooth = {
       enable = true;
@@ -61,7 +73,6 @@
         dates = "weekly";
       };
       enableOnBoot = true;
-
     };
 
     # QEMU/KVM configuration
@@ -78,20 +89,6 @@
       onBoot = "ignore";
       onShutdown = "shutdown";
     };
-
-    # Podman configuration (alternative to Docker)
-    podman = {
-      enable = true;
-      defaultNetwork.settings = {
-        dns_enabled = true;
-      };
-    };
-
-    # Waydroid for Android apps (optional)
-    waydroid.enable = true;
-
-    # Add Spice support for virtual machines
-    spiceUSBRedirection.enable = true;
   };
 
   powerManagement = {
@@ -122,11 +119,6 @@
         emoji = [ "Noto Color Emoji" ]; # For emojis
       };
 
-      hinting = {
-        enable = true;
-        style = "slight";
-      };
-
       subpixel = {
         rgba = "rgb"; # Subpixel rendering for LCD screens
         lcdfilter = "default"; # Default LCD filter
@@ -136,6 +128,10 @@
       useEmbeddedBitmaps = true; # Use embedded bitmaps in fonts
       allowBitmaps = true; # Allow bitmap fonts
     };
+  };
+
+  environment.shellAliases = {
+    dockerrun = "docker run --device=nvidia.com/gpu=all";
   };
 
   # Environment variables for font rendering
@@ -150,11 +146,13 @@
     QT_IM_MODULE = "fcitx";
     XMODIFIERS = "@im=fcitx";
     SDL_IM_MODULE = "fcitx";
+
+    CUDA_HOME = "${pkgs.cudaPackages.cudatoolkit}";
+    CUDA_PATH = "${pkgs.cudaPackages.cudatoolkit}";
+    LD_LIBRARY_PATH = lib.mkDefault "${pkgs.cudaPackages.cudatoolkit}/lib:${pkgs.cudaPackages.cudnn}/lib:$LD_LIBRARY_PATH";
+    XLA_FLAGS = "--xla_gpu_cuda_data_dir=${pkgs.cudaPackages.cudatoolkit}";
   };
 
-  environment.shellAliases = {
-    dockerrun = "docker run --device=nvidia.com/gpu=all";
-  };
 
   # System packages
   environment.systemPackages = with pkgs; [
@@ -173,16 +171,16 @@
     lxappearance
     pavucontrol
     bluetuith
+    magic-wormhole
+    signal-desktop
+    patchelf
 
     # CUDA/OpenCL
     cudaPackages.cuda_cudart
+    cudaPackages.cudatoolkit
     cudaPackages.cuda_nvcc
     cudaPackages.cudnn
-    cudatoolkit
-    ocl-icd
-    opencl-headers
-    clinfo
-    nvtopPackages.nvidia
+    libuv
 
     # Gaming
     steam
@@ -195,54 +193,37 @@
     zip unzip eza lsof htop ncdu xclip
     rofi pass gnupg pinentry-curses neovim
     yazi neofetch busybox texliveTeTeX
-    xzoom
+    xzoom pandoc
+    claude-code
+    tmux via
+
 
     # Apps
-    wezterm ghostty firefox syncthing
-    zathura zed-editor nemo obsidian
+    wezterm ghostty chromium firefox syncthing
+    zathura nemo obsidian
     vscode ollama
 
     # Media
     ffmpeg gimp mpv obs-studio qbittorrent
     inkscape
 
-    # Python (with CUDA support)
-    (python312.withPackages (ps: with ps; [
-      requests
-      numpy
-      pandas
-      pillow
-      pytorch-bin
-      torchvision-bin
-      jupyterlab
-      matplotlib
-      einops
-      pytest
-      pip
-      pyarrow
-      h5py
-      scikit-learn
-      selenium
-      tiktoken
-      bottle
-      tinygrad
-      opencv4
-      nibabel
-      flask
-
-      scikit-image
-      transformers
-      datasets
-      wandb
-    ]))
+    # Python 
+    uv
     pyright
-    nodejs_23
+    python312
 
-    # Development tools
+    # JS
+    nodejs_24
+
+    # C
     gcc clang cmake gnumake
     ghc julia elan
-    sqlite
 
+    # Zig
+    zig
+
+    # Misc
+    sqlite
     qemu
     virt-manager
   ];
@@ -260,16 +241,17 @@
 
   # Services
   services = {
-    pulseaudio = {
+    udev.packages = with pkgs; [
+      via
+    ];
+    tailscale = { enable=true;};
+    pipewire = {
       enable = true;
-      package = pkgs.pulseaudioFull;
-      support32Bit = true;
-      extraConfig = ''
-        # Force A2DP profile
-        load-module module-bluetooth-policy auto_switch=false
-        load-module module-bluetooth-discover headset=off
-      '';
+      alsa.enable = true;
+      alsa.support32Bit = true;
+      jack.enable = true;   # For audio applications that use JACK
     };
+
     logind = {
       lidSwitch = "ignore";
       extraConfig = ''
@@ -279,13 +261,12 @@
         IdleAction=ignore
       '';
     };
+
     mullvad-vpn.enable = true;
     displayManager.defaultSession = "none+i3";
     libinput.enable = true;
     libinput.touchpad.disableWhileTyping = true;
 
-    # Disable PipeWire
-    pipewire.enable = false;
 
     blueman.enable = true;
     xserver = {
