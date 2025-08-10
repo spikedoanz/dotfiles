@@ -1,4 +1,5 @@
 PS1='%F{green}%n@%m%f:%F{cyan}%~%f § '
+#PS1='\[\033[32m\]\u@\h\[\033[0m\]:\[\033[36m\]\w\[\033[0m\] § '
 source <(fzf --zsh)
 alias cat='bat -p --paging=never'
 if command -v eza >/dev/null 2>&1; then

@@ -1,6 +1,6 @@
 ########################
 ## spike's nix config ##
-########################
+######################## 
 { config, pkgs, lib,... }:
 {
   imports = [ ./hardware-configuration.nix ./cachix.nix ];
@@ -18,12 +18,15 @@
       efi.canTouchEfiVariables = true;
     };
     supportedFilesystems = [ "ntfs" ];
-    #extraModulePackages = [ config.boot.kernelPackages.nvidia_x11 ];
     extraModulePackages = [];
     kernel.sysctl = {
-      "kernel.sysrq" = 1; # REISUB
-      "vm.swappiness" = 60;  # Default swappiness
-      "vm.vfs_cache_pressure" = 100;
+      "kernel.sysrq" = 1;
+      "vm.swappiness" = 10;
+      "vm.vfs_cache_pressure" = 50;
+      "vm.dirty_ratio" = 15;
+      "vm.dirty_background_ratio" = 5;
+      "vm.overcommit_memory" = 2;
+      "vm.overcommit_ratio" = 80;
     };
   };
 
@@ -32,6 +35,7 @@
     fsType = "ntfs-3g";
     options = [ "defaults" ];
   };
+
   swapDevices = [ 
     { 
       device = "/var/swapfile";  # Use /var instead of root
@@ -52,7 +56,7 @@
       powerManagement.enable = true;
       open = false;
       nvidiaSettings = true;
-      package = config.boot.kernelPackages.nvidiaPackages.latest;
+      package = config.boot.kernelPackages.nvidiaPackages.stable;
     };
     bluetooth = {
       enable = true;
@@ -181,12 +185,19 @@
     cudaPackages.cuda_nvcc
     cudaPackages.cudnn
     libuv
+    nvitop
 
     # Gaming
     steam
     wineWowPackages.stable
     winetricks
     lutris
+    # gaming compatibility
+    vkd3d
+    vkd3d-proton
+    vulkan-tools
+    vulkan-loader
+    vulkan-validation-layers
 
     # General
     bash zsh git ripgrep tree curl fzf
@@ -222,6 +233,12 @@
     # Zig
     zig
 
+    # Gleam
+    gleam glas
+    
+    # Erlang
+    erlang_28
+
     # Misc
     sqlite
     qemu
@@ -230,7 +247,7 @@
 
   # Networking
   networking = {
-    hostName = "nixos";
+    hostName = "clinky";
     networkmanager.enable = true;
     firewall.enable = true;
     extraHosts = ''
@@ -277,7 +294,7 @@
         package = pkgs.i3;
         extraPackages = with pkgs; [ i3status i3lock ];
       };
-      xkb.layout = "us";
+      xkb = { layout = "us"; };
     };
 
     syncthing = {
@@ -299,6 +316,12 @@
       settings = {
         glx-no-stencil = true;
         glx-no-rebind-pixmap = true;
+        unredir-if-possible = true;           # Add this
+        detect-transient = true;              # Add this
+        detect-client-leader = true;          # Add this
+        glx-use-copysubbuffer-mesa = false;  # Add this
+        glx-copy-from-front = false;         # Add this
+        glx-swap-method = 2;                  # Add this
       };
     };
 
@@ -334,6 +357,7 @@
   };
 
   programs = {
+    mosh.enable = true;
     nix-ld = {
       enable = true;
       libraries = with pkgs; [

@@ -36,6 +36,7 @@ client.unfocused        $darkgray $darkgray $lightgray $darkgray $darkgray
 client.urgent           $red $red $white $red $red
 
 font pango:JetBrainsMono Nerd Font Mono 10
+focus_follows_mouse no
 
 # system startup
 exec --no-startup-id dex --autostart --environment i3
@@ -43,6 +44,7 @@ exec --no-startup-id xss-lock --transfer-sleep-lock -- i3lock --nofork
 exec --no-startup-id nm-applet
 exec_always --no-startup-id feh --bg-fill ~/.wallpaper.png
 exec --no-startup-id xrandr --output HDMI-0 --mode 1920x1080 --rate 144
+exec --no-startup-id xset s off -dpms
 set $refresh_i3status killall -SIGUSR1 i3status
 
 # volume controls
@@ -161,6 +163,3 @@ bindsym $mod+semicolon mode "resize"
 bindsym Mod4+Tab focus right
 bindsym Mod4+Shift+Tab focus left
 bindsym Print exec --no-startup-id flameshot gui
-bindsym $mod+equal exec xzoom
-bindsym $mod+minus exec xzoom -out
-bindsym $mod+Alt+0 exec xzoom -reset

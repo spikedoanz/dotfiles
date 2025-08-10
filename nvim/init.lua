@@ -5,7 +5,8 @@ local opt = vim.opt
 
 -- editor settings
 opt.number = false
-opt.expandtab = true opt.shiftwidth = 2
+opt.expandtab = true 
+opt.shiftwidth = 2
 opt.tabstop = 2
 opt.signcolumn = "no"
 opt.shortmess:append("I")
@@ -225,6 +226,43 @@ end, { noremap = true, silent = true })
 
 -- plugins
 require("lazy").setup({
+-- Tree-sitter for syntax highlighting
+{
+  "nvim-treesitter/nvim-treesitter",
+  build = ":TSUpdate",
+  config = function()
+    require("nvim-treesitter.configs").setup({
+      -- Install parsers synchronously (only applied to `ensure_installed`)
+      sync_install = false,
+      
+      -- Automatically install missing parsers when entering buffer
+      auto_install = true,
+      
+      -- List of parsers to install (or "all")
+      ensure_installed = {
+        "lua",
+        "python", 
+        "c",
+        "cpp",
+        "gleam",  -- Add gleam here
+        "vim",
+        "vimdoc",
+        "markdown",
+        "json",
+      },
+      
+      highlight = {
+        enable = true,
+        -- Setting this to true will run `:h syntax` and tree-sitter at the same time.
+        additional_vim_regex_highlighting = false,
+      },
+      
+      indent = {
+        enable = true
+      },
+    })
+  end,
+},
 { "nvim-tree/nvim-tree.lua",
   config = function()
     require("nvim-tree").setup({
@@ -363,11 +401,6 @@ require("lazy").setup({
         end,
       },
       mapping = cmp.mapping.preset.insert({
-        ['<C-b>'] = cmp.mapping.scroll_docs(-4),
-        ['<C-f>'] = cmp.mapping.scroll_docs(4),
-        ['<C-Space>'] = cmp.mapping.complete(),
-        ['<C-e>'] = cmp.mapping.abort(),
-        ['<CR>'] = cmp.mapping.confirm({ select = true }),
         -- Tab/Shift-Tab to navigate through completion items
         ['<Tab>'] = cmp.mapping.select_next_item(),
         ['<S-Tab>'] = cmp.mapping.select_prev_item(),
@@ -430,9 +463,12 @@ require("lazy").setup({
         "--header-insertion=iwyu",
       },
     })
-    lspconfig.marksman.setup({
+
+    -- AUTO :: Gleam setup
+    lspconfig.gleam.setup({
       capabilities = capabilities,
     })
+
 
     local opts = { noremap = true, silent = true }
     map('n', 'gD', vim.lsp.buf.declaration, opts)   -- BINDING :: [g]oto [D]efinition
@@ -450,8 +486,8 @@ end, { desc = 'Copy relative path' })
 
 -- BINDING :: [d]irectory [a]bsolute
 vim.keymap.set('n', '<leader>da', function() 
-  vim.fn.setreg('+', vim.fn.expand('%'))
-end, { desc = 'Copy relative path' })
+  vim.fn.setreg('+', vim.fn.expand('%:p'))
+end, { desc = 'Copy absolute path' })
 
 -- BINDING :: [c]olor [c]olumn
 map('n', '<leader>cc', function()
