@@ -337,44 +337,16 @@ require("lazy").setup({
   },
 },
 
--- Floaterm
-{ 
-  "voldikss/vim-floaterm",
-  config = function()
-    -- Floaterm settings
-    vim.g.floaterm_width = 0.9
-    vim.g.floaterm_height = 0.9
-    vim.g.floaterm_position = 'center'
-    vim.g.floaterm_title = ' Terminal '
-    
-    -- Don't auto close when job exits (so you can see output)
-    vim.g.floaterm_autoclose = 0
-    
-    -- VS Code style toggle with Ctrl-`
-    map({'n', 't', 'i'}, '<C-`>', '<Cmd>FloatermToggle<CR>', { noremap = true, silent = true })
-    
-    -- Additional floaterm keybindings
-    map('n', '<leader>tn', ':FloatermNew<CR>', { noremap = true, silent = true, desc = "New floaterm" })
-    map('n', '<leader>tt', ':FloatermToggle<CR>', { noremap = true, silent = true, desc = "Toggle floaterm" })
-    map('n', '<leader>tk', ':FloatermKill<CR>', { noremap = true, silent = true, desc = "Kill floaterm" })
-    map('n', '<leader>t]', ':FloatermNext<CR>', { noremap = true, silent = true, desc = "Next floaterm" })
-    map('n', '<leader>t[', ':FloatermPrev<CR>', { noremap = true, silent = true, desc = "Previous floaterm" })
-    
-    -- Open floaterm in specific directories
-    map('n', '<leader>th', function()
-      vim.cmd('FloatermNew --cwd=~')
-    end, { noremap = true, silent = true, desc = "Floaterm in home" })
-    
-    map('n', '<leader>t.', function()
-      vim.cmd('FloatermNew --cwd=' .. vim.fn.expand('%:p:h'))
-    end, { noremap = true, silent = true, desc = "Floaterm in current file's directory" })
-    
-    -- Send current line or selection to floaterm
-    map('n', '<leader>ts', ':FloatermSend<CR>', { noremap = true, silent = true, desc = "Send line to floaterm" })
-    map('v', '<leader>ts', ':FloatermSend<CR>', { noremap = true, silent = true, desc = "Send selection to floaterm" })
-  end,
+-- activitywatch
+"lowitea/aw-watcher.nvim",
+opts = {  -- required, but can be empty table: {}
+    -- add any options here
+    -- for example:
+    aw_server = {
+        host = "127.0.0.1",
+        port = 5600,
+    },
 },
-
 
 -- LSP Support
 {

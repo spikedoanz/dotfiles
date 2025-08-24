@@ -12,8 +12,10 @@ local act = wezterm.action
 
 -- Theme switching
 local themes = {
-  'Rosé Pine Moon (base16)',
-  'Rosé Pine Dawn (base16)',
+  'Catppuccin Mocha',
+  'Catppuccin Latte',
+  --'Rosé Pine Moon (base16)',
+  --'Rosé Pine Dawn (base16)',
   --'Cloud (terminal.sexy)',
   --'Paper (Gogh)',
 }
