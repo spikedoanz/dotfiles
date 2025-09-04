@@ -22,8 +22,8 @@ opt.backup = false
 opt.writebackup = false
 
 -- Share status line with cmd line
-opt.cmdheight = 0             -- Make command line float (requires Neovim 0.8+)
-opt.laststatus = 3            -- Global statusline
+--opt.cmdheight = 0             -- Make command line float (requires Neovim 0.8+)
+--opt.laststatus = 3            -- Global statusline
 
 -- Make statusline blend with background
 vim.cmd("highlight StatusLine cterm=NONE ctermbg=NONE ctermfg=NONE gui=NONE guibg=NONE guifg=NONE")
@@ -504,4 +504,41 @@ vim.api.nvim_create_autocmd("FileType", {
   callback = function()
     vim.cmd("highlight link markdownError NONE")
   end,
+})
+
+-- Plan language syntax highlighting with custom colors
+vim.api.nvim_create_autocmd({"BufRead", "BufNewFile"}, {
+  pattern = "*.plan",
+  callback = function()
+    vim.bo.filetype = "plan"
+    
+    -- Define syntax rules
+    vim.cmd([[
+      syn match planHeader "^#\+\s.*$"
+      syn match planMinorDivider "^-\{3,\}$"
+      syn match planMajorDivider "^=\{3,\}$"
+      
+      syn match planTodo    "^\s*-\s.*$"
+      syn match planDone    "^\s*\*\s.*$"
+      syn match planQuestion "^\s*?\s.*$"
+      syn match planAnswered "^\s*!\s.*$"
+      syn match planNote     "^\s*>\s.*$"
+      
+      " Headers
+      hi def link planHeader Title
+      hi def link planMinorDivider Comment
+      hi def link planMajorDivider Comment
+      
+      " Bright, active items (using terminal colors)
+      hi planTodo ctermfg=1                " Bright white
+      hi planQuestion ctermfg=6           " Bright yellow
+      
+      " Dimmed completed items  
+      hi planDone ctermfg=8                " Gray/dimmed
+      hi planAnswered ctermfg=8            " Gray/dimmed
+      
+      " Notes same as comments
+      hi planNote ctermfg=8                " Inherits your comment color (yellow from line 35)
+    ]])
+  end
 })
