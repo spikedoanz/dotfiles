@@ -512,17 +512,23 @@ vim.api.nvim_create_autocmd({"BufRead", "BufNewFile"}, {
   callback = function()
     vim.bo.filetype = "plan"
     
-    -- Define syntax rules
+    -- Define syntax rules with regions for multi-line support
     vim.cmd([[
+      " Clear any existing syntax
+      syn clear
+      
+      " Headers and dividers (highest priority)
       syn match planHeader "^#\+\s.*$"
       syn match planMinorDivider "^-\{3,\}$"
       syn match planMajorDivider "^=\{3,\}$"
       
-      syn match planTodo    "^\s*-\s.*$"
-      syn match planDone    "^\s*\*\s.*$"
-      syn match planQuestion "^\s*?\s.*$"
-      syn match planAnswered "^\s*!\s.*$"
-      syn match planNote     "^\s*>\s.*$"
+      " Define regions that continue until the next item or divider
+      " Each region starts with its marker and continues on indented/continuation lines
+      syn region planTodo start="^\s*-\s" end="^\s*[-*?!>#]"me=s-1 end="^-\{3,\}"me=s-1 end="^=\{3,\}"me=s-1
+      syn region planDone start="^\s*\*\s" end="^\s*[-*?!>#]"me=s-1 end="^-\{3,\}"me=s-1 end="^=\{3,\}"me=s-1
+      syn region planQuestion start="^\s*?\s" end="^\s*[-*?!>#]"me=s-1 end="^-\{3,\}"me=s-1 end="^=\{3,\}"me=s-1
+      syn region planAnswered start="^\s*!\s" end="^\s*[-*?!>#]"me=s-1 end="^-\{3,\}"me=s-1 end="^=\{3,\}"me=s-1
+      syn region planNote start="^\s*>\s" end="^\s*[-*?!>#]"me=s-1 end="^-\{3,\}"me=s-1 end="^=\{3,\}"me=s-1
       
       " Headers
       hi def link planHeader Title
@@ -531,14 +537,14 @@ vim.api.nvim_create_autocmd({"BufRead", "BufNewFile"}, {
       
       " Bright, active items (using terminal colors)
       hi planTodo ctermfg=1                " Bright white
-      hi planQuestion ctermfg=6           " Bright yellow
+      hi planQuestion ctermfg=6             " Bright yellow
       
       " Dimmed completed items  
       hi planDone ctermfg=8                " Gray/dimmed
       hi planAnswered ctermfg=8            " Gray/dimmed
       
       " Notes same as comments
-      hi planNote ctermfg=8                " Inherits your comment color (yellow from line 35)
+      hi planNote ctermfg=8                " Gray/dimmed (comment color)
     ]])
   end
 })
