@@ -15,6 +15,7 @@ cfg() {
 }
 
 # source                              dest                file
+cfg ~/.zshrc                          .                   .zshrc
 cfg ~/.config/nvim/init.lua           nvim                init.lua
 cfg ~/.config/wezterm/wezterm.lua     wezterm             wezterm.lua 
 cfg ~/.config/zed/settings.json       zed                 settings.json
