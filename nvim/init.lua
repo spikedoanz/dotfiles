@@ -386,7 +386,6 @@ opts = {  -- required, but can be empty table: {}
     "saadparwaiz1/cmp_luasnip", -- Snippet completions
   },
   config = function()
-    local lspconfig = require('lspconfig')
     local cmp = require('cmp')
     local luasnip = require('luasnip')
     
@@ -440,8 +439,19 @@ opts = {  -- required, but can be empty table: {}
 
     local capabilities = require('cmp_nvim_lsp').default_capabilities()
 
-    -- AUTO :: Pyright setup
-    lspconfig.pyright.setup({
+    -- Pyright configuration
+    vim.lsp.config('pyright', {
+      cmd = { 'pyright-langserver', '--stdio' },
+      filetypes = { 'python' },
+      root_markers = { 
+        'pyproject.toml', 
+        'setup.py', 
+        'setup.cfg', 
+        'requirements.txt', 
+        'Pipfile', 
+        'pyrightconfig.json', 
+        '.git' 
+      },
       capabilities = capabilities,
       settings = {
         python = {
@@ -454,9 +464,8 @@ opts = {  -- required, but can be empty table: {}
       },
     })
 
-    -- AUTO :: Clangd setup
-    lspconfig.clangd.setup({
-      capabilities = capabilities,
+    -- Clangd configuration
+    vim.lsp.config('clangd', {
       cmd = {
         "clangd",
         "--background-index",
@@ -464,14 +473,31 @@ opts = {  -- required, but can be empty table: {}
         "--completion-style=detailed",
         "--header-insertion=iwyu",
       },
-    })
-
-    -- AUTO :: Gleam setup
-    lspconfig.gleam.setup({
+      filetypes = { 'c', 'cpp', 'objc', 'objcpp' },
+      root_markers = { 
+        '.clangd', 
+        '.clang-tidy', 
+        '.clang-format', 
+        'compile_commands.json', 
+        'compile_flags.txt', 
+        'configure.ac',
+        '.git' 
+      },
       capabilities = capabilities,
     })
 
+    -- Gleam configuration
+    vim.lsp.config('gleam', {
+      cmd = { 'gleam', 'lsp' },
+      filetypes = { 'gleam' },
+      root_markers = { 'gleam.toml', '.git' },
+      capabilities = capabilities,
+    })
 
+    -- Enable the configured LSP servers
+    vim.lsp.enable({ 'pyright', 'clangd', 'gleam' })
+
+    -- LSP keymaps (unchanged)
     local opts = { noremap = true, silent = true }
     map('n', 'gD', vim.lsp.buf.declaration, opts)   -- BINDING :: [g]oto [D]efinition
     map('n', 'gd', vim.lsp.buf.definition, opts)    -- BINDING :: [g]oto [d]efinition
