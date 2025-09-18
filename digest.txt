@@ -1,0 +1,2819 @@
+Directory structure:
+└── dotfiles/
+    ├── README
+    ├── copy.sh
+    ├── .aerospace.toml
+    ├── .bashrc
+    ├── .shrc
+    ├── .zshrc
+    ├── aerospace/
+    │   └── .aerospace.toml
+    ├── i3/
+    │   ├── config
+    │   ├── i3/
+    │   │   └── config
+    │   └── i3status/
+    │       └── config
+    ├── nix/
+    │   ├── configuration.nix
+    │   ├── installs.txt
+    │   ├── shell.nix
+    │   ├── home-manager/
+    │   │   └── home.nix
+    │   └── laptop/
+    │       ├── configuration.nix
+    │       └── home-manager/
+    │           └── home.nix
+    ├── nvim/
+    │   ├── init.lua
+    │   └── lazy-lock.json
+    ├── scripts/
+    ├── tmux/
+    │   └── tmux.conf
+    ├── wezterm/
+    │   └── wezterm.lua
+    └── zed/
+        └── settings.json
+
+================================================
+File: README
+================================================
+        # this is out of date
+        ███████╗██████╗ ██╗██╗  ██╗███████╗ ███████╗
+        ██╔════╝██╔══██╗██║██║ ██╔╝██╔════╝ ██╔════╝
+        ███████╗██████╔╝██║█████╔╝ █████╗   ███████╗
+        ╚════██║██╔═══╝ ██║██╔═██╗ ██╔══╝   ╚════██║
+        ███████║██║     ██║██║  ██╗███████╗ ███████║
+        ╚══════╝╚═╝     ╚═╝╚═╝  ╚═╝╚══════╝ ╚══════╝
+  ██████╗  ██████╗ ████████╗███████╗██╗██╗     ███████╗███████╗
+  ██╔══██╗██╔═══██╗╚══██╔══╝██╔════╝██║██║     ██╔════╝██╔════╝
+  ██║  ██║██║   ██║   ██║   █████╗  ██║██║     █████╗  ███████╗
+  ██║  ██║██║   ██║   ██║   ██╔══╝  ██║██║     ██╔══╝  ╚════██║
+  ██████╔╝╚██████╔╝   ██║   ██║     ██║███████╗███████╗███████║
+  ╚═════╝  ╚═════╝    ╚═╝   ╚═╝     ╚═╝╚══════╝╚══════╝╚══════╝
+
+  ┌─ ▼ OVERVIEW─────────────────────────────────────────────┐
+  │ OS:       nixos                                         │
+  │ WM:       i3                                            │
+  │ Terminal: ghostty                                       │
+  │ Shell:    zsh                                           │
+  │ Editors:  neovim                                        │
+  │ Theme:    gruvbox                                       │
+  │ Font:     jetbrains mono nerd font                      │
+  └─────────────────────────────────────────────────────────┘
+
+  ┌─ ▼ FILE STRUCTURE ──────────────────────────────────────┐
+  │ /etc/nixos/configuration.nix                            │
+  │ ~/.config/                                              │
+  │ ├── i3/config                                           │
+  │ ├── nvim/init.lua                                       │
+  │ └── wezterm/wezterm.lua                                 │
+  └─────────────────────────────────────────────────────────┘
+
+  ┌──▼ SYSTEM UTILITIES─────────────────────────────────────┐
+  │ Network Management: nmtui                               │
+  │ Brightness Control: brightnessctl                       │
+  │ Audio:              pipewire + pulseaudio               │
+  │ Screenshot:         flameshot                           │
+  │ File Management:    yazi, syncthing                     │
+  └─────────────────────────────────────────────────────────┘
+
+  ┌──▼ SYSTEM SERVICES──────────────────────────────────────┐
+  │ POWER MANAGEMENT                                        │
+  │ ├── tlp:                    battery optimization        │
+  │ ├── thermald:               temperature control         │
+  │ ├── auto-cpufreq:           cpu frequency scaling       │
+  │ └── power-profiles-daemon:  power management            │
+  │                                                         │
+  │ SYSTEM MAINTENANCE                                      │
+  │ ├── Garbage Collection:    weekly                       │
+  │ ├── TRIM:                  weekly (ssd optimization)    │
+  │ ├── Health Monitoring:     smartd                       │
+  │ └── Updates:               automatic security patches   │
+  │                                                         │
+  │ SECURITY                                                │
+  │ ├── Firewall:              enabled by default           │
+  │ ├── GPG Agent:             configured for runtime       │
+  │ ├── SSH Agent:             configured for runtime       │
+  │ └── Syncthing:             secure default configuration │
+  └─────────────────────────────────────────────────────────┘
+
+┌──▼ KEYBINDS─────────────────────────────────────────────────┐
+│                                                             │
+│ ┌─────────────────────────────────────────────────────────┐ │
+│ │                                                         │ │
+│ │ MOD is reserved for window manager                      │ │
+│ │ ALT is reserved for client applications                 │ │
+│ │ CTL is reserved for apps inside apps                    │ │
+│ │                                                         │ │
+│ └─────────────────────────────────────────────────────────┘ │
+│                                                             │
+│                                                             │
+│ ┌─ ▼ WINDOW MANAGER (i3) ─────────────────────────────────┐ │
+│ │                                                         │ │
+│ │ Mod Key = Super (Windows Key)                           │ │
+│ │                                                         │ │
+│ │ Core Operations                                         │ │
+│ │ mod + shift + return    terminal                        │ │
+│ │ mod + shift + q         kill window                     │ │
+│ │ mod + p                 application launcher            │ │
+│ │ mod + d                 window switcher                 │ │
+│ │ mod + shift + c         reload i3 config                │ │
+│ │ mod + shift + r         restart i3                      │ │
+│ │ mod + shift + escape    exit i3                         │ │
+│ │                                                         │ │
+│ │ Window Navigation                                       │ │
+│ │ mod + h                 focus left                      │ │
+│ │ mod + j                 focus down                      │ │
+│ │ mod + k                 focus up                        │ │
+│ │ mod + l                 focus right                     │ │
+│ │ mod + shift + h         move window left                │ │
+│ │ mod + shift + j         move window down                │ │
+│ │ mod + shift + k         move window up                  │ │
+│ │ mod + shift + l         move window right               │ │
+│ │                                                         │ │
+│ │ Layout Control                                          │ │
+│ │ mod + shift + o         split horizontal                │ │
+│ │ mod + shift + i         split vertical                  │ │
+│ │ mod + f                 toggle fullscreen               │ │
+│ │ mod + shift + space     toggle floating                 │ │
+│ │ mod + space             toggle focus floating/tiling    │ │
+│ │                                                         │ │
+│ │ Layout Modes                                            │ │
+│ │ mod + s                 layout: stacking                │ │
+│ │ mod + w                 layout: tabbed                  │ │
+│ │ mod + e                 layout: toggle split            │ │
+│ │                                                         │ │
+│ │ Resize Mode (mod + semicolon)                           │ │
+│ │     h                   shrink width                    │ │
+│ │     j                   grow height                     │ │
+│ │     k                   shrink height                   │ │
+│ │     l                   grow width                      │ │
+│ │     return/escape       exit resize mode                │ │
+│ │                                                         │ │
+│ │ Workspace Management                                    │ │
+│ │ mod + [0-9]            switch to workspace              │ │
+│ │ mod + shift + [0-9]    move window to workspace         │ │
+│ │                                                         │ │
+│ │ Hardware Controls                                       │ │
+│ │ XF86AudioRaiseVolume    volume up                       │ │
+│ │ XF86AudioLowerVolume    volume down                     │ │
+│ │ XF86AudioMute           toggle mute                     │ │
+│ │ XF86AudioMicMute        toggle mic mute                 │ │
+│ │ XF86MonBrightnessUp     brightness up                   │ │
+│ │ XF86MonBrightnessDown   brightness down                 │ │
+│ │ Print                   screenshot (flameshot)          │ │
+│ └─────────────────────────────────────────────────────────┘ │
+│                                                             │
+│                                                             │
+│ ┌─ ▼ TERMINAL (WEZTERM) ──────────────────────────────────┐ │
+│ │ Pane Management                                         │ │
+│ │ alt + -                split vertically                 │ │
+│ │ alt + =                split horizontally               │ │
+│ │ alt + q                close pane                       │ │
+│ │ alt + t                cycle theme                      │ │
+│ │                                                         │ │
+│ │ Navigation & Resizing                                   │ │
+│ │ alt + h                focus/resize left                │ │
+│ │ alt + j                focus/resize down                │ │
+│ │ alt + k                focus/resize up                  │ │
+│ │ alt + l                focus/resize right               │ │
+│ │                                                         │ │
+│ │ Text Navigation                                         │ │
+│ │ alt + b                word back                        │ │
+│ │ alt + w                word forward                     │ │
+│ │ alt + 0                start of line                    │ │
+│ │ alt + 4/$              end of line                      │ │
+│ │ alt + d                delete word forward              │ │
+│ │ alt + d                delete to end of line            │ │
+│ │ alt + x                delete character                 │ │
+│ │ alt + v                enter copy mode                  │ │
+│ └─────────────────────────────────────────────────────────┘ │
+│                                                             │
+│                                                             │
+│ ┌─ ▼ VIM ─────────────────────────────────────────────────┐ │
+│ │ Leader Key = Space                                      │ │
+│ │                                                         │ │
+│ │ File Navigation                                         │ │
+│ │ <leader>ff             find files                       │ │
+│ │ <leader>fg             live grep                        │ │
+│ │ <leader>fb             browse buffers                   │ │
+│ │ <leader>fh             help tags                        │ │
+│ │                                                         │ │
+│ │ Editor Features                                         │ │
+│ │ <leader>n              toggle line numbers              │ │
+│ │ <leader>r              toggle relative numbers          │ │
+│ │ <leader>t2             set tab width to 2               │ │
+│ │ <leader>t4             set tab width to 4               │ │
+│ │ ctrl + b               toggle file tree                 │ │
+│ │ ctrl + j               move 10 lines down               │ │
+│ │ ctrl + k               move 10 lines up                 │ │
+│ └─────────────────────────────────────────────────────────┘ │
+└─────────────────────────────────────────────────────────────┘
+
+
+
+================================================
+File: copy.sh
+================================================
+#!/bin/sh
+# copies files from local to this directory
+cfg() {
+    local src="$1"
+    local dest_dir="$2"
+    local dest_file="$3"
+    
+    if [ -f "$src" ]; then
+        mkdir -p "$dest_dir"
+        cp "$src" "$dest_dir/$dest_file"
+        echo "✓ Copied $src"
+    else
+        echo "⚠ Warning: $src not found, skipping..."
+    fi
+}
+
+# source                              dest                file
+cfg ~/.zshrc                          .                   .zshrc
+cfg ~/.config/nvim/init.lua           nvim                init.lua
+cfg ~/.config/wezterm/wezterm.lua     wezterm             wezterm.lua 
+cfg ~/.config/zed/settings.json       zed                 settings.json
+cfg ~/.config/zed/keymap.json         zed                 settings.json
+cfg ~/.config/karabiner/karabiner.json karabiner          karabiner.json
+cfg ~/.aerospace.toml                 aerospace           .aerospace.toml
+cfg ~/.config/tmux/tmux.conf          tmux                tmux.conf 
+
+cfg /etc/nixos/configuration.nix      nix                 configuration.nix
+cfg ~/.config/home-manager/home.nix   nix/home-manager    home.nix
+
+cfg ~/.config/i3/config               i3/i3               config
+cfg ~/.config/i3status/config         i3/i3status         config
+
+
+
+================================================
+File: .aerospace.toml
+================================================
+after-login-command = []
+after-startup-command = []
+start-at-login = true
+enable-normalization-flatten-containers = true
+enable-normalization-opposite-orientation-for-nested-containers = true
+accordion-padding = 30
+default-root-container-layout = 'tiles'
+default-root-container-orientation = 'auto'
+on-focused-monitor-changed = ['move-mouse monitor-lazy-center']
+automatically-unhide-macos-hidden-apps = false
+[key-mapping]
+preset = 'qwerty'
+[gaps]
+inner.horizontal = 0
+inner.vertical =   0
+outer.left =       0
+outer.bottom =     0
+outer.top =        0
+outer.right =      0
+[mode.main.binding]
+cmd-shift-y = 'layout tiles horizontal vertical'
+cmd-shift-a = 'layout accordion horizontal vertical'
+cmd-shift-h = 'focus left'
+cmd-shift-j = 'focus down'
+cmd-shift-k = 'focus up'
+cmd-shift-l = 'focus right'
+cmd-shift-minus = 'resize smart -50'
+cmd-shift-equal = 'resize smart +50'
+cmd-shift-1 = 'workspace 1'
+cmd-shift-2 = 'workspace 2'
+cmd-shift-3 = 'workspace 3'
+cmd-shift-4 = 'workspace 4'
+cmd-shift-5 = 'workspace 5'
+cmd-shift-6 = 'workspace 6'
+cmd-shift-7 = 'workspace 7'
+cmd-shift-8 = 'workspace 8'
+cmd-shift-9 = 'workspace 9'
+# see: https://nikitabobko.github.io/aerospace/commands#move-node-to-workspace
+cmd-alt-shift-1 = 'move-node-to-workspace 1'
+cmd-alt-shift-2 = 'move-node-to-workspace 2'
+cmd-alt-shift-3 = 'move-node-to-workspace 3'
+cmd-alt-shift-4 = 'move-node-to-workspace 4'
+cmd-alt-shift-5 = 'move-node-to-workspace 5'
+cmd-alt-shift-6 = 'move-node-to-workspace 6'
+cmd-alt-shift-7 = 'move-node-to-workspace 7'
+cmd-alt-shift-8 = 'move-node-to-workspace 8'
+cmd-alt-shift-9 = 'move-node-to-workspace 9'
+cmd-tab = 'workspace-back-and-forth'
+cmd-shift-tab = 'move-workspace-to-monitor --wrap-around next'
+cmd-shift-semicolon = 'mode service'
+[mode.service.binding]
+esc = ['reload-config', 'mode main']
+r = ['flatten-workspace-tree', 'mode main'] # reset layout
+f = ['layout floating tiling', 'mode main'] # toggle between floating and tiling layout
+backspace = ['close-all-windows-but-current', 'mode main']
+[[on-window-detected]]
+if.app-id = "com.mitchellh.ghostty"
+run = [
+  # FIX: this is a workaround for https://github.com/nikitabobko/AeroSpace/issues/68
+  # this was also observed in:
+  # - https://github.com/ghostty-org/ghostty/issues/1840
+  # - https://github.com/ghostty-org/ghostty/issues/2006
+  "layout floating",
+  "move-node-to-workspace T",
+]
+
+
+
+================================================
+File: .bashrc
+================================================
+if [ -n "$BASH_VERSION" ]; then
+    eval $(ssh-agent -s)
+
+
+
+================================================
+File: .shrc
+================================================
+######################
+## spike's shell rc ##
+######################
+#
+# move into ~/.shrc (or wherever you want)
+# and add "source .shrc" to your .bashrc/.zshrc
+#
+
+# Detect shell and set appropriate prompt
+if [ -n "$ZSH_VERSION" ]; then
+    # Running in zsh
+    PS1="%{%F{blue}%}%2~%{%f%} § "
+    if [[ -z "$SSH_AGENT_PID" ]]; then
+        eval $(ssh-agent -s)
+    fi
+elif [ -n "$BASH_VERSION" ]; then
+    # Running in bash
+    PS1="\[\033[34m\]\W\[\033[0m\] § "
+    eval "$(fzf --bash)"
+    if [ -z "$SSH_AGENT_PID" ]; then
+        eval $(ssh-agent -s)
+    fi
+else
+    echo "Unknown shell type"
+fi
+
+# Set up eza aliases if it exists
+if command -v eza >/dev/null 2>&1; then
+    alias ls='eza'
+    alias ll='eza -l'
+    alias la='eza -a'
+    alias l='eza'
+fi
+
+# Detect OS and set up clipboard aliases
+if [[ "$OSTYPE" == "darwin"* ]]; then
+    # macOS
+    alias copy='pbcopy'
+    alias paste='pbpaste'
+else
+    # Linux/Unix - check for xclip or xsel
+    if command -v xclip >/dev/null 2>&1; then
+        alias copy='xclip -selection clipboard'
+        alias paste='xclip -selection clipboard -o'
+    elif command -v xsel >/dev/null 2>&1; then
+        alias copy='xsel --clipboard --input'
+        alias paste='xsel --clipboard --output'
+    else
+        echo "Neither xclip nor xsel is installed. Please install one of them."
+    fi
+fi
+
+# shorthand
+alias icat='wezterm imgcat'
+alias v='source .venv/bin/activate'
+alias gg='git add . && git commit -m "wp" && git push origin $(git branch --show-current)'
+
+alias ga='git add '
+alias gc='git commit -m '
+alias gp='git push origin $(git branch --show-current)'
+alias gl='git pull'
+alias gb='git branch '
+alias gt='git checkout '
+
+
+
+================================================
+File: .zshrc
+================================================
+######################
+## spike's shell rc ##
+######################
+PS1='%F{green}%n@%m%f:%F{cyan}%~%f § '
+
+source ~/.env
+source <(fzf --zsh)
+. "$HOME/.local/bin/env"
+
+export EDITOR=nvim
+eval "$(zoxide init zsh)"
+if [[ -z "$SSH_AGENT_PID" ]]; then
+    eval $(ssh-agent -s) > /dev/null
+fi
+
+#-------------------------------------------------------------------------------- 
+# clipboard
+if [[ "$OSTYPE" == "darwin"* ]]; then
+    # macOS
+    alias copy='pbcopy'
+    alias paste='pbpaste'
+else
+    # Linux/Unix - check for xclip or xsel
+    if command -v xclip >/dev/null 2>&1; then
+        alias copy='xclip -selection clipboard'
+        alias paste='xclip -selection clipboard -o'
+    elif command -v xsel >/dev/null 2>&1; then
+        alias copy='xsel --clipboard --input'
+        alias paste='xsel --clipboard --output'
+    else
+        echo "Neither xclip nor xsel is installed. Please install one of them."
+    fi
+fi
+
+# ------------------------------------------------------------------------------- 
+# aliases 
+v() {
+    local current_dir="$(pwd)"
+    local search_dir="$current_dir"
+    local max_depth=20
+    local depth=0
+    
+    # Deactivate current venv if active and deactivate function exists
+    if [[ -n "$VIRTUAL_ENV" ]] && command -v deactivate > /dev/null 2>&1; then
+        deactivate
+    fi
+    
+    # Search up the directory tree
+    while [[ "$search_dir" != "/" && $depth -lt $max_depth ]]; do
+        if [[ -f "$search_dir/.venv/bin/activate" ]]; then
+            source "$search_dir/.venv/bin/activate"
+            return 0
+        fi
+        # Move up one directory
+        search_dir="$(dirname "$search_dir")"
+        ((depth++))
+    done
+    
+    return 1
+}
+if command -v eza >/dev/null 2>&1; then
+    alias ls='eza'
+    alias ll='eza -l'
+    alias la='eza -a'
+    alias l='eza'
+fi
+
+alias p='python'
+alias vim='nvim'
+alias cat='bat -p --paging=never'
+
+alias gg='git add . && git commit -m "lazycommit" && git push origin $(git branch --show-current)'
+alias ga='git add '
+alias gc='git commit -m '
+alias gp='git push origin $(git branch --show-current)'
+alias gl='git pull'
+alias gb='git branch '
+alias gt='git checkout '
+
+#================================================================================
+# path
+export PATH="/opt/homebrew/opt/llvm/bin:$PATH"
+PATH="$PATH:/Applications/WezTerm.app/Contents/MacOS"
+export PATH="/opt/homebrew/opt/qt@5/bin:$PATH"
+export PATH="$HOME/.bin/:$PATH"
+
+
+
+================================================
+File: aerospace/.aerospace.toml
+================================================
+# Place a copy of this config to ~/.aerospace.toml
+# After that, you can edit ~/.aerospace.toml to your liking
+
+# You can use it to add commands that run after login to macOS user session.
+# 'start-at-login' needs to be 'true' for 'after-login-command' to work
+# Available commands: https://nikitabobko.github.io/AeroSpace/commands
+after-login-command = []
+
+# You can use it to add commands that run after AeroSpace startup.
+# 'after-startup-command' is run after 'after-login-command'
+# Available commands : https://nikitabobko.github.io/AeroSpace/commands
+after-startup-command = []
+
+# Start AeroSpace at login
+start-at-login = true
+
+# Normalizations. See: https://nikitabobko.github.io/AeroSpace/guide#normalization
+enable-normalization-flatten-containers = true
+enable-normalization-opposite-orientation-for-nested-containers = true
+
+# See: https://nikitabobko.github.io/AeroSpace/guide#layouts
+# The 'accordion-padding' specifies the size of accordion padding
+# You can set 0 to disable the padding feature
+accordion-padding = 30
+
+# Possible values: tiles|accordion
+default-root-container-layout = 'tiles'
+
+# Possible values: horizontal|vertical|auto
+# 'auto' means: wide monitor (anything wider than high) gets horizontal orientation,
+#               tall monitor (anything higher than wide) gets vertical orientation
+default-root-container-orientation = 'auto'
+
+# Mouse follows focus when focused monitor changes
+# Drop it from your config, if you don't like this behavior
+# See https://nikitabobko.github.io/AeroSpace/guide#on-focus-changed-callbacks
+# See https://nikitabobko.github.io/AeroSpace/commands#move-mouse
+# Fallback value (if you omit the key): on-focused-monitor-changed = []
+on-focused-monitor-changed = ['move-mouse monitor-lazy-center']
+
+# You can effectively turn off macOS "Hide application" (cmd-h) feature by toggling this flag
+# Useful if you don't use this macOS feature, but accidentally hit cmd-h or cmd-alt-h key
+# Also see: https://nikitabobko.github.io/AeroSpace/goodies#disable-hide-app
+automatically-unhide-macos-hidden-apps = false
+
+# Possible values: (qwerty|dvorak|colemak)
+# See https://nikitabobko.github.io/AeroSpace/guide#key-mapping
+[key-mapping]
+    preset = 'qwerty'
+
+# Gaps between windows (inner-*) and between monitor edges (outer-*).
+# Possible values:
+# - Constant:     gaps.outer.top = 8
+# - Per monitor:  gaps.outer.top = [{ monitor.main = 16 }, { monitor."some-pattern" = 32 }, 24]
+#                 In this example, 24 is a default value when there is no match.
+#                 Monitor pattern is the same as for 'workspace-to-monitor-force-assignment'.
+#                 See:
+#                 https://nikitabobko.github.io/AeroSpace/guide#assign-workspaces-to-monitors
+[gaps]
+    inner.horizontal = 10
+    inner.vertical =   0
+    outer.left =       0
+    outer.bottom =     0
+    outer.top =        0
+    outer.right =      0
+
+# 'main' binding mode declaration
+# See: https://nikitabobko.github.io/AeroSpace/guide#binding-modes
+# 'main' binding mode must be always presented
+# Fallback value (if you omit the key): mode.main.binding = {}
+[mode.main.binding]
+
+    # All possible keys:
+    # - Letters.        a, b, c, ..., z
+    # - Numbers.        0, 1, 2, ..., 9
+    # - Keypad numbers. keypad0, keypad1, keypad2, ..., keypad9
+    # - F-keys.         f1, f2, ..., f20
+    # - Special keys.   minus, equal, period, comma, slash, backslash, quote, semicolon,
+    #                   backtick, leftSquareBracket, rightSquareBracket, space, enter, esc,
+    #                   backspace, tab, pageUp, pageDown, home, end, forwardDelete,
+    #                   sectionSign (ISO keyboards only, european keyboards only)
+    # - Keypad special. keypadClear, keypadDecimalMark, keypadDivide, keypadEnter, keypadEqual,
+    #                   keypadMinus, keypadMultiply, keypadPlus
+    # - Arrows.         left, down, up, right
+
+    # All possible modifiers: cmd, alt, ctrl, shift
+
+    # All possible commands: https://nikitabobko.github.io/AeroSpace/commands
+
+    # See: https://nikitabobko.github.io/AeroSpace/commands#exec-and-forget
+    # You can uncomment the following lines to open up terminal with alt + enter shortcut
+    # (like in i3)
+    # alt-enter = '''exec-and-forget osascript -e '
+    # tell application "Terminal"
+    #     do script
+    #     activate
+    # end tell'
+    # '''
+
+    # See: https://nikitabobko.github.io/AeroSpace/commands#layout
+    alt-slash = 'layout tiles horizontal vertical'
+    alt-comma = 'layout accordion horizontal vertical'
+
+    # See: https://nikitabobko.github.io/AeroSpace/commands#focus
+    alt-h = 'focus left'
+    alt-j = 'focus down'
+    alt-k = 'focus up'
+    alt-l = 'focus right'
+
+    # See: https://nikitabobko.github.io/AeroSpace/commands#move
+    alt-shift-h = 'move left'
+    alt-shift-j = 'move down'
+    alt-shift-k = 'move up'
+    alt-shift-l = 'move right'
+
+    # See: https://nikitabobko.github.io/AeroSpace/commands#resize
+    alt-minus = 'resize smart -50'
+    alt-equal = 'resize smart +50'
+
+    # See: https://nikitabobko.github.io/AeroSpace/commands#workspace
+    alt-1 = 'workspace 1'
+    alt-2 = 'workspace 2'
+    alt-3 = 'workspace 3'
+    alt-4 = 'workspace 4'
+    alt-5 = 'workspace 5'
+    alt-6 = 'workspace 6'
+    alt-7 = 'workspace 7'
+    alt-8 = 'workspace 8'
+    alt-9 = 'workspace 9'
+
+    alt-q = 'workspace q'
+    alt-w = 'workspace w'
+    alt-e = 'workspace e'
+
+
+    # See: https://nikitabobko.github.io/AeroSpace/commands#move-node-to-workspace
+    alt-shift-1 = 'move-node-to-workspace 1'
+    alt-shift-2 = 'move-node-to-workspace 2'
+    alt-shift-3 = 'move-node-to-workspace 3'
+    alt-shift-4 = 'move-node-to-workspace 4'
+    alt-shift-5 = 'move-node-to-workspace 5'
+    alt-shift-6 = 'move-node-to-workspace 6'
+    alt-shift-7 = 'move-node-to-workspace 7'
+    alt-shift-8 = 'move-node-to-workspace 8'
+    alt-shift-9 = 'move-node-to-workspace 9'
+    alt-shift-q = 'move-node-to-workspace q'
+    alt-shift-w = 'move-node-to-workspace w'
+    alt-shift-e = 'move-node-to-workspace e'
+
+    [workspace-to-monitor-force-assignment]
+        1 = 'main'  # Your main monitor
+        2 = 'main'
+        3 = 'main'
+        4 = 'main'
+        5 = 'main'
+        6 = 'main'
+        7 = 'main'
+        8 = 'main'
+        9 = 'main'
+        q = 'secondary'  # Your second monitor - adjust the pattern if needed
+        w = 'secondary'
+        e = 'secondary'
+
+
+
+
+    # See: https://nikitabobko.github.io/AeroSpace/commands#workspace-back-and-forth
+    alt-tab = 'workspace-back-and-forth'
+    # See: https://nikitabobko.github.io/AeroSpace/commands#move-workspace-to-monitor
+    alt-shift-tab = 'move-workspace-to-monitor --wrap-around next'
+
+    # See: https://nikitabobko.github.io/AeroSpace/commands#mode
+    alt-shift-semicolon = 'mode service'
+
+# 'service' binding mode declaration.
+# See: https://nikitabobko.github.io/AeroSpace/guide#binding-modes
+[mode.service.binding]
+    esc = ['reload-config', 'mode main']
+    r = ['flatten-workspace-tree', 'mode main'] # reset layout
+    f = ['layout floating tiling', 'mode main'] # Toggle between floating and tiling layout
+    backspace = ['close-all-windows-but-current', 'mode main']
+
+    # sticky is not yet supported https://github.com/nikitabobko/AeroSpace/issues/2
+    #s = ['layout sticky tiling', 'mode main']
+
+    alt-shift-h = ['join-with left', 'mode main']
+    alt-shift-j = ['join-with down', 'mode main']
+    alt-shift-k = ['join-with up', 'mode main']
+    alt-shift-l = ['join-with right', 'mode main']
+
+    down = 'volume down'
+    up = 'volume up'
+    shift-down = ['volume set 0', 'mode main']
+
+
+
+================================================
+File: i3/config
+================================================
+#######################
+## spike's i3 config ##
+#######################
+
+
+## colors (gruvbox)
+##set $bg #282828
+##set $red #cc241d
+##set $green #98971a
+##set $yellow #d79921
+##set $blue #458588
+##set $purple #bdae93
+##set $aqua #689d68 set $gray #a89984
+##set $darkgray #1d2021
+##set $lightgray #bdae93
+
+set $rosewater #f4dbd6
+set $flamingo #f0c6c6
+set $pink #f5bde6
+set $mauve #c6a0f6
+set $red #ed8796
+set $maroon #ee99a0
+set $peach #f5a97f
+set $yellow #eed49f
+set $green #a6da95
+set $teal #8bd5ca
+set $sky #91d7e3
+set $sapphire #7dc4e4
+set $blue #8aadf4
+set $lavender #b7bdf8
+set $text #cad3f5
+set $subtext1 #b8c0e0
+set $subtext0 #a5adcb
+set $overlay2 #939ab7
+set $overlay1 #8087a2
+set $overlay0 #6e738d
+set $surface2 #5b6078
+set $surface1 #494d64
+set $surface0 #363a4f
+set $base #24273a
+set $mantle #1e2030
+set $crust #181926
+
+#bar {
+#    position bottom
+#    status_command i3status
+#    colors {
+#        background $bg
+#        statusline $lightgray
+#        #                    border  backgr. text
+#        focused_workspace    $lightgray $lightgray $bg
+#        inactive_workspace   $darkgray $darkgray $lightgray
+#        active_workspace     $darkgray $darkgray $lightgray
+#        urgent_workspace     $red $red $bg
+#    }
+#
+#}
+
+# class                 border|backgr|text|indicator|child_border
+#client.focused          $lightgray $lightgray $bg $darkgray $lightgray
+#client.focused_inactive $darkgray $darkgray $lightgray $darkgray $darkgray
+#client.unfocused        $darkgray $darkgray $lightgray $darkgray $darkgray
+#client.urgent           $red $red $white $red $red
+
+# target                 title     bg    text   indicator  border
+client.focused           $lavender $base $text  $rosewater $lavender
+client.focused_inactive  $overlay0 $base $text  $rosewater $overlay0
+client.unfocused         $overlay0 $base $text  $rosewater $overlay0
+client.urgent            $peach    $base $peach $overlay0  $peach
+client.placeholder       $overlay0 $base $text  $overlay0  $overlay0
+client.background        $base
+
+# bar
+bar {
+  colors {
+    background         $base
+    statusline         $text
+    focused_statusline $text
+    focused_separator  $base
+
+    # target           border bg        text
+    focused_workspace  $base  $mauve    $crust
+    active_workspace   $base  $surface2 $text
+    inactive_workspace $base  $base     $text
+    urgent_workspace   $base  $red      $crust
+  }
+}
+
+
+font pango:JetBrainsMono Nerd Font Mono 10
+focus_follows_mouse no
+
+# system startup
+exec --no-startup-id dex --autostart --environment i3
+exec --no-startup-id xss-lock --transfer-sleep-lock -- i3lock --nofork
+exec --no-startup-id nm-applet
+exec_always --no-startup-id feh --bg-fill ~/.wallpaper.png
+exec --no-startup-id xrandr --output HDMI-0 --mode 1920x1080 --rate 144
+exec --no-startup-id xset s off -dpms
+set $refresh_i3status killall -SIGUSR1 i3status
+
+# volume controls
+bindsym XF86AudioRaiseVolume exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ +10% && $refresh_i3status
+bindsym XF86AudioLowerVolume exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ -10% && $refresh_i3status
+bindsym XF86AudioMute exec --no-startup-id pactl set-sink-mute @DEFAULT_SINK@ toggle && $refresh_i3status
+
+# microphone controls
+bindsym XF86AudioMicMute exec --no-startup-id pactl set-source-mute @DEFAULT_SOURCE@ toggle && $refresh_i3status
+
+# brightness controls
+bindsym XF86MonBrightnessUp exec --no-startup-id brightnessctl set +5%
+bindsym XF86MonBrightnessDown exec --no-startup-id brightnessctl set 5%-
+
+
+# keybinds
+set $mod Mod4
+
+bindsym $mod+Shift+Return exec wezterm
+bindsym $mod+Shift+q kill
+bindsym $mod+space exec "rofi -show drun"
+bindsym $mod+d exec "rofi -show window"
+
+# change focus
+floating_modifier $mod
+tiling_drag modifier titlebar
+
+bindsym $mod+h focus left
+bindsym $mod+j focus down
+bindsym $mod+k focus up
+bindsym $mod+l focus right
+
+# move focused window
+bindsym $mod+Shift+h move left
+bindsym $mod+Shift+j move down
+bindsym $mod+Shift+k move up
+bindsym $mod+Shift+l move right
+
+# horizontal split
+bindsym $mod+Shift+o split h
+# vertical split 
+bindsym $mod+Shift+i split v
+
+# enter fullscreen mode for the focused container
+bindsym $mod+f fullscreen toggle
+
+# change container layout (stacked, tabbed, toggle split)
+bindsym $mod+s layout stacking
+bindsym $mod+w layout tabbed
+bindsym $mod+e layout toggle split
+
+# toggle tiling / floating
+bindsym $mod+Shift+space floating toggle
+
+# change focus between tiling / floating windows
+
+
+## workspaces
+set $ws1 "1"
+set $ws2 "2"
+set $ws3 "3"
+set $ws4 "4"
+set $ws5 "5"
+set $ws6 "6"
+set $ws7 "7"
+set $ws8 "8"
+set $ws9 "9"
+set $ws10 "10"
+
+# switch to workspace
+bindsym $mod+1 workspace number $ws1
+bindsym $mod+2 workspace number $ws2
+bindsym $mod+3 workspace number $ws3
+bindsym $mod+4 workspace number $ws4
+bindsym $mod+5 workspace number $ws5
+bindsym $mod+6 workspace number $ws6
+bindsym $mod+7 workspace number $ws7
+bindsym $mod+8 workspace number $ws8
+bindsym $mod+9 workspace number $ws9
+bindsym $mod+0 workspace number $ws10
+
+# move focused container to workspace
+bindsym $mod+Shift+1 move container to workspace number $ws1
+bindsym $mod+Shift+2 move container to workspace number $ws2
+bindsym $mod+Shift+3 move container to workspace number $ws3
+bindsym $mod+Shift+4 move container to workspace number $ws4
+bindsym $mod+Shift+5 move container to workspace number $ws5
+bindsym $mod+Shift+6 move container to workspace number $ws6
+bindsym $mod+Shift+7 move container to workspace number $ws7
+bindsym $mod+Shift+8 move container to workspace number $ws8
+bindsym $mod+Shift+9 move container to workspace number $ws9
+bindsym $mod+Shift+0 move container to workspace number $ws10
+
+# reload the configuration file
+bindsym $mod+Shift+c reload
+# restart i3 inplace (preserves your layout/session, can be used to upgrade i3)
+bindsym $mod+Shift+r restart
+# exit i3 (logs you out of your X session)
+bindsym $mod+Shift+Escape exec "i3-nagbar -t warning -m 'You pressed the exit shortcut. Do you really want to exit i3? This will end your X session.' -B 'Yes, exit i3' 'i3-msg exit'"
+
+# resize window (you can also use the mouse for that)
+mode "resize" {
+        bindsym h resize shrink width 10 px or 10 ppt
+        bindsym j resize grow height 10 px or 10 ppt
+        bindsym k resize shrink height 10 px or 10 ppt
+        bindsym l resize grow width 10 px or 10 ppt
+
+        bindsym Return mode "default"
+        bindsym Escape mode "default"
+        bindsym semicolon mode "default"
+        bindsym $mod+semicolon mode "default"
+}
+
+bindsym $mod+semicolon mode "resize"
+
+bindsym Mod4+Tab focus right
+bindsym Mod4+Shift+Tab focus left
+bindsym Print exec --no-startup-id flameshot gui
+
+
+
+================================================
+File: i3/i3/config
+================================================
+#######################
+## spike's i3 config ##
+#######################
+
+
+## colors (gruvbox)
+set $bg #282828
+set $red #cc241d
+set $green #98971a
+set $yellow #d79921
+set $blue #458588
+set $purple #bdae93
+set $aqua #689d68 set $gray #a89984
+set $darkgray #1d2021
+set $lightgray #bdae93
+
+bar {
+    position bottom
+    status_command i3status
+    colors {
+        background $bg
+        statusline $lightgray
+        #                    border  backgr. text
+        focused_workspace    $lightgray $lightgray $bg
+        inactive_workspace   $darkgray $darkgray $lightgray
+        active_workspace     $darkgray $darkgray $lightgray
+        urgent_workspace     $red $red $bg
+    }
+
+}
+
+# class                 border|backgr|text|indicator|child_border
+client.focused          $lightgray $lightgray $bg $darkgray $lightgray
+client.focused_inactive $darkgray $darkgray $lightgray $darkgray $darkgray
+client.unfocused        $darkgray $darkgray $lightgray $darkgray $darkgray
+client.urgent           $red $red $white $red $red
+
+font pango:JetBrainsMono Nerd Font Mono 10
+focus_follows_mouse no
+
+# system startup
+exec --no-startup-id dex --autostart --environment i3
+exec --no-startup-id xss-lock --transfer-sleep-lock -- i3lock --nofork
+exec --no-startup-id nm-applet
+exec_always --no-startup-id feh --bg-fill ~/.wallpaper.png
+exec --no-startup-id xrandr --output HDMI-0 --mode 1920x1080 --rate 144
+exec --no-startup-id xset s off -dpms
+set $refresh_i3status killall -SIGUSR1 i3status
+
+# volume controls
+bindsym XF86AudioRaiseVolume exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ +10% && $refresh_i3status
+bindsym XF86AudioLowerVolume exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ -10% && $refresh_i3status
+bindsym XF86AudioMute exec --no-startup-id pactl set-sink-mute @DEFAULT_SINK@ toggle && $refresh_i3status
+
+# microphone controls
+bindsym XF86AudioMicMute exec --no-startup-id pactl set-source-mute @DEFAULT_SOURCE@ toggle && $refresh_i3status
+
+# brightness controls
+bindsym XF86MonBrightnessUp exec --no-startup-id brightnessctl set +5%
+bindsym XF86MonBrightnessDown exec --no-startup-id brightnessctl set 5%-
+
+
+# keybinds
+set $mod Mod4
+
+bindsym $mod+Shift+Return exec wezterm
+bindsym $mod+Shift+q kill
+bindsym $mod+space exec "rofi -show drun"
+bindsym $mod+d exec "rofi -show window"
+
+# change focus
+floating_modifier $mod
+tiling_drag modifier titlebar
+
+bindsym $mod+h focus left
+bindsym $mod+j focus down
+bindsym $mod+k focus up
+bindsym $mod+l focus right
+
+# move focused window
+bindsym $mod+Shift+h move left
+bindsym $mod+Shift+j move down
+bindsym $mod+Shift+k move up
+bindsym $mod+Shift+l move right
+
+# horizontal split
+bindsym $mod+Shift+o split h
+# vertical split 
+bindsym $mod+Shift+i split v
+
+# enter fullscreen mode for the focused container
+bindsym $mod+f fullscreen toggle
+
+# change container layout (stacked, tabbed, toggle split)
+bindsym $mod+s layout stacking
+bindsym $mod+w layout tabbed
+bindsym $mod+e layout toggle split
+
+# toggle tiling / floating
+bindsym $mod+Shift+space floating toggle
+
+# change focus between tiling / floating windows
+
+
+## workspaces
+set $ws1 "1"
+set $ws2 "2"
+set $ws3 "3"
+set $ws4 "4"
+set $ws5 "5"
+set $ws6 "6"
+set $ws7 "7"
+set $ws8 "8"
+set $ws9 "9"
+set $ws10 "10"
+
+# switch to workspace
+bindsym $mod+1 workspace number $ws1
+bindsym $mod+2 workspace number $ws2
+bindsym $mod+3 workspace number $ws3
+bindsym $mod+4 workspace number $ws4
+bindsym $mod+5 workspace number $ws5
+bindsym $mod+6 workspace number $ws6
+bindsym $mod+7 workspace number $ws7
+bindsym $mod+8 workspace number $ws8
+bindsym $mod+9 workspace number $ws9
+bindsym $mod+0 workspace number $ws10
+
+# move focused container to workspace
+bindsym $mod+Shift+1 move container to workspace number $ws1
+bindsym $mod+Shift+2 move container to workspace number $ws2
+bindsym $mod+Shift+3 move container to workspace number $ws3
+bindsym $mod+Shift+4 move container to workspace number $ws4
+bindsym $mod+Shift+5 move container to workspace number $ws5
+bindsym $mod+Shift+6 move container to workspace number $ws6
+bindsym $mod+Shift+7 move container to workspace number $ws7
+bindsym $mod+Shift+8 move container to workspace number $ws8
+bindsym $mod+Shift+9 move container to workspace number $ws9
+bindsym $mod+Shift+0 move container to workspace number $ws10
+
+# reload the configuration file
+bindsym $mod+Shift+c reload
+# restart i3 inplace (preserves your layout/session, can be used to upgrade i3)
+bindsym $mod+Shift+r restart
+# exit i3 (logs you out of your X session)
+bindsym $mod+Shift+Escape exec "i3-nagbar -t warning -m 'You pressed the exit shortcut. Do you really want to exit i3? This will end your X session.' -B 'Yes, exit i3' 'i3-msg exit'"
+
+# resize window (you can also use the mouse for that)
+mode "resize" {
+        bindsym h resize shrink width 10 px or 10 ppt
+        bindsym j resize grow height 10 px or 10 ppt
+        bindsym k resize shrink height 10 px or 10 ppt
+        bindsym l resize grow width 10 px or 10 ppt
+
+        bindsym Return mode "default"
+        bindsym Escape mode "default"
+        bindsym semicolon mode "default"
+        bindsym $mod+semicolon mode "default"
+}
+
+bindsym $mod+semicolon mode "resize"
+
+bindsym Mod4+Tab focus right
+bindsym Mod4+Shift+Tab focus left
+bindsym Print exec --no-startup-id flameshot gui
+
+
+
+================================================
+File: i3/i3status/config
+================================================
+general {
+        colors = true
+        interval = 5
+        color_good = "#98971a"
+        color_degraded = "#d79921"
+        color_bad = "#cc241d"
+}
+
+order += "volume master"
+order += "cpu_usage"
+order += "memory"
+order += "tztime local"
+
+volume master {
+        format = " VOL %volume "
+        format_muted = " MUTED "
+        device = "pulse"
+}
+
+battery 0 {
+        format = " BAT %percentage "
+        format_down = "NO BAT"
+        status_chr = "CHR"
+        status_bat = "BAT"
+        status_unk = "UNK"
+        status_full = "FULL"
+        path = "/sys/class/power_supply/BAT0/uevent"
+        low_threshold = 10
+}
+
+cpu_usage {
+        format = " CPU %usage "
+}
+
+memory {
+        format = " RAM %used "
+        threshold_degraded = "1G"
+        format_degraded = "MEMORY < %available"
+}
+
+tztime local {
+        format = " %Y-%m-%d | %H:%M "
+}
+
+
+
+================================================
+File: nix/configuration.nix
+================================================
+########################
+## spike's nix config ##
+######################## 
+{ config, pkgs, lib,... }:
+{
+  imports = [ ./hardware-configuration.nix ./cachix.nix ];
+  nix.settings.experimental-features = [ "nix-command" "flakes" ];
+
+  # Core system configuration
+  system.stateVersion = "24.11";
+  nixpkgs.config.allowUnfree = true;
+  system.autoUpgrade.enable = true;
+
+  # Boot configuration
+  boot = {
+    loader = {
+      systemd-boot.enable = true;
+      efi.canTouchEfiVariables = true;
+    };
+    supportedFilesystems = [ "ntfs" ];
+    extraModulePackages = [];
+    kernel.sysctl = {
+      "kernel.sysrq" = 1;
+      "vm.swappiness" = 10;
+      "vm.vfs_cache_pressure" = 50;
+      "vm.dirty_ratio" = 15;
+      "vm.dirty_background_ratio" = 5;
+      "vm.overcommit_memory" = 2;
+      "vm.overcommit_ratio" = 80;
+    };
+  };
+
+  fileSystems."/media/hdd0" = {
+    device = "/dev/sda1";
+    fsType = "ntfs-3g";
+    options = [ "defaults" ];
+  };
+
+  swapDevices = [ 
+    { 
+      device = "/var/swapfile";  # Use /var instead of root
+      size = 16384;  # Increase to 16GB for better headroom
+    }
+  ];
+
+  # Hardware configuration
+  hardware = {
+    graphics = {
+      enable = true;
+      enable32Bit = true;
+      extraPackages = with pkgs; [ vaapiVdpau nvidia-vaapi-driver ];
+    };
+    nvidia-container-toolkit.enable = true;
+    nvidia = {
+      modesetting.enable = true;
+      powerManagement.enable = true;
+      open = false;
+      nvidiaSettings = true;
+      package = config.boot.kernelPackages.nvidiaPackages.stable;
+    };
+    bluetooth = {
+      enable = true;
+      settings = {
+        General = {
+          Enable = "Source,Sink,Media,Socket";
+          Disable = "Headset,Gateway,Control";
+        };
+      };
+    };
+  };
+
+  virtualisation = {
+    docker = {
+      enable = true;
+      autoPrune = {
+        enable = true;
+        dates = "weekly";
+      };
+      enableOnBoot = true;
+    };
+
+    # QEMU/KVM configuration
+    libvirtd = {
+      enable = true;
+      qemu = {
+        package = pkgs.qemu;
+        ovmf = {
+          enable = true;
+          packages = [pkgs.OVMFFull];
+        };
+        swtpm.enable = true;
+      };
+      onBoot = "ignore";
+      onShutdown = "shutdown";
+    };
+  };
+
+  powerManagement = {
+    enable = true;
+    cpuFreqGovernor = "performance";
+  };
+
+  # Font configuration
+  fonts = {
+    enableDefaultPackages = true;
+    packages = with pkgs; [
+      jetbrains-mono # Default monospace font
+      noto-fonts # Fallback for sans-serif and serif
+      noto-fonts-cjk-sans # For CJK characters
+      noto-fonts-emoji # For emojis
+      font-awesome # For icons
+      comic-neue # Comic Neue font
+      comic-relief # Open source Comic Sans alternative
+      xkcd-font # XKCD font
+    ];
+
+    fontconfig = {
+      enable = true;
+      defaultFonts = {
+        monospace = [ "JetBrains Mono" "Noto Sans Mono" ]; # Default to JetBrains Mono
+        sansSerif = [ "JetBrains Mono" "Noto Sans" ]; # Fallback to Noto Sans
+        serif = [ "JetBrains Mono" "Noto Serif" ]; # Fallback to Noto Serif
+        emoji = [ "Noto Color Emoji" ]; # For emojis
+      };
+
+      subpixel = {
+        rgba = "rgb"; # Subpixel rendering for LCD screens
+        lcdfilter = "default"; # Default LCD filter
+      };
+
+      antialias = true; # Enable anti-aliasing
+      useEmbeddedBitmaps = true; # Use embedded bitmaps in fonts
+      allowBitmaps = true; # Allow bitmap fonts
+    };
+  };
+
+  environment.shellAliases = {
+    dockerrun = "docker run --device=nvidia.com/gpu=all";
+  };
+
+  # Environment variables for font rendering
+  environment.variables = {
+    GDK_USE_XFT = "1"; # Enable Xft for GTK applications
+    QT_XFT = "true"; # Enable Xft for Qt applications
+    QT_AUTO_SCREEN_SCALE_FACTOR = "1"; # Auto-scale for high-DPI displays
+    GDK_SCALE = "1"; # Scale factor for GTK applications
+    GDK_DPI_SCALE = "1"; # DPI scaling for GTK applications
+    PULSE_LATENCY_MSEC = "60"; # Reduce audio latency
+    GTK_IM_MODULE = "fcitx";
+    QT_IM_MODULE = "fcitx";
+    XMODIFIERS = "@im=fcitx";
+    SDL_IM_MODULE = "fcitx";
+
+    CUDA_HOME = "${pkgs.cudaPackages.cudatoolkit}";
+    CUDA_PATH = "${pkgs.cudaPackages.cudatoolkit}";
+    LD_LIBRARY_PATH = lib.mkDefault "${pkgs.cudaPackages.cudatoolkit}/lib:${pkgs.cudaPackages.cudnn}/lib:$LD_LIBRARY_PATH";
+    XLA_FLAGS = "--xla_gpu_cuda_data_dir=${pkgs.cudaPackages.cudatoolkit}";
+  };
+
+
+  # System packages
+  environment.systemPackages = with pkgs; [
+    # Utils
+    home-manager
+    pulseaudio
+    brightnessctl
+    flameshot
+    feh
+    wmctrl
+    picom
+    udisks2
+    usbutils
+    ntfs3g
+    mullvad-vpn
+    lxappearance
+    pavucontrol
+    bluetuith
+    magic-wormhole
+    signal-desktop
+    patchelf
+
+    # CUDA/OpenCL
+    cudaPackages.cuda_cudart
+    cudaPackages.cudatoolkit
+    cudaPackages.cuda_nvcc
+    cudaPackages.cudnn
+    libuv
+    nvitop
+
+    # Gaming
+    steam
+    wineWowPackages.stable
+    winetricks
+    lutris
+    # gaming compatibility
+    vkd3d
+    vkd3d-proton
+    vulkan-tools
+    vulkan-loader
+    vulkan-validation-layers
+
+    # General
+    bash zsh git ripgrep tree curl fzf
+    zip unzip eza lsof htop ncdu xclip
+    rofi pass gnupg pinentry-curses neovim
+    yazi neofetch busybox texliveTeTeX
+    xzoom pandoc
+    claude-code
+    tmux via
+
+
+    # Apps
+    wezterm ghostty chromium firefox syncthing
+    zathura nemo obsidian
+    vscode ollama
+
+    # Media
+    ffmpeg gimp mpv obs-studio qbittorrent
+    inkscape
+
+    # Python 
+    uv
+    pyright
+    python312
+
+    # JS
+    nodejs_24
+
+    # C
+    gcc clang cmake gnumake
+    ghc julia elan
+
+    # Zig
+    zig
+
+    # Gleam
+    gleam glas
+    
+    # Erlang
+    erlang_28
+
+    # Misc
+    sqlite
+    qemu
+    virt-manager
+  ];
+
+  # Networking
+  networking = {
+    hostName = "clinky";
+    networkmanager.enable = true;
+    firewall.enable = true;
+    extraHosts = ''
+    '';
+  };
+
+  security.rtkit.enable = true;
+
+  # Services
+  services = {
+    udev.packages = with pkgs; [
+      via
+    ];
+    tailscale = { enable=true;};
+    pipewire = {
+      enable = true;
+      alsa.enable = true;
+      alsa.support32Bit = true;
+      jack.enable = true;   # For audio applications that use JACK
+    };
+
+    logind = {
+      lidSwitch = "ignore";
+      extraConfig = ''
+        HandleSuspendKey=ignore
+        HandleHibernateKey=ignore
+        HandleLidSwitch=ignore
+        IdleAction=ignore
+      '';
+    };
+
+    mullvad-vpn.enable = true;
+    displayManager.defaultSession = "none+i3";
+    libinput.enable = true;
+    libinput.touchpad.disableWhileTyping = true;
+
+
+    blueman.enable = true;
+    xserver = {
+      videoDrivers = [ "nvidia" ];
+      enable = true;
+      windowManager.i3 = {
+        enable = true;
+        package = pkgs.i3;
+        extraPackages = with pkgs; [ i3status i3lock ];
+      };
+      xkb = { layout = "us"; };
+    };
+
+    syncthing = {
+      enable = true;
+      user = "spike";
+      dataDir = "/home/spike/Documents";
+      configDir = "/home/spike/.config/syncthing";
+      settings.gui.theme = "dark";
+    };
+
+    devmon.enable = true;
+    gvfs.enable = true;
+    udisks2.enable = true;
+
+    picom = {
+      enable = true;
+      backend = "glx";
+      vSync = true;
+      settings = {
+        glx-no-stencil = true;
+        glx-no-rebind-pixmap = true;
+        unredir-if-possible = true;           # Add this
+        detect-transient = true;              # Add this
+        detect-client-leader = true;          # Add this
+        glx-use-copysubbuffer-mesa = false;  # Add this
+        glx-copy-from-front = false;         # Add this
+        glx-swap-method = 2;                  # Add this
+      };
+    };
+
+    dbus.enable = true;
+    redshift = {
+      enable = true;
+      temperature.day = 5500;
+      temperature.night = 3700;
+    };
+  };
+
+  # Location and time
+  location = {
+    latitude = 40.7128;
+    longitude = -74.0060;
+  };
+
+  time.timeZone = "America/New_York";
+  i18n.defaultLocale = "en_US.UTF-8";
+
+  nix.settings = {
+    substituters = [ "https://cuda-maintainers.cachix.org" ];
+    trusted-public-keys = [
+      "cuda-maintainers.cachix.org-1:0dq3bujKpuEPMCX6U4WylrUDZ9JyUG0VpVZa7CNfq5E="
+    ];
+    auto-optimise-store = true;
+  };
+
+  nix.gc = {
+    automatic = true;
+    dates = "weekly";
+    options = "--delete-older-than 30d";
+  };
+
+  programs = {
+    mosh.enable = true;
+    nix-ld = {
+      enable = true;
+      libraries = with pkgs; [
+        stdenv.cc.cc
+        zlib
+        glibc
+        openssl
+        libffi
+      ];
+    };
+    ssh.startAgent = true;
+    gnupg.agent = {
+      enable = true;
+      pinentryPackage = pkgs.pinentry-curses;
+    };
+    neovim = {
+      enable = true;
+      defaultEditor = true;
+      vimAlias = true;
+    };
+  };
+
+
+  users.users.spike = {
+    isNormalUser = true;
+    description = "spike";
+    extraGroups = [ "networkmanager" "wheel" "video" "render" "audio" "docker"];
+    shell = pkgs.bash;
+  };
+}
+
+
+
+================================================
+File: nix/installs.txt
+================================================
+ascii-image-converter-1.13.1
+bat-0.25.0
+btop-1.4.3
+eza-0.21.3
+fzf-0.62.0
+gitingest-0.1.4
+marksman-2024-12-18
+neofetch-unstable-2021-12-10
+neovim-0.11.1
+pyright-1.1.399
+ripgrep-14.1.1
+ruff-0.11.11
+runpodctl-1.14.4
+tmux-3.5a
+tokei-13.0.0-alpha.8
+uv-0.7.8
+visidata-3.1.1
+
+
+
+================================================
+File: nix/shell.nix
+================================================
+{ pkgs ? import <nixpkgs> { config = { cudaSupport = true; allowUnfree = true; }; } }:
+
+let
+  python = pkgs.python311;
+
+  pythonWithPkgs = python.withPackages (ps:
+    with ps; [
+      pip
+      setuptools
+      wheel
+      ipython
+      jupyter
+      (catppuccin.overridePythonAttrs (oldAttrs: {
+        propagatedBuildInputs = (oldAttrs.propagatedBuildInputs or [ ])
+          ++ [ pygments ];
+      }))
+      pygments
+      pyqt6
+      opencv4
+    ]);
+
+  deps = with pkgs; [
+    clang
+    llvmPackages_16.bintools
+    rustup
+    linuxPackages.nvidia_x11
+    freeglut
+    zlib
+    gcc
+    stdenv.cc.cc.lib
+    stdenv.cc
+    libGLU
+    libGL
+    glib
+    pango
+    fontconfig
+    python311Packages.matplotlib
+    libsForQt5.qt5.qtwayland
+    opencv
+  ];
+
+  lib-path = with pkgs; lib.makeLibraryPath deps;
+  extra-ldflags = "-L${pkgs.linuxPackages.nvidia_x11}/lib";
+
+in pkgs.mkShell {
+  name = "segcam";
+
+  buildInputs = deps ++ [
+    pythonWithPkgs
+    pkgs.readline
+    pkgs.libffi
+    pkgs.openssl
+    pkgs.git
+    pkgs.openssh
+    pkgs.rsync
+  ];
+
+  shellHook = ''
+    SOURCE_DATE_EPOCH=$(date +%s)
+    export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:${lib-path}
+    export CUDA_PATH=${pkgs.cudatoolkit}
+    export EXTRA_LDFLAGS=${extra-ldflags}
+    export TZ="America/Toronto"
+    if [[ ! -f .venv ]] && [[ ! -d .venv ]]; then
+      setvenv
+      VENV=$(cat .venv)
+      source $VIRTUALENV_HOME/$VENV/bin/activate
+      deactivate
+    fi
+  '';
+}
+
+
+
+================================================
+File: nix/home-manager/home.nix
+================================================
+{ config, pkgs, ... }:
+
+{
+  home.username = "spike";
+  home.homeDirectory = "/home/spike";
+  home.stateVersion = "25.05";
+
+  home.packages = with pkgs; [
+    xorg.xrandr
+  ];
+
+  programs.home-manager.enable = true;
+  programs.git = {
+    enable = true;
+    userEmail = "spikedoanz@gmail.com";
+    userName = "spikedoanz";
+  };
+
+  programs.bash= {
+    enable = true;
+    
+    initExtra = ''
+      PS1='\[\033[32m\]\u@\h\[\033[0m\]:\[\033[36m\]\w\[\033[0m\] § '
+      if ! pgrep -u "$USER" ssh-agent > /dev/null; then
+        ssh-agent -t 1h > "$XDG_RUNTIME_DIR/ssh-agent.env"
+          fi
+      if [[ ! -f "$XDG_RUNTIME_DIR/ssh-agent.env" ]]; then
+        ssh-agent -t 1h > "$XDG_RUNTIME_DIR/ssh-agent.env"
+      fi
+      source "$XDG_RUNTIME_DIR/ssh-agent.env" > /dev/null
+      ssh-add -q ~/.ssh/gh 2>/dev/null
+      source ~/.env
+
+      PS1="\[\033[34m\]\W\[\033[0m\] § "
+      eval "$(fzf --bash)"
+      export PATH="$HOME/.bin:$PATH"
+      '';
+
+    shellAliases = {
+      # exa aliases (ensure exa is in home.packages)
+      ls = "eza";
+      ll = "eza -l";
+      la = "eza -a";
+      l = "eza";
+      daily="vim + ~/Global/Vault/daily/$(date +%Y-%m-%d).md";
+
+      # Clipboard aliases
+      copy = "xclip -selection clipboard";
+      paste = "xclip -selection clipboard -o";
+
+      icat = "wezterm imgcat";
+      v = "source .venv/bin/activate";
+      rebuild = "sudo nixos-rebuild switch";
+      nixedit = "sudoedit /etc/nixos/configuration.nix";
+
+      ga = "git add";
+      gc = "git commit -m";
+      gp = "git push";
+      gl = "git pull";
+      gb = "git branch";
+      gk = "git checkout";
+    };
+  };
+
+
+  fonts.fontconfig.enable = true;        
+}
+
+
+
+================================================
+File: nix/laptop/configuration.nix
+================================================
+########################
+## spike's nix config ##
+########################
+{ config, pkgs, ... }:
+{
+  imports = [ ./hardware-configuration.nix ];
+
+  # Core system configuration
+  nix.settings.experimental-features = [ "nix-command" "flakes" ];
+  system.stateVersion = "24.11";
+  nixpkgs.config.allowUnfree = true;
+
+  # Boot and hardware
+  boot.loader = {
+    systemd-boot.enable = true;
+    efi.canTouchEfiVariables = true;
+  };
+
+  # Power management
+  powerManagement = {
+    enable = true;
+    cpuFreqGovernor = "powersave"; # Better for laptops
+    powertop.enable = true; # Optimize power usage
+  };
+
+  services = {
+    tlp = {
+      enable = true; # TLP for power management
+      settings = {
+        CPU_SCALING_GOVERNOR_ON_AC = "performance";
+        CPU_SCALING_GOVERNOR_ON_BAT = "powersave";
+      };
+    };
+    thermald.enable = true; # Thermal management
+    auto-cpufreq.enable = true; # Auto CPU frequency scaling
+    fstrim.enable = true; # SSD trimming
+    smartd.enable = true; # SMART monitoring
+  };
+
+  # Networking
+  networking = {
+    hostName = "nixos";
+    networkmanager.enable = true;
+    firewall.enable = true;
+
+    # Block distracting sites
+    extraHosts = ''
+      127.0.0.1 reddit.com
+      127.0.0.1 www.reddit.com
+    '';
+  };
+
+  # Audio
+  hardware.pulseaudio.enable = false; # Disable PulseAudio in favor of PipeWire
+  security.rtkit.enable = true;
+  services.pipewire = {
+    enable = true;
+    alsa = {
+      enable = true;
+      support32Bit = true;
+    };
+    pulse.enable = true;
+  };
+
+  # Bluetooth
+  hardware.bluetooth.enable = true;
+  services.blueman.enable = true;
+
+  # Locale and time
+  time.timeZone = "America/New_York";
+  i18n = {
+    defaultLocale = "en_US.UTF-8";
+    extraLocaleSettings = {
+      LC_ADDRESS = "en_US.UTF-8";
+      LC_IDENTIFICATION = "en_US.UTF-8";
+      LC_MEASUREMENT = "en_US.UTF-8";
+      LC_MONETARY = "en_US.UTF-8";
+      LC_NAME = "en_US.UTF-8";
+      LC_NUMERIC = "en_US.UTF-8";
+      LC_PAPER = "en_US.UTF-8";
+      LC_TELEPHONE = "en_US.UTF-8";
+      LC_TIME = "en_US.UTF-8";
+    };
+  };
+
+  # X11 and desktop environment
+  services.libinput.enable = true; # Touchpad support
+  services.libinput.touchpad.disableWhileTyping = true;
+  services.xserver = {
+    enable = true;
+    windowManager.i3 = {
+      enable = true;
+      package = pkgs.i3;
+      extraPackages = with pkgs; [
+        i3status
+        i3lock
+      ];
+    };
+    xkb = {
+      layout = "us";
+      variant = "";
+      options = "ctrl:nocaps,terminate:ctrl_alt_bksp,lv3:ralt_switch,altwin:swap_alt_win";
+    };
+  };
+  services.displayManager.defaultSession = "none+i3";
+
+  # Drive automounting
+  services.devmon.enable = true; # Automount removable drives
+  services.gvfs.enable = true; # GNOME Virtual File System for automounting
+  services.udisks2.enable = true; # Disk management service
+
+  # System services
+  services.printing.enable = true; # Enable CUPS for printing
+  services.syncthing = {
+    enable = true;
+    user = "spike";
+    dataDir = "/home/spike/Documents";
+    configDir = "/home/spike/.config/syncthing";
+    overrideDevices = true;
+    overrideFolders = true;
+    settings.gui.theme = "dark";
+  };
+
+  # Display compositor
+  services.picom = {
+    enable = true;
+    vSync = true;
+    backend = "glx";
+    settings = {
+      glx-no-stencil = true;
+      glx-no-rebind-pixmap = true;
+    };
+  };
+
+  # System maintenance
+  nix.gc = {
+    automatic = true;
+    dates = "weekly";
+    options = "--delete-older-than 30d";
+  };
+  system.autoUpgrade.enable = true;
+
+
+  # System packages
+  environment = {
+    systemPackages = with pkgs; [
+      # System utils
+      home-manager    # config manager
+      brightnessctl   # brightness manager
+      flameshot       # screenshot tool
+      feh             # background image manager
+      wmctrl          # window manager manager
+      picom           # compositor
+      udisks2         # disk management
+      usbutils        # USB utilities
+      mullvad-vpn     # VPN client
+
+      # General
+      bash            # shell 
+      zsh             # backup shell
+      git             # version control tool
+      ripgrep         # better grep
+      tree            # file tree visualizer
+      curl            # download tool
+      fzf             # fuzzy file searching
+      zip unzip       # compression tools
+      eza             # better "ls"
+      lsof            # list open files
+      htop            # system utilization tool
+      ncdu            # disk usage monitoring
+      xclip           # clipboard
+      rofi            # window switcher util tool
+      pass            # password manager
+      gnupg           # private key creator
+      pinentry-curses # in terminal prompts
+      neovim          # editor number one
+      yazi            # tui file browser
+
+      # Apps
+      wezterm         # terminal emulator
+      ghostty         # other terminal emulator
+      firefox         # browser
+      syncthing       # file syncing
+      zathura         # pdf reader
+      zed-editor      # editor number two
+      nemo            # gui file browser
+      obsidian
+      discord
+
+      # Media
+      ffmpeg          # video/gif/etc editor
+      gimp            # image editor
+      mpv             # video viewer
+      obs-studio      # screen recording
+      qbittorrent     # file "sharing"
+      inkscape        # svg editor
+      zotero          # reference manager
+      qemu            # virtualization
+      virt-manager    # VM manager
+      lutris
+
+      # Python
+      (python312.withPackages (ps: with ps; [
+        requests
+        datasets
+        numpy
+        jupyterlab
+        pandas
+        pillow
+        torch
+        torchvision
+        pip
+        pyarrow
+        selenium
+        tiktoken
+        bottle
+        tinygrad
+        matplotlib
+        build
+        twine
+        nibabel
+        pytest
+        einops
+        transformers
+        wandb
+      ]))
+      pyright
+
+      # C
+      gcc
+      clang
+      clang-tools
+      cmake
+      gnumake
+      extra-cmake-modules
+      gdb
+
+      # Haskell
+      ghc
+
+      # Julia
+      julia
+
+      elan
+      vscode
+    ];
+    pathsToLink = [ "/libexec" ];
+  };
+  fonts.packages = with pkgs; [ nerdfonts ];
+
+  # VM
+  virtualisation.libvirtd.enable = true; # Enable libvirt for VMs
+  virtualisation.spiceUSBRedirection.enable = true; # USB redirection for VMs
+  virtualisation.docker.enable = true;
+
+  programs = {
+    virt-manager.enable = true; # GUI for managing VMs
+    nix-ld.enable = true; # Enable running dynamically linked libraries
+    ssh.startAgent = true;
+    gnupg.agent = {
+      enable = true;
+      pinentryPackage = pkgs.pinentry-curses;
+    };
+    neovim = {
+      enable = true;
+      defaultEditor = true;
+      vimAlias = true;
+    };
+  };
+
+  # User configuration
+  programs.zsh.enable = true;
+  users.users.spike = {
+    isNormalUser = true;
+    description = "spike";
+    extraGroups = [ "networkmanager" "wheel" "libvirtd" "docker"];
+    shell = pkgs.bash;
+    packages = with pkgs; [];
+  };
+}
+
+
+
+================================================
+File: nix/laptop/home-manager/home.nix
+================================================
+{ config, pkgs, ... }:
+
+{
+  home.username = "spike";
+  home.homeDirectory = "/home/spike";
+  home.stateVersion = "24.11";
+
+  home.packages = with pkgs; [
+    xorg.xrandr
+  ];
+
+  programs.home-manager.enable = true;
+  programs.git = {
+    enable = true;
+    userEmail = "spikedoanz@gmail.com";
+    userName = "spikedoanz";
+  };
+
+  xresources.properties = {
+    "Xft.dpi" = 120;
+  };
+
+  home.sessionVariables = {
+    GDK_SCALE = "1.25";
+    GDK_DPI_SCALE = "1.25";
+  };
+
+  programs.bash= {
+    enable = true;
+    
+    initExtra = ''
+      # Custom prompt
+      PS1="\[\033[34m\]\W\[\033[0m\] § "
+
+      # FZF integration (make sure fzf is in home.packages)
+      eval "$(fzf --bash)"
+    '';
+
+    shellAliases = {
+      # exa aliases (ensure exa is in home.packages)
+      ls = "eza";
+      ll = "eza -l";
+      la = "eza -a";
+      l = "eza";
+      daily="vim + ~/Global/Vault/daily/$(date +%Y-%m-%d).md";
+
+      # Clipboard aliases
+      copy = "xclip -selection clipboard";
+      paste = "xclip -selection clipboard -o";
+
+      icat = "wezterm imgcat";
+      v = "source .venv/bin/activate";
+      gg = "git add . && git commit -m \"wp\" && git push origin $(git branch --show-current)";
+      rebuild = "sudo nixos-rebuild switch";
+      nixedit = "sudoedit /etc/nixos/configuration.nix";
+    };
+  };
+
+
+  fonts.fontconfig.enable = true;        
+}
+
+
+
+================================================
+File: nvim/init.lua
+================================================
+---------------------------
+-- spike's neovim config --
+---------------------------
+local opt = vim.opt
+
+-- editor settings
+opt.number = false
+opt.expandtab = true 
+opt.shiftwidth = 2
+opt.tabstop = 2
+opt.signcolumn = "no"
+opt.shortmess:append("I")
+opt.autoread = true
+opt.clipboard = "unnamedplus" -- use shared system clipboard
+opt.scrolloff = 999           -- Keep cursor centered vertically
+opt.sidescrolloff = 8         -- Keep some horizontal context visible
+opt.termguicolors = false     -- inherit terminal colors
+
+-- disable swap/backup
+opt.swapfile = false
+opt.backup = false
+opt.writebackup = false
+
+-- Share status line with cmd line
+--opt.cmdheight = 0             -- Make command line float (requires Neovim 0.8+)
+--opt.laststatus = 3            -- Global statusline
+
+-- Make statusline blend with background
+vim.cmd("highlight StatusLine cterm=NONE ctermbg=NONE ctermfg=NONE gui=NONE guibg=NONE guifg=NONE")
+vim.cmd("highlight StatusLineNC cterm=NONE ctermbg=NONE ctermfg=NONE gui=NONE guibg=NONE guifg=NONE")
+
+-- persistent undo
+local undodir = vim.fn.stdpath("data") .. "/undodir"
+if not vim.fn.isdirectory(undodir) then
+  vim.fn.mkdir(undodir, "p")
+end
+
+vim.cmd("highlight Comment ctermfg=3 gui=none")
+
+
+opt.undofile = true        -- Enable persistent undo
+opt.undodir = undodir      -- Set undo directory
+opt.undolevels = 10000     -- Maximum number of changes that can be undone
+opt.undoreload = 10000     -- Maximum number lines to save for undo on buffer reload
+
+-- tab spacing shortcuts
+local function set_tab_width(width)
+  opt.tabstop = width
+  opt.shiftwidth = width
+  print("Tab spacing set to " .. width)
+end
+
+-- keymaps
+local map = vim.keymap.set
+vim.g.mapleader = " "
+
+-- backspace hurts my fingers
+map('i', '<C-h>', '<BS>', { noremap = true, silent = true })
+map('i', '<C-S-H>', '<C-w>', { noremap = true, silent = true })
+
+map("n","<C-b>",":NvimTreeToggle<CR>",{silent=true})
+
+map({'n','v'},'<C-J>','10j',{noremap=true,silent=true})
+map({'n','v'},'<C-K>','10k',{noremap=true,silent=true})
+map({'n','v'},'<C-H>','_',{noremap=true,silent=true})
+map({'n','v'},'<C-L>','$',{noremap=true,silent=true})
+
+map('n', '<leader>n', ':set number!<CR>', { noremap = true, silent = true })
+map('n', '<leader>r', ':set relativenumber!<CR>', { noremap = true, silent = true })
+
+map('n','<leader>t2',function()set_tab_width(2)end,{noremap=true,silent=true})
+map('n','<leader>t4',function()set_tab_width(4)end,{noremap=true,silent=true})
+
+-- CWD Management
+map('n', '<leader>cd', ':cd %:p:h<CR>:pwd<CR>', { noremap = true, silent = false, desc = "cd to current file's directory" })
+map('n', '<leader>cD', ':cd ..<CR>:pwd<CR>', { noremap = true, silent = false, desc = "cd to parent directory" })
+map('n', '<leader>cr', ':cd -<CR>:pwd<CR>', { noremap = true, silent = false, desc = "cd to previous directory" })
+map('n', '<leader>cp', ':pwd<CR>', { noremap = true, silent = false, desc = "print working directory" })
+
+-- Terminal mode mappings (applies to all terminals, including floaterm)
+map('t', '<C-[>', '<C-\\><C-n>', { noremap = true, silent = true })
+map('t', '<Esc>', '<C-\\><C-n>', { noremap = true, silent = true })
+
+-- Better terminal window navigation from terminal mode
+map('t', '<C-w>h', '<C-\\><C-n><C-w>h', { noremap = true, silent = true })
+map('t', '<C-w>j', '<C-\\><C-n><C-w>j', { noremap = true, silent = true })
+map('t', '<C-w>k', '<C-\\><C-n><C-w>k', { noremap = true, silent = true })
+map('t', '<C-w>l', '<C-\\><C-n><C-w>l', { noremap = true, silent = true })
+
+local function setup_symbols(symbols)
+  for trigger, symbol in pairs(symbols) do
+    vim.keymap.set('i', '\\' .. trigger, symbol, {buffer = true})
+  end
+end
+
+-- split behavior
+vim.opt.splitright = true  
+vim.opt.splitbelow = true  
+
+
+-- Define symbols by category
+local symbols = {
+  -- Greek lowercase
+  greek_lower = {
+    alpha = 'α', a = 'α',
+    beta = 'β', b = 'β',
+    gamma = 'γ',
+    delta = 'δ',
+    epsilon = 'ε',
+    zeta = 'ζ',
+    eta = 'η',
+    theta = 'θ',
+    lambda = 'λ', lam = 'λ',
+    mu = 'μ',
+    nu = 'ν',
+    xi = 'ξ',
+    pi = 'π',
+    rho = 'ρ',
+    sigma = 'σ',
+    tau = 'τ',
+    phi = 'φ',
+    chi = 'χ',
+    psi = 'ψ',
+    omega = 'ω',
+  },
+
+  -- Greek uppercase
+  greek_upper = {
+    Alpha = 'Α',
+    Beta = 'Β',
+    Gamma = 'Γ',
+    Delta = 'Δ',
+    Epsilon = 'Ε',
+    Zeta = 'Ζ',
+    Eta = 'Η',
+    Theta = 'Θ',
+    Iota = 'Ι',
+    Kappa = 'Κ',
+    Lambda = 'Λ',
+    Mu = 'Μ',
+    Nu = 'Ν',
+    Xi = 'Ξ',
+    Omicron = 'Ο',
+    Pi = 'Π',
+    Rho = 'Ρ',
+    Sigma = 'Σ',
+    Tau = 'Τ',
+    Upsilon = 'Υ',
+    Phi = 'Φ',
+    Chi = 'Χ',
+    Psi = 'Ψ',
+    Omega = 'Ω',
+  },
+
+  -- Sets
+  operators = {
+    ['in'] = '∈',
+    notin = '∉',
+    union = '∪',
+    intersect = '∩',
+    subset = '⊂',
+    supset = '⊃',
+    forall = '∀',
+    exists = '∃',
+    therefore = '∴',
+    sum = '∑',
+    prod = '∏',
+  },
+
+  -- Arrows
+  arrows = {
+    implies = '⟹',
+    iff = '⟺',
+    to = '→',
+    gets = '←',
+  },
+
+  -- Misc
+  misc = {
+    trademark = '™',
+    copyright = '©',
+    top = '⊤',
+    dot = '·',
+    n = '\\n',
+    sec = '§',
+    approx = '≈',
+    inf = '∞',
+    qed = '□',
+    partial = '∂', par = '∂'
+  },
+  -- Linear algebra
+  linear = {
+    otimes = '⊗',
+  },
+}
+
+for _, category in pairs(symbols) do
+  setup_symbols(category)
+end
+
+-- bootstrap lazy.nvim
+local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
+if not vim.loop.fs_stat(lazypath) then
+  vim.fn.system({ "git", "clone", "--filter=blob:none",
+    "https://github.com/folke/lazy.nvim.git",
+    "--branch=stable", lazypath,
+  })
+end
+vim.opt.rtp:prepend(lazypath)
+
+-- get diagnostics
+map('n', 'gh', function()
+  vim.diagnostic.open_float(nil, { border = "double", scope = "line" })
+end, { noremap = true, silent = true })
+
+-- get type info
+map('n', 'gt', function()
+  local opts = {
+    border = "double",  -- More visible border style
+    max_width = 80,
+    pad_left = 1,
+    pad_right = 1
+  }
+  vim.lsp.buf.hover(opts)
+end, { noremap = true, silent = true })
+
+-- plugins
+require("lazy").setup({
+-- Tree-sitter for syntax highlighting
+{
+  "nvim-treesitter/nvim-treesitter",
+  build = ":TSUpdate",
+  config = function()
+    require("nvim-treesitter.configs").setup({
+      -- Install parsers synchronously (only applied to `ensure_installed`)
+      sync_install = false,
+      
+      -- Automatically install missing parsers when entering buffer
+      auto_install = true,
+      
+      -- List of parsers to install (or "all")
+      ensure_installed = {
+        "lua",
+        "python", 
+        "c",
+        "cpp",
+        "gleam",  -- Add gleam here
+        "vim",
+        "vimdoc",
+        "markdown",
+        "json",
+      },
+      
+      highlight = {
+        enable = true,
+        -- Setting this to true will run `:h syntax` and tree-sitter at the same time.
+        additional_vim_regex_highlighting = false,
+      },
+      
+      indent = {
+        enable = true
+      },
+    })
+  end,
+},
+{ "nvim-tree/nvim-tree.lua",
+  config = function()
+    require("nvim-tree").setup({
+      renderer = {
+        icons = {
+          show = {
+            file = false,
+            folder = false,
+            folder_arrow = false,
+            git = false,
+          },
+        },
+        indent_markers = {
+          enable = true,
+          icons = {
+            corner = "└──",
+            edge = "│",
+            item = "├──",
+            none = " ",
+          },
+        },
+      },
+    })
+  end,
+},
+
+{ "nvim-telescope/telescope.nvim",
+  dependencies = { "nvim-lua/plenary.nvim" },
+  config = function()
+    local builtin = require("telescope.builtin")
+    map("n", "<leader>ff", builtin.find_files)
+    map("n", "<leader>fg", builtin.live_grep)
+    map("n", "<leader>fb", builtin.buffers)
+    map("n", "<leader>fh", builtin.help_tags)
+    
+    -- Add more telescope pickers for navigation
+    map("n", "<leader>fd", function() 
+      builtin.find_files({ cwd = vim.fn.expand("%:p:h") }) 
+    end, { desc = "Find files in current directory" })
+    
+    map("n", "<leader>fc", function()
+      builtin.find_files({ 
+        prompt_title = "Change Directory",
+        find_command = {'fd', '--type', 'd', '--hidden', '--exclude', '.git'},
+        attach_mappings = function(prompt_bufnr, map)
+          local actions = require('telescope.actions')
+          local action_state = require('telescope.actions.state')
+          
+          actions.select_default:replace(function()
+            actions.close(prompt_bufnr)
+            local selection = action_state.get_selected_entry()
+            if selection then
+              vim.cmd('cd ' .. selection[1])
+              print('Changed directory to: ' .. selection[1])
+            end
+          end)
+          return true
+        end,
+      })
+    end, { desc = "Change directory with telescope" })
+  end,
+},
+
+{ "folke/which-key.nvim",
+  event = "VeryLazy",
+  opts = {},
+  keys = {
+    { "<leader>?",
+      function() require("which-key").show({ global = false }) end,
+      desc = "Buffer Local Keymaps (which-key)",
+    },
+  },
+},
+
+-- activitywatch
+"lowitea/aw-watcher.nvim",
+opts = {  -- required, but can be empty table: {}
+    -- add any options here
+    -- for example:
+    aw_server = {
+        host = "127.0.0.1",
+        port = 5600,
+    },
+},
+
+-- LSP Support
+{
+  "neovim/nvim-lspconfig",
+  dependencies = {
+    "hrsh7th/cmp-nvim-lsp",
+    "hrsh7th/nvim-cmp",
+    "hrsh7th/cmp-buffer",       -- Buffer completions
+    "hrsh7th/cmp-path",         -- Path completions
+    "hrsh7th/cmp-cmdline",      -- Cmdline completions
+    "L3MON4D3/LuaSnip",         -- Snippet engine
+    "saadparwaiz1/cmp_luasnip", -- Snippet completions
+  },
+  config = function()
+    local lspconfig = require('lspconfig')
+    local cmp = require('cmp')
+    local luasnip = require('luasnip')
+    
+    -- nvim-cmp setup
+    cmp.setup({
+      snippet = {
+        expand = function(args)
+          luasnip.lsp_expand(args.body)
+        end,
+      },
+      mapping = cmp.mapping.preset.insert({
+        ['<C-b>'] = cmp.mapping.scroll_docs(-4),
+        ['<C-f>'] = cmp.mapping.scroll_docs(4),
+        ['<C-Space>'] = cmp.mapping.complete(),
+        ['<C-e>'] = cmp.mapping.abort(),
+        ['<CR>'] = cmp.mapping.confirm({ select = true }),
+        -- Tab/Shift-Tab to navigate through completion items
+        ['<Tab>'] = cmp.mapping.select_next_item(),
+        ['<S-Tab>'] = cmp.mapping.select_prev_item(),
+      }),
+      sources = cmp.config.sources({
+        { name = 'nvim_lsp' },
+        { name = 'luasnip' },
+      }, {
+        { name = 'buffer' },
+        { name = 'path' },
+      }),
+      -- Disable completion menu from automatically showing
+      completion = {
+        autocomplete = false,  -- This disables auto-popup
+      },
+    })
+
+    -- Use buffer source for `/` and `?`
+    cmp.setup.cmdline({ '/', '?' }, {
+      mapping = cmp.mapping.preset.cmdline(),
+      sources = {
+        { name = 'buffer' }
+      }
+    })
+
+    -- Use cmdline & path source for ':'
+    cmp.setup.cmdline(':', {
+      mapping = cmp.mapping.preset.cmdline(),
+      sources = cmp.config.sources({
+        { name = 'path' }
+      }, {
+        { name = 'cmdline' }
+      })
+    })
+
+    local capabilities = require('cmp_nvim_lsp').default_capabilities()
+
+    -- AUTO :: Pyright setup
+    lspconfig.pyright.setup({
+      capabilities = capabilities,
+      settings = {
+        python = {
+          analysis = {
+            typeCheckingMode = "standard",
+            autoSearchPaths = true,
+            useLibraryCodeForTypes = true,
+          },
+        },
+      },
+    })
+
+    -- AUTO :: Clangd setup
+    lspconfig.clangd.setup({
+      capabilities = capabilities,
+      cmd = {
+        "clangd",
+        "--background-index",
+        "--clang-tidy",
+        "--completion-style=detailed",
+        "--header-insertion=iwyu",
+      },
+    })
+
+    -- AUTO :: Gleam setup
+    lspconfig.gleam.setup({
+      capabilities = capabilities,
+    })
+
+
+    local opts = { noremap = true, silent = true }
+    map('n', 'gD', vim.lsp.buf.declaration, opts)   -- BINDING :: [g]oto [D]efinition
+    map('n', 'gd', vim.lsp.buf.definition, opts)    -- BINDING :: [g]oto [d]efinition
+    map('n', '[d', vim.diagnostic.goto_prev, opts)  -- BINDING :: [[]next [d]iagnostic
+    map('n', ']d', vim.diagnostic.goto_next, opts)  -- BINDING :: []]last [d]iagnostic 
+    map('n', 'K', vim.lsp.buf.hover, opts)          -- BINDING :: hover
+  end,
+},
+})
+-- BINDING :: [d]irectory [r]elative
+vim.keymap.set('n', '<leader>dr', function() 
+  vim.fn.setreg('+', vim.fn.expand('%'))
+end, { desc = 'Copy relative path' })
+
+-- BINDING :: [d]irectory [a]bsolute
+vim.keymap.set('n', '<leader>da', function() 
+  vim.fn.setreg('+', vim.fn.expand('%:p'))
+end, { desc = 'Copy absolute path' })
+
+-- BINDING :: [c]olor [c]olumn
+map('n', '<leader>cc', function()
+  if vim.opt.colorcolumn:get()[1] then
+    vim.opt.colorcolumn = ""
+    print("Colorcolumn off")
+  else
+    vim.opt.colorcolumn = "80"
+    print("Colorcolumn on")
+  end
+end, { noremap = true, silent = false, desc = "Toggle colorcolumn" })
+
+-- AUTO :: detect if we're running inside neovim terminal and set env var
+vim.api.nvim_create_autocmd("TermOpen", {
+  pattern = "*",
+  callback = function()
+    vim.fn.setenv("NVIM_LISTEN_ADDRESS", vim.v.servername)
+    vim.fn.setenv("NVIM", vim.fn.getpid())
+  end,
+})
+
+-- AUTO :: enter insert mode when opening terminal
+vim.api.nvim_create_autocmd("TermOpen", {
+  pattern = "*",
+  callback = function()
+    vim.cmd("startinsert")
+    -- Also set local options for terminal buffers
+    vim.opt_local.number = false
+    vim.opt_local.relativenumber = false
+    vim.opt_local.signcolumn = "no"
+  end,
+})
+
+-- AUTO :: disable error higlighting in markdown
+vim.api.nvim_create_autocmd("FileType", {
+  pattern = "markdown",
+  callback = function()
+    vim.cmd("highlight link markdownError NONE")
+  end,
+})
+
+-- Plan language syntax highlighting with custom colors
+vim.api.nvim_create_autocmd({"BufRead", "BufNewFile"}, {
+  pattern = "*.plan",
+  callback = function()
+    vim.bo.filetype = "plan"
+    
+    -- Define syntax rules with regions for multi-line support
+    vim.cmd([[
+      " Clear any existing syntax
+      syn clear
+      
+      " Headers and dividers (highest priority)
+      syn match planHeader "^#\+\s.*$"
+      syn match planMinorDivider "^-\{3,\}$"
+      syn match planMajorDivider "^=\{3,\}$"
+      
+      " Define regions that continue until the next item or divider
+      " Each region starts with its marker and continues on indented/continuation lines
+      syn region planTodo start="^\s*-\s" end="^\s*[-*?!>#]"me=s-1 end="^-\{3,\}"me=s-1 end="^=\{3,\}"me=s-1
+      syn region planDone start="^\s*\*\s" end="^\s*[-*?!>#]"me=s-1 end="^-\{3,\}"me=s-1 end="^=\{3,\}"me=s-1
+      syn region planQuestion start="^\s*?\s" end="^\s*[-*?!>#]"me=s-1 end="^-\{3,\}"me=s-1 end="^=\{3,\}"me=s-1
+      syn region planAnswered start="^\s*!\s" end="^\s*[-*?!>#]"me=s-1 end="^-\{3,\}"me=s-1 end="^=\{3,\}"me=s-1
+      syn region planNote start="^\s*>\s" end="^\s*[-*?!>#]"me=s-1 end="^-\{3,\}"me=s-1 end="^=\{3,\}"me=s-1
+      
+      " Headers
+      hi def link planHeader Title
+      hi def link planMinorDivider Comment
+      hi def link planMajorDivider Comment
+      
+      " Bright, active items (using terminal colors)
+      hi planTodo ctermfg=1                " Bright white
+      hi planQuestion ctermfg=6             " Bright yellow
+      
+      " Dimmed completed items  
+      hi planDone ctermfg=8                " Gray/dimmed
+      hi planAnswered ctermfg=8            " Gray/dimmed
+      
+      " Notes same as comments
+      hi planNote ctermfg=8                " Gray/dimmed (comment color)
+    ]])
+  end
+})
+
+
+
+================================================
+File: nvim/lazy-lock.json
+================================================
+{
+  "LuaSnip": { "branch": "master", "commit": "3d5bced1b9ae69fa3f9b1942e28af5dbc537f946" },
+  "aw-watcher.nvim": { "branch": "master", "commit": "c9cdc2285d384f4e2717bd3734435dfc63ff6f48" },
+  "cmp-buffer": { "branch": "main", "commit": "b74fab3656eea9de20a9b8116afa3cfc4ec09657" },
+  "cmp-cmdline": { "branch": "main", "commit": "d126061b624e0af6c3a556428712dd4d4194ec6d" },
+  "cmp-nvim-lsp": { "branch": "main", "commit": "a8912b88ce488f411177fc8aed358b04dc246d7b" },
+  "cmp-path": { "branch": "main", "commit": "e52e640b7befd8113b3350f46e8cfcfe98fcf730" },
+  "cmp_luasnip": { "branch": "master", "commit": "98d9cb5c2c38532bd9bdb481067b20fea8f32e90" },
+  "lazy.nvim": { "branch": "main", "commit": "6c3bda4aca61a13a9c63f1c1d1b16b9d3be90d7a" },
+  "nvim-cmp": { "branch": "main", "commit": "b5311ab3ed9c846b585c0c15b7559be131ec4be9" },
+  "nvim-lspconfig": { "branch": "master", "commit": "a56f4b9dde5daf3d4c7bb50cf78ab609537f2259" },
+  "nvim-tree.lua": { "branch": "master", "commit": "5bea2b37523a31288e0fcab42f3be5c1bd4516bb" },
+  "nvim-treesitter": { "branch": "master", "commit": "42fc28ba918343ebfd5565147a42a26580579482" },
+  "plenary.nvim": { "branch": "master", "commit": "857c5ac632080dba10aae49dba902ce3abf91b35" },
+  "telescope.nvim": { "branch": "master", "commit": "a4ed82509cecc56df1c7138920a1aeaf246c0ac5" },
+  "which-key.nvim": { "branch": "main", "commit": "370ec46f710e058c9c1646273e6b225acf47cbed" }
+}
+
+
+
+
+================================================
+File: tmux/tmux.conf
+================================================
+unbind C-b
+set -g prefix C-a
+bind-key C-a last-window
+bind-key e send-prefix
+
+# Status bar with terminal's default colors
+set -g status-position bottom
+set -g status-bg black
+set -g status-fg white
+set -g status-style bold
+set -g status-left ''
+set -g status-right '#[bold] %d/%m #[bold] %H:%M:%S '
+set -g status-right-length 50
+set -g status-left-length 20
+
+setw -g mode-keys vi
+bind-key -T copy-mode-vi 'v' send -X begin-selection
+bind-key -T copy-mode-vi 'y' send -X copy-selection
+
+# Pane navigation (vim-like)
+bind h select-pane -L
+bind j select-pane -D
+bind k select-pane -U
+bind l select-pane -R
+
+# Easy pane resizing
+bind -r H resize-pane -L 5
+bind -r J resize-pane -D 5
+bind -r K resize-pane -U 5
+bind -r L resize-pane -R 5
+
+# Window status with minimal styling
+setw -g window-status-current-format ' #I:#W#F '
+setw -g window-status-format ' #I:#W#F '
+setw -g window-status-current-style 'bold'
+
+set-option -g history-limit 1000000
+
+bind-key -T copy-mode-vi y send-keys -X copy-pipe-and-cancel "copy"
+
+# TPM plugins
+set -g @plugin 'tmux-plugins/tpm'
+set -g @plugin 'tmux-plugins/tmux-sensible'
+set -g @plugin 'sainnhe/tmux-fzf'
+
+# Initialize TMUX plugin manager (keep this line at the very bottom)
+run '~/.tmux/plugins/tpm/tpm'
+#git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
+
+
+
+================================================
+File: wezterm/wezterm.lua
+================================================
+----------------------------
+-- spike's wezterm config --
+----------------------------
+
+local wezterm = require 'wezterm'
+local c = {}
+if wezterm.config_builder then
+  c = wezterm.config_builder()
+  c:set_strict_mode(true)
+end
+local act = wezterm.action
+
+-- Theme switching
+local themes = {
+  'Catppuccin Mocha',
+  'Catppuccin Latte',
+  --'Rosé Pine Moon (base16)',
+  --'Rosé Pine Dawn (base16)',
+  --'Cloud (terminal.sexy)',
+  --'Paper (Gogh)',
+}
+
+local current_theme_index = 1
+local last_switch_time = 0
+c.color_scheme = themes[current_theme_index]
+c.front_end = "WebGpu"
+
+local function cycle_theme()
+  return wezterm.action_callback(function(window, pane)
+    local current_time = os.time()
+    if current_time - last_switch_time < 0.1 then
+      return
+    end
+    last_switch_time = current_time
+    current_theme_index = current_theme_index + 1
+    if current_theme_index > #themes then
+      current_theme_index = 1
+    end
+    window:set_config_overrides({
+      color_scheme = themes[current_theme_index]
+    })
+  end)
+end
+
+c.adjust_window_size_when_changing_font_size = false
+
+-- Keybinding
+c.keys = {
+  { key = 'm', mods = 'CMD', action = wezterm.action.DisableDefaultAssignment, },
+  { key = 'h', mods = 'CMD', action = wezterm.action.DisableDefaultAssignment, },
+  { key = 'l', mods = 'CMD', action = wezterm.action.DisableDefaultAssignment, },
+  { key = 'f', mods = 'CMD', action = wezterm.action.DisableDefaultAssignment, },
+  { key = 'h', mods = 'CTRL', action = wezterm.action.DisableDefaultAssignment, },
+  { key = 'h', mods = 'CTRL|SHIFT', action = wezterm.action.DisableDefaultAssignment, },
+  -----------------------------------------------------------------------------
+  { key = 'f', mods = 'CMD', action = wezterm.action.TogglePaneZoomState },
+  { key = "]", mods = "CMD", action = act.SplitVertical({ domain = "CurrentPaneDomain" }) },
+  { key = "[", mods = "CMD", action = act.SplitHorizontal({ domain = "CurrentPaneDomain" }) },
+  -- Theme cycling
+  { key = 'T', mods = 'ALT', action = cycle_theme() },
+  -- Split management
+  { key = "d", mods = "CMD", action = act.CloseCurrentPane({ confirm = true }) },
+  -- Window focus (hjkl)
+  { key = "h", mods = "CMD", action = act.ActivatePaneDirection("Left") },
+  { key = "j", mods = "CMD", action = act.ActivatePaneDirection("Down") },
+  { key = "k", mods = "CMD", action = act.ActivatePaneDirection("Up") },
+  { key = "l", mods = "CMD", action = act.ActivatePaneDirection("Right") },
+  -- Window resizing (HJKL)
+  { key = "H", mods = "CMD", action = act.AdjustPaneSize({ "Left", 5 }) },
+  { key = "J", mods = "CMD", action = act.AdjustPaneSize({ "Down", 5 }) },
+  { key = "K", mods = "CMD", action = act.AdjustPaneSize({ "Up", 5 }) },
+  { key = "L", mods = "CMD", action = act.AdjustPaneSize({ "Right", 5 }) },
+  -- Select mode
+  { key = 'v', mods = 'ALT', action = wezterm.action.ActivateCopyMode, },
+  { key = 'u', mods = 'ALT', action = act.CopyMode 'ClearPattern' },
+}
+-- Appearance
+--  c.font = wezterm.font('SF Mono')
+c.font_size = 18
+c.window_padding = {
+  left = 0,
+  right = 0,
+  top = 0,
+  bottom = 0,
+}
+
+c.colors = {
+  tab_bar = {
+    background    = '#000000',
+    active_tab    = { bg_color = '#111111', fg_color = '#ffffff', },
+    inactive_tab  = { bg_color = '#000000', fg_color = '#888888', },
+    new_tab       = { bg_color = '#000000', fg_color = '#000000', },
+  },
+}
+
+c.window_decorations = "RESIZE"
+c.use_fancy_tab_bar = false
+c.hide_tab_bar_if_only_one_tab = true
+c.enable_wayland = false
+return c
+
+
+
+================================================
+File: zed/settings.json
+================================================
+// Zed settings
+//
+// For information on how to configure Zed, see the Zed
+// documentation: https://zed.dev/docs/configuring-zed
+//
+// To see all of Zed's default settings without changing your
+// custom settings, run `zed: open default settings` from the
+// command palette (cmd-shift-p / ctrl-shift-p)
+{
+  "vim_mode": true,
+  "base_keymap": "VSCode",
+  "ui_font_size": 16,
+  "buffer_font_size": 16,
+  "theme": {
+    "mode": "system",
+    "light": "One Light",
+    "dark": "Gruvbox Dark Hard"
+  }
+}
+
+

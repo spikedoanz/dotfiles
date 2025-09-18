@@ -23,7 +23,6 @@ local themes = {
 local current_theme_index = 1
 local last_switch_time = 0
 c.color_scheme = themes[current_theme_index]
-c.front_end = "WebGpu"
 
 local function cycle_theme()
   return wezterm.action_callback(function(window, pane)
@@ -75,7 +74,6 @@ c.keys = {
   { key = 'u', mods = 'ALT', action = act.CopyMode 'ClearPattern' },
 }
 -- Appearance
---  c.font = wezterm.font('SF Mono')
 c.font_size = 18
 c.window_padding = {
   left = 0,
@@ -97,4 +95,8 @@ c.window_decorations = "RESIZE"
 c.use_fancy_tab_bar = false
 c.hide_tab_bar_if_only_one_tab = true
 c.enable_wayland = false
+c.window_background_opacity = 0.8
+c.macos_window_background_blur = 64
+c.front_end = "WebGpu"
+
 return c

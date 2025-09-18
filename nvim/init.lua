@@ -226,6 +226,31 @@ end, { noremap = true, silent = true })
 
 -- plugins
 require("lazy").setup({
+
+{
+  'Julian/lean.nvim',
+  event = { 'BufReadPre *.lean', 'BufNewFile *.lean' },
+
+  dependencies = {
+    'neovim/nvim-lspconfig',
+    'nvim-lua/plenary.nvim',
+
+    -- optional dependencies:
+
+    -- a completion engine
+    --    hrsh7th/nvim-cmp or Saghen/blink.cmp are popular choices
+
+    -- 'nvim-telescope/telescope.nvim', -- for 2 Lean-specific pickers
+    -- 'andymass/vim-matchup',          -- for enhanced % motion behavior
+    -- 'andrewradev/switch.vim',        -- for switch support
+    -- 'tomtom/tcomment_vim',           -- for commenting
+  },
+
+  ---@type lean.Config
+  opts = { -- see below for full configuration options
+    mappings = true,
+  }
+},
 -- Tree-sitter for syntax highlighting
 {
   "nvim-treesitter/nvim-treesitter",
@@ -506,45 +531,52 @@ vim.api.nvim_create_autocmd("FileType", {
   end,
 })
 
--- Plan language syntax highlighting with custom colors
+-- Plan language syntax highlighting
 vim.api.nvim_create_autocmd({"BufRead", "BufNewFile"}, {
   pattern = "*.plan",
   callback = function()
     vim.bo.filetype = "plan"
     
-    -- Define syntax rules with regions for multi-line support
     vim.cmd([[
       " Clear any existing syntax
       syn clear
       
-      " Headers and dividers (highest priority)
+      " Headers and dividers (highest priority - match first)
       syn match planHeader "^#\+\s.*$"
-      syn match planMinorDivider "^-\{3,\}$"
-      syn match planMajorDivider "^=\{3,\}$"
+      syn match planMinorDivider "^-\{80\}$"
+      syn match planMajorDivider "^=\{80\}$"
       
-      " Define regions that continue until the next item or divider
-      " Each region starts with its marker and continues on indented/continuation lines
-      syn region planTodo start="^\s*-\s" end="^\s*[-*?!>#]"me=s-1 end="^-\{3,\}"me=s-1 end="^=\{3,\}"me=s-1
-      syn region planDone start="^\s*\*\s" end="^\s*[-*?!>#]"me=s-1 end="^-\{3,\}"me=s-1 end="^=\{3,\}"me=s-1
-      syn region planQuestion start="^\s*?\s" end="^\s*[-*?!>#]"me=s-1 end="^-\{3,\}"me=s-1 end="^=\{3,\}"me=s-1
-      syn region planAnswered start="^\s*!\s" end="^\s*[-*?!>#]"me=s-1 end="^-\{3,\}"me=s-1 end="^=\{3,\}"me=s-1
-      syn region planNote start="^\s*>\s" end="^\s*[-*?!>#]"me=s-1 end="^-\{3,\}"me=s-1 end="^=\{3,\}"me=s-1
+      " References - match [text](target) patterns
+      syn match planReference "\[.\{-}\](.\{-})" contained containedin=planTodo,planDone,planQuestion,planAnswered,planNote
       
-      " Headers
-      hi def link planHeader Title
-      hi def link planMinorDivider Comment
+      " Define regions for multi-line items
+      " Each region starts with marker and continues until:
+      " 1. Another item marker at start of line
+      " 2. A header line
+      " 3. A divider line  
+      " 4. End of file
+      syn region planTodo start="^\s*-\s" end="^\ze\s*[-*?!>]" end="^\ze#" end="^\ze-\{80\}" end="^\ze=\{80\}" end="\%$"
+      syn region planDone start="^\s*\*\s" end="^\ze\s*[-*?!>]" end="^\ze#" end="^\ze-\{80\}" end="^\ze=\{80\}" end="\%$"
+      syn region planQuestion start="^\s*?\s" end="^\ze\s*[-*?!>]" end="^\ze#" end="^\ze-\{80\}" end="^\ze=\{80\}" end="\%$"
+      syn region planAnswered start="^\s*!\s" end="^\ze\s*[-*?!>]" end="^\ze#" end="^\ze-\{80\}" end="^\ze=\{80\}" end="\%$"
+      syn region planNote start="^\s*>\s" end="^\ze\s*[-*?!>]" end="^\ze#" end="^\ze-\{80\}" end="^\ze=\{80\}" end="\%$"
+      
+      " Color definitions
+      hi planHeader ctermfg=7 cterm=NONE
+      hi def link planMinorDivider Comment  
       hi def link planMajorDivider Comment
+      hi def link planReference Underlined
       
-      " Bright, active items (using terminal colors)
-      hi planTodo ctermfg=1                " Bright white
-      hi planQuestion ctermfg=6             " Bright yellow
+      " Active/pending items - bright colors
+      hi planTodo ctermfg=1 cterm=NONE
+      hi planQuestion ctermfg=6 cterm=NONE
       
-      " Dimmed completed items  
-      hi planDone ctermfg=8                " Gray/dimmed
-      hi planAnswered ctermfg=8            " Gray/dimmed
+      " Completed items - dimmed
+      hi planDone ctermfg=8 cterm=NONE
+      hi planAnswered ctermfg=8 cterm=NONE
       
-      " Notes same as comments
-      hi planNote ctermfg=8                " Gray/dimmed (comment color)
+      " Notes - same as comments
+      hi planNote ctermfg=8 cterm=NONE
     ]])
   end
 })

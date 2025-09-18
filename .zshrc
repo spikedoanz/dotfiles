@@ -3,6 +3,8 @@
 ######################
 PS1='%F{green}%n@%m%f:%F{cyan}%~%f § '
 
+set -o emacs
+
 source ~/.env
 source <(fzf --zsh)
 . "$HOME/.local/bin/env"
@@ -83,3 +85,12 @@ export PATH="/opt/homebrew/opt/llvm/bin:$PATH"
 PATH="$PATH:/Applications/WezTerm.app/Contents/MacOS"
 export PATH="/opt/homebrew/opt/qt@5/bin:$PATH"
 export PATH="$HOME/.bin/:$PATH"
+
+
+#--------------------------------------------------------------------------------
+# android sdk
+export ANDROID_NDK="$HOME/Library/Android/sdk/ndk/29.0.14033849"
+export TVM_NDK_CC="$ANDROID_NDK/toolchains/llvm/prebuilt/darwin-x86_64/bin/aarch64-linux-android24-clang"
+export JAVA_HOME="/Applications/Android Studio.app/Contents/jbr/Contents/Home"
+export TVM_SOURCE_DIR="/Users/spike/R/t-efficient-ai-notes/mlc-llm/3rdparty/tvm"
+export PATH="$HOME/Library/Android/sdk/platform-tools:$PATH"
