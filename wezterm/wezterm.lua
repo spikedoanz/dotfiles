@@ -56,7 +56,7 @@ c.keys = {
   { key = "]", mods = "CMD", action = act.SplitVertical({ domain = "CurrentPaneDomain" }) },
   { key = "[", mods = "CMD", action = act.SplitHorizontal({ domain = "CurrentPaneDomain" }) },
   -- Theme cycling
-  { key = 'T', mods = 'ALT', action = cycle_theme() },
+  { key = 'A', mods = 'ALT|SHIFT', action = cycle_theme() },
   -- Split management
   { key = "d", mods = "CMD", action = act.CloseCurrentPane({ confirm = true }) },
   -- Window focus (hjkl)

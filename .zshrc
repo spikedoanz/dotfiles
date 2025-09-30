@@ -1,20 +1,31 @@
 ######################
 ## spike's shell rc ##
 ######################
+
+# NIX SETUP - MUST COME FIRST
+export PATH="/nix/var/nix/profiles/default/bin:$HOME/.nix-profile/bin:$PATH"
+if [ -e ~/.nix-profile/etc/profile.d/nix.sh ]; then . ~/.nix-profile/etc/profile.d/nix.sh; fi
+
 PS1='%F{green}%n@%m%f:%F{cyan}%~%f § '
-
 set -o emacs
-
 source ~/.env
-source <(fzf --zsh)
-. "$HOME/.local/bin/env"
 
-export EDITOR=nvim
-eval "$(zoxide init zsh)"
+if command -v fzf >/dev/null 2>&1; then
+  source <(fzf --zsh)
+fi
+
+if command -v zoxide >/dev/null 2>&1; then
+  eval "$(zoxide init zsh)"
+fi
+
+if command -v nvim >/dev/null 2>&1; then
+  export EDITOR=nvim
+fi
+
+. "$HOME/.local/bin/env"
 if [[ -z "$SSH_AGENT_PID" ]]; then
     eval $(ssh-agent -s) > /dev/null
 fi
-
 #-------------------------------------------------------------------------------- 
 # clipboard
 if [[ "$OSTYPE" == "darwin"* ]]; then
@@ -33,8 +44,9 @@ else
         echo "Neither xclip nor xsel is installed. Please install one of them."
     fi
 fi
-
 # ------------------------------------------------------------------------------- 
+#
+alias icat='wezterm imgcat'
 # aliases 
 v() {
     local current_dir="$(pwd)"
@@ -66,11 +78,8 @@ if command -v eza >/dev/null 2>&1; then
     alias la='eza -a'
     alias l='eza'
 fi
-
 alias p='python'
 alias vim='nvim'
-alias cat='bat -p --paging=never'
-
 alias gg='git add . && git commit -m "lazycommit" && git push origin $(git branch --show-current)'
 alias ga='git add '
 alias gc='git commit -m '
@@ -78,15 +87,12 @@ alias gp='git push origin $(git branch --show-current)'
 alias gl='git pull'
 alias gb='git branch '
 alias gt='git checkout '
-
 #================================================================================
 # path
 export PATH="/opt/homebrew/opt/llvm/bin:$PATH"
 PATH="$PATH:/Applications/WezTerm.app/Contents/MacOS"
 export PATH="/opt/homebrew/opt/qt@5/bin:$PATH"
 export PATH="$HOME/.bin/:$PATH"
-
-
 #--------------------------------------------------------------------------------
 # android sdk
 export ANDROID_NDK="$HOME/Library/Android/sdk/ndk/29.0.14033849"
@@ -94,3 +100,16 @@ export TVM_NDK_CC="$ANDROID_NDK/toolchains/llvm/prebuilt/darwin-x86_64/bin/aarch
 export JAVA_HOME="/Applications/Android Studio.app/Contents/jbr/Contents/Home"
 export TVM_SOURCE_DIR="/Users/spike/R/t-efficient-ai-notes/mlc-llm/3rdparty/tvm"
 export PATH="$HOME/Library/Android/sdk/platform-tools:$PATH"
+
+
+# BEGIN opam configuration
+# This is useful if you're using opam as it adds:
+#   - the correct directories to the PATH
+#   - auto-completion for the opam binary
+# This section can be safely removed at any time if needed.
+[[ ! -r '/Users/spike/.opam/opam-init/init.zsh' ]] || source '/Users/spike/.opam/opam-init/init.zsh' > /dev/null 2> /dev/null
+# END opam configuration
+
+fpath+=~/.zfunc; autoload -Uz compinit; compinit
+
+zstyle ':completion:*' menu select

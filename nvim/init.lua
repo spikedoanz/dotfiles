@@ -26,7 +26,7 @@ opt.writebackup = false
 --opt.laststatus = 3            -- Global statusline
 
 -- Make statusline blend with background
-vim.cmd("highlight StatusLine cterm=NONE ctermbg=NONE ctermfg=NONE gui=NONE guibg=NONE guifg=NONE")
+--vim.cmd("highlight StatusLine cterm=NONE ctermbg=NONE ctermfg=NONE gui=NONE guibg=NONE guifg=NONE")
 vim.cmd("highlight StatusLineNC cterm=NONE ctermbg=NONE ctermfg=NONE gui=NONE guibg=NONE guifg=NONE")
 
 -- persistent undo
@@ -388,7 +388,113 @@ opts = {  -- required, but can be empty table: {}
   config = function()
     local cmp = require('cmp')
     local luasnip = require('luasnip')
-    
+
+    -- Custom date/time completion source
+    local date_source = {}
+
+    date_source.new = function()
+      return setmetatable({}, { __index = date_source })
+    end
+
+    date_source.get_trigger_characters = function()
+      return { '@' }
+    end
+
+    date_source.is_available = function()
+      return true
+    end
+
+    date_source.get_debug_name = function()
+      return 'date_macros'
+    end
+
+    date_source.complete = function(self, params, callback)
+      local cursor_before_line = params.context.cursor_before_line
+      local trigger_match = cursor_before_line:match('@now$') or cursor_before_line:match('@day$')
+
+      if trigger_match then
+        local items = {}
+        local now = os.date("*t")
+
+        if cursor_before_line:match('@now$') then
+          -- Various time formats
+          table.insert(items, {
+            label = '@now → ' .. os.date('%Y-%m-%d'),
+            insertText = os.date('%Y-%m-%d'),
+            documentation = 'Date: YYYY-MM-DD',
+            data = { trigger = '@now' }
+          })
+
+          table.insert(items, {
+            label = '@now → ' .. os.date('%Y-%m-%d %H:%M:%S'),
+            insertText = os.date('%Y-%m-%d %H:%M:%S'),
+            documentation = 'Date and time: YYYY-MM-DD HH:MM:SS',
+            data = { trigger = '@now' }
+          })
+
+          table.insert(items, {
+            label = '@now → ' .. os.date('%Y-%m-%d:%H-%M-%S'),
+            insertText = os.date('%Y-%m-%d:%H-%M-%S'),
+            documentation = 'Date and time: YYYY-MM-DD:HH-MM-SS',
+            data = { trigger = '@now' }
+          })
+
+          table.insert(items, {
+            label = '@now → ' .. os.date('%H:%M:%S'),
+            insertText = os.date('%H:%M:%S'),
+            documentation = 'Time only: HH:MM:SS',
+            data = { trigger = '@now' }
+          })
+
+          table.insert(items, {
+            label = '@now → ' .. os.date('%Y%m%d'),
+            insertText = os.date('%Y%m%d'),
+            documentation = 'Compact date: YYYYMMDD',
+            data = { trigger = '@now' }
+          })
+
+          table.insert(items, {
+            label = '@now → ' .. os.date('%Y%m%d_%H%M%S'),
+            insertText = os.date('%Y%m%d_%H%M%S'),
+            documentation = 'Compact datetime: YYYYMMDD_HHMMSS',
+            data = { trigger = '@now' }
+          })
+        elseif cursor_before_line:match('@day$') then
+          -- Just the date
+          table.insert(items, {
+            label = '@day → ' .. os.date('%Y-%m-%d'),
+            insertText = os.date('%Y-%m-%d'),
+            documentation = 'Today\'s date: YYYY-MM-DD',
+            data = { trigger = '@day' }
+          })
+        end
+
+        -- Transform items to include textEdit to replace the trigger
+        for _, item in ipairs(items) do
+          local trigger = item.data.trigger
+          local line = params.context.cursor.line
+          local start_col = params.context.cursor.col - #trigger
+
+          item.textEdit = {
+            newText = item.insertText,
+            range = {
+              start = { line = line, character = start_col },
+              ['end'] = { line = line, character = params.context.cursor.col }
+            }
+          }
+          item.filterText = trigger
+          item.sortText = item.label
+        end
+
+        callback(items)
+      else
+        callback({})
+      end
+    end
+
+    -- Register the custom source
+    cmp.register_source('date_macros', date_source.new())
+
     -- nvim-cmp setup
     cmp.setup({
       snippet = {
@@ -400,23 +506,23 @@ opts = {  -- required, but can be empty table: {}
         ['<C-b>'] = cmp.mapping.scroll_docs(-4),
         ['<C-f>'] = cmp.mapping.scroll_docs(4),
         ['<C-Space>'] = cmp.mapping.complete(),
+        ['<C-p>'] = cmp.mapping.complete(),  -- Add Ctrl-P as completion trigger
         ['<C-e>'] = cmp.mapping.abort(),
         ['<CR>'] = cmp.mapping.confirm({ select = true }),
         -- Tab/Shift-Tab to navigate through completion items
         ['<Tab>'] = cmp.mapping.select_next_item(),
         ['<S-Tab>'] = cmp.mapping.select_prev_item(),
       }),
-      sources = cmp.config.sources({
-        { name = 'nvim_lsp' },
-        { name = 'luasnip' },
-      }, {
-        { name = 'buffer' },
-        { name = 'path' },
-      }),
+      sources = cmp.config.sources(
+          {
+            { name = 'date_macros', priority = 1000 }, -- High priority for date macros
+            { name = 'nvim_lsp' },
+            { name = 'luasnip' },
+          },
+          { { name = 'buffer' }, { name = 'path' }, }
+        ),
       -- Disable completion menu from automatically showing
-      completion = {
-        autocomplete = false,  -- This disables auto-popup
-      },
+      completion = {autocomplete = false,},
     })
 
     -- Use buffer source for `/` and `?`
@@ -464,40 +570,9 @@ opts = {  -- required, but can be empty table: {}
       },
     })
 
-    -- Clangd configuration
-    vim.lsp.config('clangd', {
-      cmd = {
-        "clangd",
-        "--background-index",
-        "--clang-tidy",
-        "--completion-style=detailed",
-        "--header-insertion=iwyu",
-      },
-      filetypes = { 'c', 'cpp', 'objc', 'objcpp' },
-      root_markers = { 
-        '.clangd', 
-        '.clang-tidy', 
-        '.clang-format', 
-        'compile_commands.json', 
-        'compile_flags.txt', 
-        'configure.ac',
-        '.git' 
-      },
-      capabilities = capabilities,
-    })
-
-    -- Gleam configuration
-    vim.lsp.config('gleam', {
-      cmd = { 'gleam', 'lsp' },
-      filetypes = { 'gleam' },
-      root_markers = { 'gleam.toml', '.git' },
-      capabilities = capabilities,
-    })
-
     -- Enable the configured LSP servers
-    vim.lsp.enable({ 'pyright', 'clangd', 'gleam' })
+    vim.lsp.enable({ 'pyright' })
 
-    -- LSP keymaps (unchanged)
     local opts = { noremap = true, silent = true }
     map('n', 'gD', vim.lsp.buf.declaration, opts)   -- BINDING :: [g]oto [D]efinition
     map('n', 'gd', vim.lsp.buf.definition, opts)    -- BINDING :: [g]oto [d]efinition
@@ -507,6 +582,7 @@ opts = {  -- required, but can be empty table: {}
   end,
 },
 })
+
 -- BINDING :: [d]irectory [r]elative
 vim.keymap.set('n', '<leader>dr', function() 
   vim.fn.setreg('+', vim.fn.expand('%'))
