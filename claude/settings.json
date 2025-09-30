@@ -1,0 +1,21 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(ls *)",
+      "Bash(uv *)",
+      "Bash(uvx *)",
+      "Bash(cd *)",
+      "Bash(git worktree *)",
+      "Bash(git add *)",
+      "Bash(git commit *)",
+      "Read(~/.zshrc)"
+    ],
+    "deny": [
+      "Bash(curl:*)",
+      "Read(~/.env*)",
+      "Read(./.env*)"
+    ]
+  },
+  "env": {"CLAUDE_CODE_ENABLE_TELEMETRY": "0"},
+  "alwaysThinkingEnabled": true
+}

@@ -23,6 +23,7 @@ cfg ~/.config/zed/keymap.json         zed                 settings.json
 cfg ~/.config/karabiner/karabiner.json karabiner          karabiner.json
 cfg ~/.aerospace.toml                 aerospace           .aerospace.toml
 cfg ~/.config/tmux/tmux.conf          tmux                tmux.conf 
+cfg ~/.claude/settings.json           claude              settings.json
 
 cfg /etc/nixos/configuration.nix      nix                 configuration.nix
 cfg ~/.config/home-manager/home.nix   nix/home-manager    home.nix
