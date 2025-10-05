@@ -1,4 +1,7 @@
 {
+  "env": {
+    "CLAUDE_CODE_ENABLE_TELEMETRY": "0"
+  },
   "permissions": {
     "allow": [
       "Bash(ls:*)",
@@ -17,6 +20,5 @@
       "Read(./.env*)"
     ]
   },
-  "env": {"CLAUDE_CODE_ENABLE_TELEMETRY": "0"},
   "alwaysThinkingEnabled": true
 }

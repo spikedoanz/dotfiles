@@ -130,7 +130,6 @@ automatically-unhide-macos-hidden-apps = false
 
     alt-q = 'workspace q'
     alt-w = 'workspace w'
-    alt-e = 'workspace e'
 
 
     # See: https://nikitabobko.github.io/AeroSpace/commands#move-node-to-workspace
@@ -145,7 +144,6 @@ automatically-unhide-macos-hidden-apps = false
     alt-shift-9 = 'move-node-to-workspace 9'
     alt-shift-q = 'move-node-to-workspace q'
     alt-shift-w = 'move-node-to-workspace w'
-    alt-shift-e = 'move-node-to-workspace e'
 
     [workspace-to-monitor-force-assignment]
         1 = 'main'  # Your main monitor

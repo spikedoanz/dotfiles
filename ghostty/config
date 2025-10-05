@@ -1,0 +1,37 @@
+# Ghostty configuration matching wezterm setup
+# Reload with: CMD+SHIFT+,
+
+shell-integration = fish
+# Theme - Catppuccin (auto-switches based on system appearance)
+theme = dark:Catppuccin Mocha, light:Catppuccin Latte
+# Appearance
+font-size = 18
+window-padding-x = 0
+window-padding-y = 0
+window-decoration = false
+
+# Disable default keybinds that conflict with custom ones
+keybind = super+m=unbind
+keybind = super+h=unbind
+keybind = super+l=unbind
+keybind = super+f=unbind
+keybind = ctrl+h=unbind
+keybind = ctrl+shift+h=unbind
+
+# Split management
+keybind = super+f=toggle_split_zoom
+keybind = super+shift+]=new_split:down
+keybind = super+shift+[=new_split:right
+keybind = super+d=close_surface
+
+# Split navigation (hjkl)
+keybind = super+h=goto_split:left
+keybind = super+j=goto_split:down
+keybind = super+k=goto_split:up
+keybind = super+l=goto_split:right
+
+# Split resizing (HJKL)
+keybind = super+shift+h=resize_split:left,5
+keybind = super+shift+j=resize_split:down,5
+keybind = super+shift+k=resize_split:up,5
+keybind = super+shift+l=resize_split:right,5

@@ -1,14 +1,14 @@
 ######################
 ## spike's shell rc ##
 ######################
+PS1='%F{green}%n@%m%f:%F{cyan}%~%f § '
+source ~/.env
 
 # NIX SETUP - MUST COME FIRST
 export PATH="/nix/var/nix/profiles/default/bin:$HOME/.nix-profile/bin:$PATH"
 if [ -e ~/.nix-profile/etc/profile.d/nix.sh ]; then . ~/.nix-profile/etc/profile.d/nix.sh; fi
 
-PS1='%F{green}%n@%m%f:%F{cyan}%~%f § '
 set -o emacs
-source ~/.env
 
 if command -v fzf >/dev/null 2>&1; then
   source <(fzf --zsh)
@@ -26,6 +26,15 @@ fi
 if [[ -z "$SSH_AGENT_PID" ]]; then
     eval $(ssh-agent -s) > /dev/null
 fi
+
+# capture tmux buffer in vim
+bindkey -s '^X^E' 'tmux capture-pane -S - -p > /tmp/tmux-buffer.txt && nvim + /tmp/tmux-buffer.txt\n'
+
+# edit command line
+autoload -U edit-command-line
+zle -N edit-command-line
+bindkey '\ev' edit-command-line
+
 #-------------------------------------------------------------------------------- 
 # clipboard
 if [[ "$OSTYPE" == "darwin"* ]]; then
@@ -45,9 +54,6 @@ else
     fi
 fi
 # ------------------------------------------------------------------------------- 
-#
-alias icat='wezterm imgcat'
-# aliases 
 v() {
     local current_dir="$(pwd)"
     local search_dir="$current_dir"
@@ -87,10 +93,11 @@ alias gp='git push origin $(git branch --show-current)'
 alias gl='git pull'
 alias gb='git branch '
 alias gt='git checkout '
+
 #================================================================================
 # path
 export PATH="/opt/homebrew/opt/llvm/bin:$PATH"
-PATH="$PATH:/Applications/WezTerm.app/Contents/MacOS"
+export PATH="/Applications/Ghostty.app/Contents/MacOS:$PATH"
 export PATH="/opt/homebrew/opt/qt@5/bin:$PATH"
 export PATH="$HOME/.bin/:$PATH"
 #--------------------------------------------------------------------------------
