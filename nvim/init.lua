@@ -581,6 +581,40 @@ opts = {  -- required, but can be empty table: {}
     map('n', 'K', vim.lsp.buf.hover, opts)          -- BINDING :: hover
   end,
 },
+-- vim-slime for REPL interaction
+{
+  "jpalardy/vim-slime",
+  init = function()
+    -- Use tmux instead of neovim
+    vim.g.slime_target = "tmux"
+    
+    -- Default tmux configuration
+    vim.g.slime_default_config = {
+      socket_name = "default",
+      target_pane = "{last}"  -- or use ":.2" for current window, pane 2
+    }
+    
+    -- Don't ask for config every time (optional)
+    vim.g.slime_dont_ask_default = 1
+    
+    -- Use %cpaste for iPython to handle indentation correctly
+    vim.g.slime_python_ipython = 1
+  end,
+  config = function()
+    -- Your existing keybindings look good
+    vim.keymap.set('n', '<leader>ss', '<Plug>SlimeSendCell', { desc = "Send cell to REPL" })
+    vim.keymap.set('n', '<leader>sp', '<Plug>SlimeParagraphSend', { desc = "Send paragraph to REPL" })
+    vim.keymap.set('n', '<leader>sl', '<Plug>SlimeLineSend', { desc = "Send line to REPL" })
+    vim.keymap.set('x', '<leader>s', '<Plug>SlimeRegionSend', { desc = "Send selection to REPL" })
+    vim.keymap.set('n', '<leader>sc', '<Plug>SlimeConfig', { desc = "Configure slime" })
+    
+    -- Update the iPython starter for tmux
+    vim.keymap.set('n', '<leader>si', function()
+      -- Opens iPython in a new tmux pane (horizontal split)
+      vim.fn.system('tmux split-window -h ipython')
+    end, { desc = "Start iPython in tmux pane" })
+  end,
+},
 })
 
 -- BINDING :: [d]irectory [r]elative

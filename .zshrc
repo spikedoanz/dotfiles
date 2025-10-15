@@ -1,7 +1,7 @@
 ######################
 ## spike's shell rc ##
 ######################
-PS1='%F{green}%n@%m%f:%F{cyan}%~%f § '
+PS1='%F{green}%n@%m%f:%F{cyan}%~%f $ '
 source ~/.env
 
 # NIX SETUP - MUST COME FIRST
@@ -23,8 +23,14 @@ if command -v nvim >/dev/null 2>&1; then
 fi
 
 . "$HOME/.local/bin/env"
-if [[ -z "$SSH_AGENT_PID" ]]; then
-    eval $(ssh-agent -s) > /dev/null
+
+# SSH Agent
+if ! pgrep -u "$USER" ssh-agent > /dev/null; then
+    eval "$(ssh-agent -s)" > /dev/null
+fi
+
+if [ -n "$SSH_AUTH_SOCK" ]; then
+    ssh-add --apple-use-keychain ~/.ssh/gh 2>/dev/null
 fi
 
 # capture tmux buffer in vim
