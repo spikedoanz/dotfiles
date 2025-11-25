@@ -5,9 +5,15 @@ local opt = vim.opt
 
 -- editor settings
 opt.number = false
+opt.relativenumber = false
+opt.ruler = true
+opt.showmode = true
+opt.autoindent = true
 opt.expandtab = true 
 opt.shiftwidth = 2
 opt.tabstop = 2
+opt.softtabstop = 2
+--opt.nowrap = true
 opt.signcolumn = "no"
 opt.shortmess:append("I")
 opt.autoread = true
@@ -53,6 +59,7 @@ end
 -- keymaps
 local map = vim.keymap.set
 vim.g.mapleader = " "
+vim.g.maplocalleader = ","
 
 -- backspace hurts my fingers
 map('i', '<C-h>', '<BS>', { noremap = true, silent = true })
@@ -251,6 +258,82 @@ require("lazy").setup({
     mappings = true,
   }
 },
+
+-- Idris2 support
+{
+  'ShinKage/idris2-nvim',
+  dependencies = {
+    'neovim/nvim-lspconfig',
+    'MunifTanjim/nui.nvim',
+  },
+  ft = { 'idris2' },
+  config = function()
+    -- Set localleader if not already set
+    vim.g.maplocalleader = vim.g.maplocalleader or ','
+
+    -- command to run after every code action
+    local function save_hook(action)
+      vim.cmd('silent write')
+    end
+
+    local opts = {
+      client = {
+        hover = {
+          use_split = false, -- Persistent split instead of popups for hover
+          split_size = '30%', -- Size of persistent split, if used
+          auto_resize_split = false, -- Should resize split to use minimum space
+          split_position = 'bottom', -- bottom, top, left or right
+          with_history = false, -- Show history of hovers instead of only last
+        },
+      },
+      server = {
+        on_attach = function(...)
+          -- LSP mappings
+          vim.cmd [[nnoremap <buffer> gd <Cmd>lua vim.lsp.buf.definition()<CR>]]
+          vim.cmd [[nnoremap <buffer> K <Cmd>lua vim.lsp.buf.hover()<CR>]]
+
+          -- Idris-specific code actions
+          vim.cmd [[nnoremap <buffer> <LocalLeader>c <Cmd>lua require('idris2.code_action').case_split()<CR>]]
+          vim.cmd [[nnoremap <buffer> <LocalLeader>mc <Cmd>lua require('idris2.code_action').make_case()<CR>]]
+          vim.cmd [[nnoremap <buffer> <LocalLeader>mw <Cmd>lua require('idris2.code_action').make_with()<CR>]]
+          vim.cmd [[nnoremap <buffer> <LocalLeader>ml <Cmd>lua require('idris2.code_action').make_lemma()<CR>]]
+          vim.cmd [[nnoremap <buffer> <LocalLeader>a <Cmd>lua require('idris2.code_action').add_clause()<CR>]]
+          vim.cmd [[nnoremap <buffer> <LocalLeader>o <Cmd>lua require('idris2.code_action').expr_search()<CR>]]
+          vim.cmd [[nnoremap <buffer> <LocalLeader>gd <Cmd>lua require('idris2.code_action').generate_def()<CR>]]
+          vim.cmd [[nnoremap <buffer> <LocalLeader>rh <Cmd>lua require('idris2.code_action').refine_hole()<CR>]]
+
+          -- Hover split management
+          vim.cmd [[nnoremap <buffer> <LocalLeader>so <Cmd>lua require('idris2.hover').open_split()<CR>]]
+          vim.cmd [[nnoremap <buffer> <LocalLeader>sc <Cmd>lua require('idris2.hover').close_split()<CR>]]
+
+          -- Metavariables (holes) navigation
+          vim.cmd [[nnoremap <buffer> <LocalLeader>mm <Cmd>lua require('idris2.metavars').request_all()<CR>]]
+          vim.cmd [[nnoremap <buffer> <LocalLeader>mn <Cmd>lua require('idris2.metavars').goto_next()<CR>]]
+          vim.cmd [[nnoremap <buffer> <LocalLeader>mp <Cmd>lua require('idris2.metavars').goto_prev()<CR>]]
+
+          -- Browse namespaces
+          vim.cmd [[nnoremap <buffer> <LocalLeader>br <Cmd>lua require('idris2.browse').browse()<CR>]]
+
+          -- REPL evaluation
+          vim.cmd [[nnoremap <buffer> <LocalLeader>x <Cmd>lua require('idris2.repl').evaluate()<CR>]]
+
+          -- Diagnostics
+          vim.cmd [[nnoremap <buffer> <LocalLeader><LocalLeader>e <Cmd>lua vim.diagnostic.open_float()<CR>]]
+          vim.cmd [[nnoremap <buffer> <LocalLeader><LocalLeader>el <Cmd>lua vim.diagnostic.setloclist()<CR>]]
+        end,
+        init_options = {
+          logFile = "~/.cache/idris2-lsp/server.log",
+          longActionTimeout = 2000, -- 2 seconds
+        },
+      },
+      autostart_semantic = true, -- Should start and refresh semantic highlight automatically
+      code_action_post_hook = save_hook, -- Function to execute after a code action is performed
+      use_default_semantic_hl_groups = true, -- Set default highlight groups for semantic tokens
+    }
+    
+    require('idris2').setup(opts)
+  end,
+},
 -- Tree-sitter for syntax highlighting
 {
   "nvim-treesitter/nvim-treesitter",
@@ -264,17 +347,18 @@ require("lazy").setup({
       auto_install = true,
       
       -- List of parsers to install (or "all")
-      ensure_installed = {
-        "lua",
-        "python", 
-        "c",
-        "cpp",
-        "gleam",  -- Add gleam here
-        "vim",
-        "vimdoc",
-        "markdown",
-        "json",
-      },
+       ensure_installed = {
+         "lua",
+         "python",
+         "c",
+         "cpp",
+         "gleam",  -- Add gleam here
+         "vim",
+         "vimdoc",
+         "markdown",
+         "json",
+         "typescript",
+       },
       
       highlight = {
         enable = true,
@@ -570,8 +654,45 @@ opts = {  -- required, but can be empty table: {}
       },
     })
 
+    -- TypeScript configuration
+    vim.lsp.config('ts_ls', {
+      cmd = { 'typescript-language-server', '--stdio' },
+      filetypes = { 'typescript', 'typescriptreact', 'javascript', 'javascriptreact' },
+      root_markers = {
+        'tsconfig.json',
+        'package.json',
+        'jsconfig.json',
+        '.git'
+      },
+      capabilities = capabilities,
+      settings = {
+        typescript = {
+          inlayHints = {
+            includeInlayParameterNameHints = 'all',
+            includeInlayParameterNameHintsWhenArgumentMatchesName = false,
+            includeInlayFunctionParameterTypeHints = true,
+            includeInlayVariableTypeHints = true,
+            includeInlayPropertyDeclarationTypeHints = true,
+            includeInlayFunctionLikeReturnTypeHints = true,
+            includeInlayEnumMemberValueHints = true,
+          }
+        },
+        javascript = {
+          inlayHints = {
+            includeInlayParameterNameHints = 'all',
+            includeInlayParameterNameHintsWhenArgumentMatchesName = false,
+            includeInlayFunctionParameterTypeHints = true,
+            includeInlayVariableTypeHints = true,
+            includeInlayPropertyDeclarationTypeHints = true,
+            includeInlayFunctionLikeReturnTypeHints = true,
+            includeInlayEnumMemberValueHints = true,
+          }
+        }
+      }
+    })
+
     -- Enable the configured LSP servers
-    vim.lsp.enable({ 'pyright' })
+    vim.lsp.enable({ 'pyright', 'ts_ls' })
 
     local opts = { noremap = true, silent = true }
     map('n', 'gD', vim.lsp.buf.declaration, opts)   -- BINDING :: [g]oto [D]efinition
@@ -594,14 +715,10 @@ opts = {  -- required, but can be empty table: {}
       target_pane = "{last}"  -- or use ":.2" for current window, pane 2
     }
     
-    -- Don't ask for config every time (optional)
-    vim.g.slime_dont_ask_default = 1
-    
-    -- Use %cpaste for iPython to handle indentation correctly
-    vim.g.slime_python_ipython = 1
+    vim.g.slime_dont_ask_default = 1 -- Don't ask for config every time (optional)
+    vim.g.slime_python_ipython = 1 -- Use %cpaste for iPython to handle indentation correctly
   end,
   config = function()
-    -- Your existing keybindings look good
     vim.keymap.set('n', '<leader>ss', '<Plug>SlimeSendCell', { desc = "Send cell to REPL" })
     vim.keymap.set('n', '<leader>sp', '<Plug>SlimeParagraphSend', { desc = "Send paragraph to REPL" })
     vim.keymap.set('n', '<leader>sl', '<Plug>SlimeLineSend', { desc = "Send line to REPL" })
@@ -614,6 +731,15 @@ opts = {  -- required, but can be empty table: {}
       vim.fn.system('tmux split-window -h ipython')
     end, { desc = "Start iPython in tmux pane" })
   end,
+},
+{
+  'ggml-org/llama.vim',
+    init = function()
+      vim.g.llama_config = {
+        keymap_accept_full = "<C-F>",
+        show_info = false,
+      }
+    end,
 },
 })
 
@@ -666,6 +792,7 @@ vim.api.nvim_create_autocmd("FileType", {
     vim.cmd("highlight link markdownError NONE")
   end,
 })
+
 
 -- Plan language syntax highlighting
 vim.api.nvim_create_autocmd({"BufRead", "BufNewFile"}, {

@@ -14,10 +14,6 @@ if command -v fzf >/dev/null 2>&1; then
   source <(fzf --zsh)
 fi
 
-if command -v zoxide >/dev/null 2>&1; then
-  eval "$(zoxide init zsh)"
-fi
-
 if command -v nvim >/dev/null 2>&1; then
   export EDITOR=nvim
 fi
@@ -102,9 +98,7 @@ alias gt='git checkout '
 
 #================================================================================
 # path
-export PATH="/opt/homebrew/opt/llvm/bin:$PATH"
 export PATH="/Applications/Ghostty.app/Contents/MacOS:$PATH"
-export PATH="/opt/homebrew/opt/qt@5/bin:$PATH"
 export PATH="$HOME/.bin/:$PATH"
 #--------------------------------------------------------------------------------
 # android sdk
@@ -114,15 +108,5 @@ export JAVA_HOME="/Applications/Android Studio.app/Contents/jbr/Contents/Home"
 export TVM_SOURCE_DIR="/Users/spike/R/t-efficient-ai-notes/mlc-llm/3rdparty/tvm"
 export PATH="$HOME/Library/Android/sdk/platform-tools:$PATH"
 
-
-# BEGIN opam configuration
-# This is useful if you're using opam as it adds:
-#   - the correct directories to the PATH
-#   - auto-completion for the opam binary
-# This section can be safely removed at any time if needed.
-[[ ! -r '/Users/spike/.opam/opam-init/init.zsh' ]] || source '/Users/spike/.opam/opam-init/init.zsh' > /dev/null 2> /dev/null
-# END opam configuration
-
-fpath+=~/.zfunc; autoload -Uz compinit; compinit
-
-zstyle ':completion:*' menu select
+export PLAN9=/Users/spike/R/plan9 export PLAN9
+export PATH=$PATH:$PLAN9/bin export PATH
