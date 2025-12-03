@@ -4,50 +4,44 @@
 local opt = vim.opt
 
 -- editor settings
-opt.number = false
-opt.relativenumber = false
-opt.ruler = true
 opt.showmode = true
 opt.autoindent = true
-opt.expandtab = true 
-opt.shiftwidth = 2
-opt.tabstop = 2
-opt.softtabstop = 2
---opt.nowrap = true
-opt.signcolumn = "no"
-opt.shortmess:append("I")
-opt.autoread = true
-opt.clipboard = "unnamedplus" -- use shared system clipboard
-opt.scrolloff = 999           -- Keep cursor centered vertically
-opt.sidescrolloff = 8         -- Keep some horizontal context visible
-opt.termguicolors = false     -- inherit terminal colors
-
--- disable swap/backup
-opt.swapfile = false
-opt.backup = false
-opt.writebackup = false
-
--- Share status line with cmd line
---opt.cmdheight = 0             -- Make command line float (requires Neovim 0.8+)
---opt.laststatus = 3            -- Global statusline
-
--- Make statusline blend with background
---vim.cmd("highlight StatusLine cterm=NONE ctermbg=NONE ctermfg=NONE gui=NONE guibg=NONE guifg=NONE")
-vim.cmd("highlight StatusLineNC cterm=NONE ctermbg=NONE ctermfg=NONE gui=NONE guibg=NONE guifg=NONE")
+opt.expandtab = true            -- use spaces instead of tabs
+opt.tabstop = 2                 -- how many spaces a tab character displays as
+opt.shiftwidth = 2              -- how many spaces for each indent level
+opt.softtabstop = 2             -- how many spaces inserted when pressing tab
+opt.clipboard = "unnamedplus" 	-- use shared system clipboard
+opt.scrolloff = 999           	-- keep cursor centered vertically
+opt.sidescrolloff = 8         	-- keep some horizontal context visible
+opt.termguicolors = false     	-- inherit terminal colors
 
 -- persistent undo
+opt.undofile = true
+opt.undodir = undodir      			-- set undo directory
+opt.undolevels = 10000     			-- maximum number of changes that can be undone
+opt.undoreload = 10000     			-- maximum number lines to save for undo on buffer reload
 local undodir = vim.fn.stdpath("data") .. "/undodir"
 if not vim.fn.isdirectory(undodir) then
   vim.fn.mkdir(undodir, "p")
 end
 
-vim.cmd("highlight Comment ctermfg=3 gui=none")
+-- disable swap file
+opt.swapfile = false
+opt.backup = false
+opt.writebackup = false
 
+-- status line
+vim.cmd("highlight Comment      ctermfg=3 gui=none") -- make comments pop
 
-opt.undofile = true        -- Enable persistent undo
-opt.undodir = undodir      -- Set undo directory
-opt.undolevels = 10000     -- Maximum number of changes that can be undone
-opt.undoreload = 10000     -- Maximum number lines to save for undo on buffer reload
+-- keymaps
+local map = vim.keymap.set
+vim.g.mapleader = " "
+vim.g.maplocalleader = ","
+map("n","<C-b>",":NvimTreeToggle<CR>",{silent=true})
+
+-- line numbers
+map('n', '<leader>n', ':set number!<CR>', { noremap = true, silent = true })
+map('n', '<leader>r', ':set relativenumber!<CR>', { noremap = true, silent = true })
 
 -- tab spacing shortcuts
 local function set_tab_width(width)
@@ -55,155 +49,18 @@ local function set_tab_width(width)
   opt.shiftwidth = width
   print("Tab spacing set to " .. width)
 end
+map('n','<leader>2',function()set_tab_width(2)end,{noremap=true,silent=true})
+map('n','<leader>4',function()set_tab_width(4)end,{noremap=true,silent=true})
 
--- keymaps
-local map = vim.keymap.set
-vim.g.mapleader = " "
-vim.g.maplocalleader = ","
-
--- backspace hurts my fingers
-map('i', '<C-h>', '<BS>', { noremap = true, silent = true })
-map('i', '<C-S-H>', '<C-w>', { noremap = true, silent = true })
-
-map("n","<C-b>",":NvimTreeToggle<CR>",{silent=true})
-
-map({'n','v'},'<C-J>','10j',{noremap=true,silent=true})
-map({'n','v'},'<C-K>','10k',{noremap=true,silent=true})
-map({'n','v'},'<C-H>','_',{noremap=true,silent=true})
-map({'n','v'},'<C-L>','$',{noremap=true,silent=true})
-
-map('n', '<leader>n', ':set number!<CR>', { noremap = true, silent = true })
-map('n', '<leader>r', ':set relativenumber!<CR>', { noremap = true, silent = true })
-
-map('n','<leader>t2',function()set_tab_width(2)end,{noremap=true,silent=true})
-map('n','<leader>t4',function()set_tab_width(4)end,{noremap=true,silent=true})
-
--- CWD Management
-map('n', '<leader>cd', ':cd %:p:h<CR>:pwd<CR>', { noremap = true, silent = false, desc = "cd to current file's directory" })
-map('n', '<leader>cD', ':cd ..<CR>:pwd<CR>', { noremap = true, silent = false, desc = "cd to parent directory" })
-map('n', '<leader>cr', ':cd -<CR>:pwd<CR>', { noremap = true, silent = false, desc = "cd to previous directory" })
-map('n', '<leader>cp', ':pwd<CR>', { noremap = true, silent = false, desc = "print working directory" })
-
--- Terminal mode mappings (applies to all terminals, including floaterm)
+-- terminal mode mappings (applies to all terminals, including floaterm)
 map('t', '<C-[>', '<C-\\><C-n>', { noremap = true, silent = true })
 map('t', '<Esc>', '<C-\\><C-n>', { noremap = true, silent = true })
 
--- Better terminal window navigation from terminal mode
+-- better terminal window navigation from terminal mode
 map('t', '<C-w>h', '<C-\\><C-n><C-w>h', { noremap = true, silent = true })
 map('t', '<C-w>j', '<C-\\><C-n><C-w>j', { noremap = true, silent = true })
 map('t', '<C-w>k', '<C-\\><C-n><C-w>k', { noremap = true, silent = true })
 map('t', '<C-w>l', '<C-\\><C-n><C-w>l', { noremap = true, silent = true })
-
-local function setup_symbols(symbols)
-  for trigger, symbol in pairs(symbols) do
-    vim.keymap.set('i', '\\' .. trigger, symbol, {buffer = true})
-  end
-end
-
--- split behavior
-vim.opt.splitright = true  
-vim.opt.splitbelow = true  
-
-
--- Define symbols by category
-local symbols = {
-  -- Greek lowercase
-  greek_lower = {
-    alpha = 'α', a = 'α',
-    beta = 'β', b = 'β',
-    gamma = 'γ',
-    delta = 'δ',
-    epsilon = 'ε',
-    zeta = 'ζ',
-    eta = 'η',
-    theta = 'θ',
-    lambda = 'λ', lam = 'λ',
-    mu = 'μ',
-    nu = 'ν',
-    xi = 'ξ',
-    pi = 'π',
-    rho = 'ρ',
-    sigma = 'σ',
-    tau = 'τ',
-    phi = 'φ',
-    chi = 'χ',
-    psi = 'ψ',
-    omega = 'ω',
-  },
-
-  -- Greek uppercase
-  greek_upper = {
-    Alpha = 'Α',
-    Beta = 'Β',
-    Gamma = 'Γ',
-    Delta = 'Δ',
-    Epsilon = 'Ε',
-    Zeta = 'Ζ',
-    Eta = 'Η',
-    Theta = 'Θ',
-    Iota = 'Ι',
-    Kappa = 'Κ',
-    Lambda = 'Λ',
-    Mu = 'Μ',
-    Nu = 'Ν',
-    Xi = 'Ξ',
-    Omicron = 'Ο',
-    Pi = 'Π',
-    Rho = 'Ρ',
-    Sigma = 'Σ',
-    Tau = 'Τ',
-    Upsilon = 'Υ',
-    Phi = 'Φ',
-    Chi = 'Χ',
-    Psi = 'Ψ',
-    Omega = 'Ω',
-  },
-
-  -- Sets
-  operators = {
-    ['in'] = '∈',
-    notin = '∉',
-    union = '∪',
-    intersect = '∩',
-    subset = '⊂',
-    supset = '⊃',
-    forall = '∀',
-    exists = '∃',
-    therefore = '∴',
-    sum = '∑',
-    prod = '∏',
-  },
-
-  -- Arrows
-  arrows = {
-    implies = '⟹',
-    iff = '⟺',
-    to = '→',
-    gets = '←',
-  },
-
-  -- Misc
-  misc = {
-    trademark = '™',
-    copyright = '©',
-    top = '⊤',
-    dot = '·',
-    n = '\\n',
-    sec = '§',
-    approx = '≈',
-    inf = '∞',
-    qed = '□',
-    partial = '∂', par = '∂'
-  },
-  -- Linear algebra
-  linear = {
-    otimes = '⊗',
-  },
-}
-
-for _, category in pairs(symbols) do
-  setup_symbols(category)
-end
 
 -- bootstrap lazy.nvim
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
@@ -222,12 +79,7 @@ end, { noremap = true, silent = true })
 
 -- get type info
 map('n', 'gt', function()
-  local opts = {
-    border = "double",  -- More visible border style
-    max_width = 80,
-    pad_left = 1,
-    pad_right = 1
-  }
+  local opts = { border = "double", max_width = 80, pad_left = 1, pad_right = 1}
   vim.lsp.buf.hover(opts)
 end, { noremap = true, silent = true })
 
@@ -237,29 +89,13 @@ require("lazy").setup({
 {
   'Julian/lean.nvim',
   event = { 'BufReadPre *.lean', 'BufNewFile *.lean' },
-
   dependencies = {
     'neovim/nvim-lspconfig',
     'nvim-lua/plenary.nvim',
-
-    -- optional dependencies:
-
-    -- a completion engine
-    --    hrsh7th/nvim-cmp or Saghen/blink.cmp are popular choices
-
-    -- 'nvim-telescope/telescope.nvim', -- for 2 Lean-specific pickers
-    -- 'andymass/vim-matchup',          -- for enhanced % motion behavior
-    -- 'andrewradev/switch.vim',        -- for switch support
-    -- 'tomtom/tcomment_vim',           -- for commenting
   },
-
-  ---@type lean.Config
-  opts = { -- see below for full configuration options
-    mappings = true,
-  }
+  opts = {mappings = true,}
 },
 
--- Idris2 support
 {
   'ShinKage/idris2-nvim',
   dependencies = {
@@ -268,10 +104,7 @@ require("lazy").setup({
   },
   ft = { 'idris2' },
   config = function()
-    -- Set localleader if not already set
     vim.g.maplocalleader = vim.g.maplocalleader or ','
-
-    -- command to run after every code action
     local function save_hook(action)
       vim.cmd('silent write')
     end
@@ -286,115 +119,18 @@ require("lazy").setup({
           with_history = false, -- Show history of hovers instead of only last
         },
       },
-      server = {
-        on_attach = function(...)
-          -- LSP mappings
-          vim.cmd [[nnoremap <buffer> gd <Cmd>lua vim.lsp.buf.definition()<CR>]]
-          vim.cmd [[nnoremap <buffer> K <Cmd>lua vim.lsp.buf.hover()<CR>]]
-
-          -- Idris-specific code actions
-          vim.cmd [[nnoremap <buffer> <LocalLeader>c <Cmd>lua require('idris2.code_action').case_split()<CR>]]
-          vim.cmd [[nnoremap <buffer> <LocalLeader>mc <Cmd>lua require('idris2.code_action').make_case()<CR>]]
-          vim.cmd [[nnoremap <buffer> <LocalLeader>mw <Cmd>lua require('idris2.code_action').make_with()<CR>]]
-          vim.cmd [[nnoremap <buffer> <LocalLeader>ml <Cmd>lua require('idris2.code_action').make_lemma()<CR>]]
-          vim.cmd [[nnoremap <buffer> <LocalLeader>a <Cmd>lua require('idris2.code_action').add_clause()<CR>]]
-          vim.cmd [[nnoremap <buffer> <LocalLeader>o <Cmd>lua require('idris2.code_action').expr_search()<CR>]]
-          vim.cmd [[nnoremap <buffer> <LocalLeader>gd <Cmd>lua require('idris2.code_action').generate_def()<CR>]]
-          vim.cmd [[nnoremap <buffer> <LocalLeader>rh <Cmd>lua require('idris2.code_action').refine_hole()<CR>]]
-
-          -- Hover split management
-          vim.cmd [[nnoremap <buffer> <LocalLeader>so <Cmd>lua require('idris2.hover').open_split()<CR>]]
-          vim.cmd [[nnoremap <buffer> <LocalLeader>sc <Cmd>lua require('idris2.hover').close_split()<CR>]]
-
-          -- Metavariables (holes) navigation
-          vim.cmd [[nnoremap <buffer> <LocalLeader>mm <Cmd>lua require('idris2.metavars').request_all()<CR>]]
-          vim.cmd [[nnoremap <buffer> <LocalLeader>mn <Cmd>lua require('idris2.metavars').goto_next()<CR>]]
-          vim.cmd [[nnoremap <buffer> <LocalLeader>mp <Cmd>lua require('idris2.metavars').goto_prev()<CR>]]
-
-          -- Browse namespaces
-          vim.cmd [[nnoremap <buffer> <LocalLeader>br <Cmd>lua require('idris2.browse').browse()<CR>]]
-
-          -- REPL evaluation
-          vim.cmd [[nnoremap <buffer> <LocalLeader>x <Cmd>lua require('idris2.repl').evaluate()<CR>]]
-
-          -- Diagnostics
-          vim.cmd [[nnoremap <buffer> <LocalLeader><LocalLeader>e <Cmd>lua vim.diagnostic.open_float()<CR>]]
-          vim.cmd [[nnoremap <buffer> <LocalLeader><LocalLeader>el <Cmd>lua vim.diagnostic.setloclist()<CR>]]
-        end,
-        init_options = {
-          logFile = "~/.cache/idris2-lsp/server.log",
-          longActionTimeout = 2000, -- 2 seconds
-        },
-      },
+      server = {}, 
       autostart_semantic = true, -- Should start and refresh semantic highlight automatically
       code_action_post_hook = save_hook, -- Function to execute after a code action is performed
       use_default_semantic_hl_groups = true, -- Set default highlight groups for semantic tokens
     }
-    
     require('idris2').setup(opts)
   end,
 },
--- Tree-sitter for syntax highlighting
-{
-  "nvim-treesitter/nvim-treesitter",
-  build = ":TSUpdate",
-  config = function()
-    require("nvim-treesitter.configs").setup({
-      -- Install parsers synchronously (only applied to `ensure_installed`)
-      sync_install = false,
-      
-      -- Automatically install missing parsers when entering buffer
-      auto_install = true,
-      
-      -- List of parsers to install (or "all")
-       ensure_installed = {
-         "lua",
-         "python",
-         "c",
-         "cpp",
-         "gleam",  -- Add gleam here
-         "vim",
-         "vimdoc",
-         "markdown",
-         "json",
-         "typescript",
-       },
-      
-      highlight = {
-        enable = true,
-        -- Setting this to true will run `:h syntax` and tree-sitter at the same time.
-        additional_vim_regex_highlighting = false,
-      },
-      
-      indent = {
-        enable = true
-      },
-    })
-  end,
-},
+
 { "nvim-tree/nvim-tree.lua",
   config = function()
-    require("nvim-tree").setup({
-      renderer = {
-        icons = {
-          show = {
-            file = false,
-            folder = false,
-            folder_arrow = false,
-            git = false,
-          },
-        },
-        indent_markers = {
-          enable = true,
-          icons = {
-            corner = "└──",
-            edge = "│",
-            item = "├──",
-            none = " ",
-          },
-        },
-      },
-    })
+    require("nvim-tree").setup({ })
   end,
 },
 
@@ -448,9 +184,7 @@ require("lazy").setup({
 
 -- activitywatch
 "lowitea/aw-watcher.nvim",
-opts = {  -- required, but can be empty table: {}
-    -- add any options here
-    -- for example:
+opts = {
     aw_server = {
         host = "127.0.0.1",
         port = 5600,
@@ -473,112 +207,6 @@ opts = {  -- required, but can be empty table: {}
     local cmp = require('cmp')
     local luasnip = require('luasnip')
 
-    -- Custom date/time completion source
-    local date_source = {}
-
-    date_source.new = function()
-      return setmetatable({}, { __index = date_source })
-    end
-
-    date_source.get_trigger_characters = function()
-      return { '@' }
-    end
-
-    date_source.is_available = function()
-      return true
-    end
-
-    date_source.get_debug_name = function()
-      return 'date_macros'
-    end
-
-    date_source.complete = function(self, params, callback)
-      local cursor_before_line = params.context.cursor_before_line
-      local trigger_match = cursor_before_line:match('@now$') or cursor_before_line:match('@day$')
-
-      if trigger_match then
-        local items = {}
-        local now = os.date("*t")
-
-        if cursor_before_line:match('@now$') then
-          -- Various time formats
-          table.insert(items, {
-            label = '@now → ' .. os.date('%Y-%m-%d'),
-            insertText = os.date('%Y-%m-%d'),
-            documentation = 'Date: YYYY-MM-DD',
-            data = { trigger = '@now' }
-          })
-
-          table.insert(items, {
-            label = '@now → ' .. os.date('%Y-%m-%d %H:%M:%S'),
-            insertText = os.date('%Y-%m-%d %H:%M:%S'),
-            documentation = 'Date and time: YYYY-MM-DD HH:MM:SS',
-            data = { trigger = '@now' }
-          })
-
-          table.insert(items, {
-            label = '@now → ' .. os.date('%Y-%m-%d:%H-%M-%S'),
-            insertText = os.date('%Y-%m-%d:%H-%M-%S'),
-            documentation = 'Date and time: YYYY-MM-DD:HH-MM-SS',
-            data = { trigger = '@now' }
-          })
-
-          table.insert(items, {
-            label = '@now → ' .. os.date('%H:%M:%S'),
-            insertText = os.date('%H:%M:%S'),
-            documentation = 'Time only: HH:MM:SS',
-            data = { trigger = '@now' }
-          })
-
-          table.insert(items, {
-            label = '@now → ' .. os.date('%Y%m%d'),
-            insertText = os.date('%Y%m%d'),
-            documentation = 'Compact date: YYYYMMDD',
-            data = { trigger = '@now' }
-          })
-
-          table.insert(items, {
-            label = '@now → ' .. os.date('%Y%m%d_%H%M%S'),
-            insertText = os.date('%Y%m%d_%H%M%S'),
-            documentation = 'Compact datetime: YYYYMMDD_HHMMSS',
-            data = { trigger = '@now' }
-          })
-        elseif cursor_before_line:match('@day$') then
-          -- Just the date
-          table.insert(items, {
-            label = '@day → ' .. os.date('%Y-%m-%d'),
-            insertText = os.date('%Y-%m-%d'),
-            documentation = 'Today\'s date: YYYY-MM-DD',
-            data = { trigger = '@day' }
-          })
-        end
-
-        -- Transform items to include textEdit to replace the trigger
-        for _, item in ipairs(items) do
-          local trigger = item.data.trigger
-          local line = params.context.cursor.line
-          local start_col = params.context.cursor.col - #trigger
-
-          item.textEdit = {
-            newText = item.insertText,
-            range = {
-              start = { line = line, character = start_col },
-              ['end'] = { line = line, character = params.context.cursor.col }
-            }
-          }
-          item.filterText = trigger
-          item.sortText = item.label
-        end
-
-        callback(items)
-      else
-        callback({})
-      end
-    end
-
-    -- Register the custom source
-    cmp.register_source('date_macros', date_source.new())
-
     -- nvim-cmp setup
     cmp.setup({
       snippet = {
@@ -587,26 +215,16 @@ opts = {  -- required, but can be empty table: {}
         end,
       },
       mapping = cmp.mapping.preset.insert({
-        ['<C-b>'] = cmp.mapping.scroll_docs(-4),
-        ['<C-f>'] = cmp.mapping.scroll_docs(4),
-        ['<C-Space>'] = cmp.mapping.complete(),
-        ['<C-p>'] = cmp.mapping.complete(),  -- Add Ctrl-P as completion trigger
-        ['<C-e>'] = cmp.mapping.abort(),
-        ['<CR>'] = cmp.mapping.confirm({ select = true }),
-        -- Tab/Shift-Tab to navigate through completion items
-        ['<Tab>'] = cmp.mapping.select_next_item(),
-        ['<S-Tab>'] = cmp.mapping.select_prev_item(),
+        ['<C-p>'] = cmp.mapping.complete(),
       }),
       sources = cmp.config.sources(
           {
-            { name = 'date_macros', priority = 1000 }, -- High priority for date macros
             { name = 'nvim_lsp' },
             { name = 'luasnip' },
           },
           { { name = 'buffer' }, { name = 'path' }, }
         ),
-      -- Disable completion menu from automatically showing
-      completion = {autocomplete = false,},
+      completion = {autocomplete = false,},-- Disable completion menu from automatically showing
     })
 
     -- Use buffer source for `/` and `?`
@@ -626,7 +244,6 @@ opts = {  -- required, but can be empty table: {}
         { name = 'cmdline' }
       })
     })
-
     local capabilities = require('cmp_nvim_lsp').default_capabilities()
 
     -- Pyright configuration
@@ -654,46 +271,8 @@ opts = {  -- required, but can be empty table: {}
       },
     })
 
-    -- TypeScript configuration
-    vim.lsp.config('ts_ls', {
-      cmd = { 'typescript-language-server', '--stdio' },
-      filetypes = { 'typescript', 'typescriptreact', 'javascript', 'javascriptreact' },
-      root_markers = {
-        'tsconfig.json',
-        'package.json',
-        'jsconfig.json',
-        '.git'
-      },
-      capabilities = capabilities,
-      settings = {
-        typescript = {
-          inlayHints = {
-            includeInlayParameterNameHints = 'all',
-            includeInlayParameterNameHintsWhenArgumentMatchesName = false,
-            includeInlayFunctionParameterTypeHints = true,
-            includeInlayVariableTypeHints = true,
-            includeInlayPropertyDeclarationTypeHints = true,
-            includeInlayFunctionLikeReturnTypeHints = true,
-            includeInlayEnumMemberValueHints = true,
-          }
-        },
-        javascript = {
-          inlayHints = {
-            includeInlayParameterNameHints = 'all',
-            includeInlayParameterNameHintsWhenArgumentMatchesName = false,
-            includeInlayFunctionParameterTypeHints = true,
-            includeInlayVariableTypeHints = true,
-            includeInlayPropertyDeclarationTypeHints = true,
-            includeInlayFunctionLikeReturnTypeHints = true,
-            includeInlayEnumMemberValueHints = true,
-          }
-        }
-      }
-    })
-
     -- Enable the configured LSP servers
     vim.lsp.enable({ 'pyright', 'ts_ls' })
-
     local opts = { noremap = true, silent = true }
     map('n', 'gD', vim.lsp.buf.declaration, opts)   -- BINDING :: [g]oto [D]efinition
     map('n', 'gd', vim.lsp.buf.definition, opts)    -- BINDING :: [g]oto [d]efinition
@@ -702,36 +281,7 @@ opts = {  -- required, but can be empty table: {}
     map('n', 'K', vim.lsp.buf.hover, opts)          -- BINDING :: hover
   end,
 },
--- vim-slime for REPL interaction
-{
-  "jpalardy/vim-slime",
-  init = function()
-    -- Use tmux instead of neovim
-    vim.g.slime_target = "tmux"
-    
-    -- Default tmux configuration
-    vim.g.slime_default_config = {
-      socket_name = "default",
-      target_pane = "{last}"  -- or use ":.2" for current window, pane 2
-    }
-    
-    vim.g.slime_dont_ask_default = 1 -- Don't ask for config every time (optional)
-    vim.g.slime_python_ipython = 1 -- Use %cpaste for iPython to handle indentation correctly
-  end,
-  config = function()
-    vim.keymap.set('n', '<leader>ss', '<Plug>SlimeSendCell', { desc = "Send cell to REPL" })
-    vim.keymap.set('n', '<leader>sp', '<Plug>SlimeParagraphSend', { desc = "Send paragraph to REPL" })
-    vim.keymap.set('n', '<leader>sl', '<Plug>SlimeLineSend', { desc = "Send line to REPL" })
-    vim.keymap.set('x', '<leader>s', '<Plug>SlimeRegionSend', { desc = "Send selection to REPL" })
-    vim.keymap.set('n', '<leader>sc', '<Plug>SlimeConfig', { desc = "Configure slime" })
-    
-    -- Update the iPython starter for tmux
-    vim.keymap.set('n', '<leader>si', function()
-      -- Opens iPython in a new tmux pane (horizontal split)
-      vim.fn.system('tmux split-window -h ipython')
-    end, { desc = "Start iPython in tmux pane" })
-  end,
-},
+
 {
   'ggml-org/llama.vim',
     init = function()
@@ -741,6 +291,7 @@ opts = {  -- required, but can be empty table: {}
       }
     end,
 },
+
 })
 
 -- BINDING :: [d]irectory [r]elative
@@ -758,7 +309,6 @@ map('n', '<leader>cc', function()
   if vim.opt.colorcolumn:get()[1] then
     vim.opt.colorcolumn = ""
     print("Colorcolumn off")
-  else
     vim.opt.colorcolumn = "80"
     print("Colorcolumn on")
   end
@@ -771,75 +321,4 @@ vim.api.nvim_create_autocmd("TermOpen", {
     vim.fn.setenv("NVIM_LISTEN_ADDRESS", vim.v.servername)
     vim.fn.setenv("NVIM", vim.fn.getpid())
   end,
-})
-
--- AUTO :: enter insert mode when opening terminal
-vim.api.nvim_create_autocmd("TermOpen", {
-  pattern = "*",
-  callback = function()
-    vim.cmd("startinsert")
-    -- Also set local options for terminal buffers
-    vim.opt_local.number = false
-    vim.opt_local.relativenumber = false
-    vim.opt_local.signcolumn = "no"
-  end,
-})
-
--- AUTO :: disable error higlighting in markdown
-vim.api.nvim_create_autocmd("FileType", {
-  pattern = "markdown",
-  callback = function()
-    vim.cmd("highlight link markdownError NONE")
-  end,
-})
-
-
--- Plan language syntax highlighting
-vim.api.nvim_create_autocmd({"BufRead", "BufNewFile"}, {
-  pattern = "*.plan",
-  callback = function()
-    vim.bo.filetype = "plan"
-    
-    vim.cmd([[
-      " Clear any existing syntax
-      syn clear
-      
-      " Headers and dividers (highest priority - match first)
-      syn match planHeader "^#\+\s.*$"
-      syn match planMinorDivider "^-\{80\}$"
-      syn match planMajorDivider "^=\{80\}$"
-      
-      " References - match [text](target) patterns
-      syn match planReference "\[.\{-}\](.\{-})" contained containedin=planTodo,planDone,planQuestion,planAnswered,planNote
-      
-      " Define regions for multi-line items
-      " Each region starts with marker and continues until:
-      " 1. Another item marker at start of line
-      " 2. A header line
-      " 3. A divider line  
-      " 4. End of file
-      syn region planTodo start="^\s*-\s" end="^\ze\s*[-*?!>]" end="^\ze#" end="^\ze-\{80\}" end="^\ze=\{80\}" end="\%$"
-      syn region planDone start="^\s*\*\s" end="^\ze\s*[-*?!>]" end="^\ze#" end="^\ze-\{80\}" end="^\ze=\{80\}" end="\%$"
-      syn region planQuestion start="^\s*?\s" end="^\ze\s*[-*?!>]" end="^\ze#" end="^\ze-\{80\}" end="^\ze=\{80\}" end="\%$"
-      syn region planAnswered start="^\s*!\s" end="^\ze\s*[-*?!>]" end="^\ze#" end="^\ze-\{80\}" end="^\ze=\{80\}" end="\%$"
-      syn region planNote start="^\s*>\s" end="^\ze\s*[-*?!>]" end="^\ze#" end="^\ze-\{80\}" end="^\ze=\{80\}" end="\%$"
-      
-      " Color definitions
-      hi planHeader ctermfg=7 cterm=NONE
-      hi def link planMinorDivider Comment  
-      hi def link planMajorDivider Comment
-      hi def link planReference Underlined
-      
-      " Active/pending items - bright colors
-      hi planTodo ctermfg=1 cterm=NONE
-      hi planQuestion ctermfg=6 cterm=NONE
-      
-      " Completed items - dimmed
-      hi planDone ctermfg=8 cterm=NONE
-      hi planAnswered ctermfg=8 cterm=NONE
-      
-      " Notes - same as comments
-      hi planNote ctermfg=8 cterm=NONE
-    ]])
-  end
 })

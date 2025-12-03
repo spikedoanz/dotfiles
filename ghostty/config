@@ -1,13 +1,14 @@
 # Ghostty configuration matching wezterm setup
 # Reload with: CMD+SHIFT+,
 # Theme - Catppuccin (auto-switches based on system appearance)
-theme = dark:Nvim Dark, light:Catppuccin Latte
+theme = dark:Nvim Dark, light:Nvim Dark
 # Appearance
 font-size = 18
 window-padding-x = 0
 window-padding-y = 0
 window-decoration = false
 background-opacity = 0.9
+auto-update-channel = stable
 
 # Disable default keybinds that conflict with custom ones
 keybind = super+m=unbind
