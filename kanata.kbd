@@ -53,6 +53,4 @@
 
 (defalias
   spc (tap-hold 200 200 spc (layer-while-held sym))
-  alt (tap-hold 200 200 esc lalt)
-  met (tap-hold 200 200 tab lmet)
 )
