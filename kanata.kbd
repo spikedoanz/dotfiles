@@ -1,5 +1,8 @@
 ;; design philosophy
 ;; -----------------
+;; > if you had one extra layer, how would you make qwerty comfortable for programming?
+;;
+;; 0. a unix qwerty is assumed (lctl to the left of 'a')
 ;; 1. never conflict with standard qwerty.
 ;; 2. soft emacs bindings are assumed in most contexts
 ;;  C-p : up
@@ -11,11 +14,12 @@
 ;;  () gets handled with holding shift while in SYM on 0 and 9
 ;;  {} gets handled with holding shift while in SYM on [ and ]
 ;; 4. common chords := => -> should be easy
+;; 5. only one new mod key: space -> sym layer
+;; 6. no home row mods. they make typing fast a very brittle process.
 ;;
-;;
-;;
-;;
-;;
+;; some compromises
+;; ----------------
+;; 1. typing spaced out symbols (1 2 3 4 ...) is hard, so space is duplicated
 
 (defcfg
   process-unmapped-keys yes
@@ -37,12 +41,13 @@
   fn   lctl lalt lmet           @spc           rmet ralt
 )
 
+
 ;; SYM layer (hold space)
 (deflayer sym
   _    _    _    _    _    _    _    _    _    _    _    _    _    _
   _    `    \    [    ]    _    _    _    _    _    _    _    _    _
   _    1    2    3    4    5    6    7    8    9    0    _    _
-  _    -    +    S-;  =    spc  _    ret  S-,  S-.  _    _
+  _    -    +    S-;  =    _    _    spc  S-,  S-.  _    _
   _    _    _    _              _              _    _
 )
 
