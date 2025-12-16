@@ -8,14 +8,17 @@
       "Bash(uv:*)",
       "Bash(uvx:*)",
       "Bash(cd:*)",
+      "Bash(find:*)",
+      "Bash(grep:*)",
       "Bash(git worktree:*)",
       "Bash(git checkout:*)",
       "Bash(git add:*)",
       "Bash(git commit:*)",
-      "Read(~/.zshrc)"
+      "Read(~/.zshrc)",
+      "Bash(curl:ntfy.sh/*)",
+      "WebSearch"
     ],
     "deny": [
-      "Bash(curl:*)",
       "Read(~/.env*)",
       "Read(./.env*)"
     ]
@@ -23,6 +26,5 @@
   "statusLine": {
     "type": "command",
     "command": "~/.claude/statusline.sh"
-  },
-  "alwaysThinkingEnabled": true
+  }
 }

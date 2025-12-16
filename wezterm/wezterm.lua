@@ -92,11 +92,12 @@ c.colors = {
 }
 
 c.window_decorations = "RESIZE"
+c.integrated_title_buttons = {}
 c.use_fancy_tab_bar = false
 c.hide_tab_bar_if_only_one_tab = true
 c.enable_wayland = false
---c.window_background_opacity = 0.8
---c.macos_window_background_blur = 64
+c.window_background_opacity = 0.8
+c.macos_window_background_blur = 16
 c.front_end = "WebGpu"
 
 return c

@@ -26,6 +26,7 @@
 )
 
 (defsrc
+  esc  f1   f2   f3   f4   f5   f6   f7   f8   f9   f10  f11  f12
   grv  1    2    3    4    5    6    7    8    9    0    -    =    bspc
   tab  q    w    e    r    t    y    u    i    o    p    [    ]    \
   caps a    s    d    f    g    h    j    k    l    ;    '    ret
@@ -34,16 +35,18 @@
 )
 
 (deflayer qwerty
+  esc  brdn brup _    _    _    _    prev pp   next mute vold volu
   grv  1    2    3    4    5    6    7    8    9    0    -    =    bspc
   tab  q    w    e    r    t    y    u    i    o    p    [    ]    \
   lctl a    s    d    f    g    h    j    k    l    ;    '    ret
   lsft z    x    c    v    b    n    m    ,    .    /    rsft
-  fn   lctl lalt lmet           @spc           rmet ralt
+  @fnl lctl lalt lmet           @spc           rmet ralt
 )
 
 
 ;; SYM layer (hold space)
 (deflayer sym
+  _    _    _    _    _    _    _    _    _    _    _    _    _
   _    _    _    _    _    _    _    _    _    _    _    _    _    _
   _    `    \    [    ]    _    _    _    _    _    _    _    _    _
   _    1    2    3    4    5    6    7    8    9    0    _    _
@@ -51,6 +54,17 @@
   _    _    _    _              _              _    _
 )
 
+;; FN layer (hold fn) - actual F-keys
+(deflayer fn
+  esc  f1   f2   f3   f4   f5   f6   f7   f8   f9   f10  f11  f12
+  _    _    _    _    _    _    _    _    _    _    _    _    _    _
+  _    _    _    _    _    _    _    _    _    _    _    _    _    _
+  _    _    _    _    _    _    _    _    _    _    _    _    _
+  _    _    _    _    _    _    _    _    _    _    _    _
+  _    _    _    _              _              _    _
+)
+
 (defalias
   spc (tap-hold 200 200 spc (layer-while-held sym))
+  fnl (tap-hold 200 200 fn (layer-toggle fn))
 )
