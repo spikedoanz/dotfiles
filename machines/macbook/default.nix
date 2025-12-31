@@ -99,5 +99,10 @@
 
     xdg.configFile."nvim/init.lua".source = ./config/nvim/init.lua;
     xdg.configFile."nvim/lazy-lock.json".source = ./config/nvim/lazy-lock.json;
+
+    #--------------------------------------------------------------------------
+    # Aerospace (tiling window manager)
+    #--------------------------------------------------------------------------
+    home.file.".aerospace.toml".source = ./config/aerospace/.aerospace.toml;
   };
 }
