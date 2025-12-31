@@ -15,7 +15,7 @@ cfg() {
 }
 
 # source                              dest                    file
-cfg ~/.zshrc                          .                       .zshrc
+cfg ~/.zshrc                          sh                      .zshrc
 cfg ~/.config/nvim/init.lua           nvim                    init.lua
 cfg ~/.config/karabiner/karabiner.json karabiner              karabiner.json
 cfg ~/.aerospace.toml                 aerospace               .aerospace.toml
