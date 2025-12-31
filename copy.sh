@@ -21,6 +21,7 @@ cfg ~/.config/karabiner/karabiner.json karabiner              karabiner.json
 cfg ~/.aerospace.toml                 aerospace               .aerospace.toml
 cfg ~/.config/tmux/tmux.conf          tmux                    tmux.conf 
 cfg ~/.claude/settings.json           claude                  settings.json
+cfg ~/.claude/statusline.sh           claude                  statusline.sh
 cfg ~/.config/ghostty/config          ghostty                 config
 
 cfg /etc/nixos/configuration.nix      nix                     configuration.nix
