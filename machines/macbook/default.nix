@@ -19,6 +19,31 @@
   programs.zsh.enable = true;
   system.stateVersion = 5;
 
+  #############################################################################
+  # MACOS SETTINGS
+  #############################################################################
+
+  system.defaults = {
+    # Dock
+    dock.autohide = true;
+    dock.show-recents = false;
+    dock.mru-spaces = false;  # don't rearrange spaces based on recent use
+
+    # Finder
+    finder.FXPreferredViewStyle = "Nlsv";  # list view
+
+    # Keyboard - fast repeat
+    NSGlobalDomain.KeyRepeat = 2;
+    NSGlobalDomain.InitialKeyRepeat = 15;
+    NSGlobalDomain.ApplePressAndHoldEnabled = false;  # key repeat instead of accent menu
+
+    # Trackpad
+    trackpad.TrackpadRightClick = true;
+
+    # Misc
+    NSGlobalDomain.AppleInterfaceStyle = "Dark";  # dark mode
+  };
+
   # User
   system.primaryUser = "spike";
   users.users.spike = {
