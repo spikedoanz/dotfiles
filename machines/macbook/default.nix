@@ -114,8 +114,70 @@
     #--------------------------------------------------------------------------
     # Tmux
     #--------------------------------------------------------------------------
-    home.file.".tmux.conf".source = ./config/tmux/tmux.conf;
-    xdg.configFile."tmux".source = ./config/tmux;
+    programs.tmux = {
+      enable = true;
+      prefix = "C-s";
+      shell = "${pkgs.zsh}/bin/zsh";
+      terminal = "screen-256color";
+      historyLimit = 1000000;
+      mouse = true;
+      keyMode = "vi";
+
+      plugins = with pkgs.tmuxPlugins; [
+        sensible
+        tmux-fzf
+        tmux-thumbs
+        tmux-floax
+      ];
+
+      extraConfig = ''
+        bind-key C-a last-window
+        bind-key e send-prefix
+
+        # Status bar
+        set -g status-position bottom
+        set -g status-bg default
+        set -g status-fg white
+        set -g status-style bold
+        set -g status-left ""
+        set -g status-right "#[fg=white,bold]#S "
+        set -g status-right-length 50
+        set -g status-left-length 20
+
+        # Copy mode
+        bind-key -T copy-mode-vi v send -X begin-selection
+        bind-key -T copy-mode-vi y send -X copy-selection
+
+        # Pane navigation
+        bind h select-pane -L
+        bind j select-pane -D
+        bind k select-pane -U
+        bind l select-pane -R
+
+        # Pane resizing
+        bind -r H resize-pane -L 5
+        bind -r J resize-pane -D 5
+        bind -r K resize-pane -U 5
+        bind -r L resize-pane -R 5
+
+        # Window status
+        setw -g window-status-current-format " #I:#W#F "
+        setw -g window-status-format " #I:#W#F "
+        setw -g window-status-style "fg=white,bg=default"
+        setw -g window-status-current-style "fg=black,bg=white,bold"
+
+        set-option -g allow-rename off
+
+        # Clipboard
+        bind-key -T copy-mode-vi y send-keys -X copy-pipe-and-cancel "pbcopy"
+
+        # Plugin settings
+        set -g @thumbs-key Space
+        set -g @floax-change-path "false"
+        set -g @floax-width "90%"
+        set -g @floax-height "100%"
+      '';
+    };
 
     #--------------------------------------------------------------------------
     # Claude Code
