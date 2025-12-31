@@ -116,5 +116,11 @@
     #--------------------------------------------------------------------------
     home.file.".tmux.conf".source = ./config/tmux/tmux.conf;
     xdg.configFile."tmux".source = ./config/tmux;
+
+    #--------------------------------------------------------------------------
+    # Claude Code
+    #--------------------------------------------------------------------------
+    xdg.configFile."claude/settings.json".source = ./config/claude/settings.json;
+    xdg.configFile."claude/statusline.sh".source = ./config/claude/statusline.sh;
   };
 }

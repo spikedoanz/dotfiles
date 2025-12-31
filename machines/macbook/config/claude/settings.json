@@ -1,0 +1,31 @@
+{
+  "env": {
+    "CLAUDE_CODE_ENABLE_TELEMETRY": "0"
+  },
+  "permissions": {
+    "allow": [
+      "Bash(ls:*)",
+      "Bash(uv:*)",
+      "Bash(uvx:*)",
+      "Bash(cd:*)",
+      "Bash(find:*)",
+      "Bash(grep:*)",
+      "Bash(git worktree:*)",
+      "Bash(git checkout:*)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Read(~/.zshrc)",
+      "Bash(curl:ntfy.sh/*)",
+      "WebSearch"
+    ],
+    "deny": [
+      "Read(~/.env*)",
+      "Read(./.env*)"
+    ]
+  },
+  "statusLine": {
+    "type": "command",
+    "command": "~/.claude/statusline.sh"
+  },
+  "alwaysThinkingEnabled": false
+}
