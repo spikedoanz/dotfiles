@@ -122,5 +122,10 @@
     #--------------------------------------------------------------------------
     xdg.configFile."claude/settings.json".source = ./config/claude/settings.json;
     xdg.configFile."claude/statusline.sh".source = ./config/claude/statusline.sh;
+
+    #--------------------------------------------------------------------------
+    # Zsh
+    #--------------------------------------------------------------------------
+    home.file.".zshrc".source = ./config/sh/.zshrc;
   };
 }
