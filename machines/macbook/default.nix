@@ -97,19 +97,19 @@
       ];
     };
 
-    xdg.configFile."nvim/init.lua".source = ./config/nvim/init.lua;
-    xdg.configFile."nvim/lazy-lock.json".source = ./config/nvim/lazy-lock.json;
+    xdg.configFile."nvim/init.lua".source = ../../config/nvim/init.lua;
+    xdg.configFile."nvim/lazy-lock.json".source = ../../config/nvim/lazy-lock.json;
 
     #--------------------------------------------------------------------------
     # Aerospace (tiling window manager)
     #--------------------------------------------------------------------------
-    home.file.".aerospace.toml".source = ./config/aerospace/.aerospace.toml;
+    home.file.".aerospace.toml".source = ../../config/aerospace/.aerospace.toml;
 
     #--------------------------------------------------------------------------
     # Ghostty (terminal)
     #--------------------------------------------------------------------------
-    xdg.configFile."ghostty/config".source = ./config/ghostty/config;
-    xdg.configFile."ghostty/cursor.glsl".source = ./config/ghostty/cursor.glsl;
+    xdg.configFile."ghostty/config".source = ../../config/ghostty/config;
+    xdg.configFile."ghostty/cursor.glsl".source = ../../config/ghostty/cursor.glsl;
 
     #--------------------------------------------------------------------------
     # Tmux
@@ -182,12 +182,12 @@
     #--------------------------------------------------------------------------
     # Claude Code
     #--------------------------------------------------------------------------
-    xdg.configFile."claude/settings.json".source = ./config/claude/settings.json;
-    xdg.configFile."claude/statusline.sh".source = ./config/claude/statusline.sh;
+    xdg.configFile."claude/settings.json".source = ../../config/claude/settings.json;
+    xdg.configFile."claude/statusline.sh".source = ../../config/claude/statusline.sh;
 
     #--------------------------------------------------------------------------
     # Zsh
     #--------------------------------------------------------------------------
-    home.file.".zshrc".source = ./config/sh/.zshrc;
+    home.file.".zshrc".source = ../../config/sh/.zshrc;
   };
 }
