@@ -33,12 +33,12 @@ if [ -n "$SSH_AUTH_SOCK" ]; then
 fi
 
 # capture tmux buffer in vim
-bindkey -s '^X^E' 'tmux capture-pane -S - -p > /tmp/tmux-buffer.txt && nvim + /tmp/tmux-buffer.txt\n'
+bindkey -s '^X^E' 'tmux capture-pane -S - -p > /tmp/tmux-buffer.txt && nvim + /tmp/tmux-buffer.txt\n' #KB: zsh | C-x | - | C-e | Capture tmux buffer in nvim
 
 # edit command line
 autoload -U edit-command-line
 zle -N edit-command-line
-bindkey '\ev' edit-command-line
+bindkey '\ev' edit-command-line #KB: zsh | M | - | v | Edit command line in editor
 
 #-------------------------------------------------------------------------------- 
 # clipboard

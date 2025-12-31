@@ -1,0 +1,170 @@
+#!/usr/bin/env python3
+"""
+Keybind extractor - finds tagged keybind comments and renders them.
+
+Tag format: KB: ctx | mod | mode | key | description
+  - ctx: context (nvim, tmux, aerospace, zsh, etc.)
+  - mod: modifier (C, M, S, leader, none)
+  - mode: mode (n, i, v for nvim; - for n/a)
+  - key: the key
+  - description: what it does
+
+Usage:
+  keybinds              # markdown (default)
+  keybinds --csv        # csv (for visidata)
+  keybinds --tsv        # tsv
+  keybinds --json       # json
+  keybinds --check      # check for conflicts
+"""
+
+import csv
+import json
+import subprocess
+import sys
+from io import StringIO
+from pathlib import Path
+from dataclasses import dataclass, asdict
+
+@dataclass
+class Keybind:
+    ctx: str
+    mod: str
+    mode: str
+    key: str
+    desc: str
+    file: str
+    line: int
+    check_ignore: bool = False
+
+    @property
+    def full_key(self) -> str:
+        if self.mod == "none" or self.mod == "-":
+            return self.key
+        return f"{self.mod}-{self.key}"
+
+def extract_keybinds(dotfiles_dir: Path) -> list[Keybind]:
+    """Extract all KB: tagged comments from dotfiles."""
+    result = subprocess.run(
+        ["rg", "--no-heading", "-n", "--hidden", "--glob=!bin/keybinds", r"\bKB:", str(dotfiles_dir)],
+        capture_output=True,
+        text=True,
+    )
+    
+    keybinds = []
+    for line in result.stdout.strip().split("\n"):
+        if not line:
+            continue
+        
+        # Parse: file:linenum:content...KB: ctx | mod | mode | key | desc
+        try:
+            if "KB:" not in line:
+                continue
+            _, rest = line.split("KB:", 1)
+            
+            first_colon = line.find(":")
+            second_colon = line.find(":", first_colon + 1)
+            file_path = line[:first_colon]
+            line_num = line[first_colon + 1:second_colon]
+            
+            # Check for #check:ignore tag
+            check_ignore = "check:ignore" in line
+            
+            parts = [p.strip() for p in rest.split("|")]
+            if len(parts) >= 5:
+                keybinds.append(Keybind(
+                    ctx=parts[0],
+                    mod=parts[1],
+                    mode=parts[2],
+                    key=parts[3],
+                    desc=parts[4],
+                    file=file_path,
+                    line=int(line_num),
+                    check_ignore=check_ignore,
+                ))
+        except (ValueError, IndexError):
+            print(f"Warning: couldn't parse: {line}", file=sys.stderr)
+    
+    return keybinds
+
+def find_conflicts(keybinds: list[Keybind]) -> list[tuple[Keybind, Keybind]]:
+    """Find keybinds that might conflict (same ctx + key + mode)."""
+    conflicts = []
+    seen: dict[tuple, Keybind] = {}
+    
+    for kb in keybinds:
+        key = (kb.ctx, kb.full_key, kb.mode)
+        if key in seen:
+            # Skip if either keybind has check:ignore
+            if not (kb.check_ignore or seen[key].check_ignore):
+                conflicts.append((seen[key], kb))
+        else:
+            seen[key] = kb
+    
+    return conflicts
+
+def render_markdown(keybinds: list[Keybind]) -> str:
+    if not keybinds:
+        return "No keybinds found."
+    
+    by_ctx: dict[str, list[Keybind]] = {}
+    for kb in keybinds:
+        by_ctx.setdefault(kb.ctx, []).append(kb)
+    
+    lines = []
+    for ctx in sorted(by_ctx.keys()):
+        lines.append(f"\n## {ctx}\n")
+        lines.append("| Key | Mode | Description |")
+        lines.append("|-----|------|-------------|")
+        for kb in sorted(by_ctx[ctx], key=lambda x: x.full_key):
+            mode = kb.mode if kb.mode != "-" else ""
+            lines.append(f"| `{kb.full_key}` | {mode} | {kb.desc} |")
+    
+    return "\n".join(lines)
+
+def render_csv(keybinds: list[Keybind], delimiter: str = ",") -> str:
+    if not keybinds:
+        return ""
+    
+    output = StringIO()
+    writer = csv.writer(output, delimiter=delimiter)
+    writer.writerow(["ctx", "mod", "mode", "key", "full_key", "desc", "file", "line"])
+    for kb in keybinds:
+        writer.writerow([kb.ctx, kb.mod, kb.mode, kb.key, kb.full_key, kb.desc, kb.file, kb.line])
+    return output.getvalue()
+
+def render_json(keybinds: list[Keybind]) -> str:
+    data = []
+    for kb in keybinds:
+        d = asdict(kb)
+        d["full_key"] = kb.full_key
+        data.append(d)
+    return json.dumps(data, indent=2)
+
+def main():
+    dotfiles = Path(__file__).parent.parent
+    keybinds = extract_keybinds(dotfiles)
+    
+    if "--check" in sys.argv:
+        conflicts = find_conflicts(keybinds)
+        if conflicts:
+            print("Conflicts found:")
+            for a, b in conflicts:
+                print(f"  {a.ctx} {a.full_key} ({a.mode}): {a.desc} vs {b.desc}")
+                print(f"    {a.file}:{a.line}")
+                print(f"    {b.file}:{b.line}")
+            sys.exit(1)
+        else:
+            print("No conflicts found.")
+            sys.exit(0)
+    
+    if "--csv" in sys.argv:
+        print(render_csv(keybinds))
+    elif "--tsv" in sys.argv:
+        print(render_csv(keybinds, delimiter="\t"))
+    elif "--json" in sys.argv:
+        print(render_json(keybinds))
+    else:
+        print(render_markdown(keybinds))
+
+if __name__ == "__main__":
+    main()

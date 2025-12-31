@@ -176,8 +176,8 @@
       ];
 
       extraConfig = ''
-        bind-key C-a last-window
-        bind-key e send-prefix
+        bind-key C-a last-window #KB: tmux | C-s | - | C-a | Last window
+        bind-key e send-prefix #KB: tmux | C-s | - | e | Send prefix
 
         # Status bar
         set -g status-position bottom
@@ -190,20 +190,20 @@
         set -g status-left-length 20
 
         # Copy mode
-        bind-key -T copy-mode-vi v send -X begin-selection
+        bind-key -T copy-mode-vi v send -X begin-selection #KB: tmux | none | copy | v | Begin selection
         bind-key -T copy-mode-vi y send -X copy-selection
 
         # Pane navigation
-        bind h select-pane -L
-        bind j select-pane -D
-        bind k select-pane -U
-        bind l select-pane -R
+        bind h select-pane -L #KB: tmux | C-s | - | h | Select pane left
+        bind j select-pane -D #KB: tmux | C-s | - | j | Select pane down
+        bind k select-pane -U #KB: tmux | C-s | - | k | Select pane up
+        bind l select-pane -R #KB: tmux | C-s | - | l | Select pane right
 
         # Pane resizing
-        bind -r H resize-pane -L 5
-        bind -r J resize-pane -D 5
-        bind -r K resize-pane -U 5
-        bind -r L resize-pane -R 5
+        bind -r H resize-pane -L 5 #KB: tmux | C-s | - | H | Resize pane left
+        bind -r J resize-pane -D 5 #KB: tmux | C-s | - | J | Resize pane down
+        bind -r K resize-pane -U 5 #KB: tmux | C-s | - | K | Resize pane up
+        bind -r L resize-pane -R 5 #KB: tmux | C-s | - | L | Resize pane right
 
         # Window status
         setw -g window-status-current-format " #I:#W#F "
@@ -214,10 +214,10 @@
         set-option -g allow-rename off
 
         # Clipboard
-        bind-key -T copy-mode-vi y send-keys -X copy-pipe-and-cancel "pbcopy"
+        bind-key -T copy-mode-vi y send-keys -X copy-pipe-and-cancel "pbcopy" #KB: tmux | none | copy | y | Copy to clipboard
 
         # Plugin settings
-        set -g @thumbs-key Space
+        set -g @thumbs-key Space #KB: tmux | C-s | - | Space | Thumbs (copy hints)
         set -g @floax-change-path "false"
         set -g @floax-width "90%"
         set -g @floax-height "100%"
