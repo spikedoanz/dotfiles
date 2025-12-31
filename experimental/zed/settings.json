@@ -8,12 +8,12 @@
 // command palette (cmd-shift-p / ctrl-shift-p)
 {
   "vim_mode": true,
-  "base_keymap": "VSCode",
+  "base_keymap": "Emacs",
   "ui_font_size": 16,
   "buffer_font_size": 16,
   "theme": {
     "mode": "system",
     "light": "One Light",
-    "dark": "Gruvbox Dark Hard"
+    "dark": "Neovim default dark"
   }
 }

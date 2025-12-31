@@ -81,7 +81,7 @@ v() {
     return 1
 }
 if command -v eza >/dev/null 2>&1; then
-    alias ls='eza'
+    alias ls='eza --sort=extension'
     alias ll='eza -l'
     alias la='eza -a'
     alias l='eza'
@@ -110,3 +110,11 @@ export PATH="$HOME/Library/Android/sdk/platform-tools:$PATH"
 
 export PLAN9=/Users/spike/R/plan9 export PLAN9
 export PATH=$PATH:$PLAN9/bin export PATH
+
+# Daily notes
+DAILY_NOTES_DIR="$HOME/Global/Vault/daily"
+daily() {
+    local dir="${1:-$DAILY_NOTES_DIR}"
+    mkdir -p "$dir"
+    ${EDITOR:-nvim} "$dir/$(date +%Y-%m-%d).md"
+}

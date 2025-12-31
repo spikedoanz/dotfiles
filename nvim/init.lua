@@ -1,30 +1,11 @@
----------------------------
--- spike's neovim config --
----------------------------
+--------------------------------------------------------------------------------
+--                            spike's neovim config                           --
+--------------------------------------------------------------------------------
 local opt = vim.opt
 local map = vim.keymap.set
 
--- leaders (set before lazy)
-vim.g.mapleader = " "
-vim.g.maplocalleader = ","
-
--- disable unused providers
-vim.g.loaded_ruby_provider = 0
-vim.g.loaded_perl_provider = 0
-vim.g.loaded_node_provider = 0
-
--- disable built-in plugins
-vim.g.loaded_netrw = 1
-vim.g.loaded_netrwPlugin = 1
-vim.g.loaded_tutor = 1
-vim.g.loaded_tohtml = 1
-vim.g.loaded_zipPlugin = 1
-vim.g.loaded_gzip = 1
-vim.g.loaded_tarPlugin = 1
-
--------------------------------
 -- editor settings
--------------------------------
+--------------------------------------------------------------------------------
 opt.lazyredraw = true
 opt.shortmess:append("I")  -- disable intro screen
 opt.showmode = true
@@ -38,6 +19,10 @@ opt.scrolloff = 999
 opt.sidescrolloff = 8
 opt.termguicolors = false
 opt.signcolumn = "no"
+
+-- leaders (set before lazy)
+vim.g.mapleader = " "
+vim.g.maplocalleader = ","
 
 -- persistent undo
 local undodir = vim.fn.stdpath("data") .. "/undodir"
@@ -57,9 +42,7 @@ opt.writebackup = false
 -- make comments pop
 vim.cmd("highlight Comment ctermfg=3 gui=none")
 
--------------------------------
 -- basic keymaps
--------------------------------
 
 -- line numbers
 map('n', '<leader>n', ':set number!<CR>', { silent = true, desc = "Toggle line numbers" })
@@ -93,31 +76,10 @@ map('n', '<leader>c', function()
     print("Colorcolumn on")
   end
 end, { desc = "Toggle colorcolumn" })
+--------------------------------------------------------------------------------
 
--------------------------------
--- autocommands
--------------------------------
-
--- disable diagnostics for markdown
-vim.api.nvim_create_autocmd("FileType", {
-  pattern = "markdown",
-  callback = function()
-    vim.diagnostic.enable(false)
-  end,
-})
-
--- set NVIM env vars in terminal
-vim.api.nvim_create_autocmd("TermOpen", {
-  pattern = "*",
-  callback = function()
-    vim.fn.setenv("NVIM_LISTEN_ADDRESS", vim.v.servername)
-    vim.fn.setenv("NVIM", vim.fn.getpid())
-  end,
-})
-
--------------------------------
 -- bootstrap lazy.nvim
--------------------------------
+--------------------------------------------------------------------------------
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 if not vim.loop.fs_stat(lazypath) then
   vim.fn.system({
@@ -128,135 +90,21 @@ if not vim.loop.fs_stat(lazypath) then
 end
 vim.opt.rtp:prepend(lazypath)
 
--------------------------------
+vim.g.fzf_layout = { window = { width = 1, height = 1 } }
+--------------------------------------------------------------------------------
+
 -- plugins
--------------------------------
+--------------------------------------------------------------------------------
 require("lazy").setup({
-
-  -- mini.nvim modules
+  -- fzf
+  { 'junegunn/fzf', build = './install --bin', },
   {
-    "echasnovski/mini.nvim",
-    config = function()
-      -- mini.files (file explorer)
-      require("mini.files").setup({
-        mappings = {
-          close = "q",
-          go_in = "l",
-          go_in_plus = "<CR>",
-          go_out = "h",
-          go_out_plus = "-",
-        },
-      })
-      map("n", "<leader>b", function()
-        local mf = require("mini.files")
-        if not mf.close() then
-          mf.open(vim.api.nvim_buf_get_name(0))
-        end
-      end, { desc = "Toggle file explorer" })
-
-      -- mini.pick + mini.extra (fuzzy finder)
-      require("mini.pick").setup()
-      require("mini.extra").setup()
-
-      -- helix-style space bindings
-      map("n", "<space>f", "<cmd>Pick files<cr>", { desc = "Find files" })
-      map("n", "<space>/", "<cmd>Pick grep_live<cr>", { desc = "Live grep" })
-      map("n", "<space>b", "<cmd>Pick buffers<cr>", { desc = "Buffers" })
-      map("n", "<space>s", "<cmd>Pick lsp scope='document_symbol'<cr>", { desc = "Document symbols" })
-      map("n", "<space>S", "<cmd>Pick lsp scope='workspace_symbol'<cr>", { desc = "Workspace symbols" })
-
-      -- leader-f variants
-      map("n", "<leader>fh", "<cmd>Pick help<cr>", { desc = "Help tags" })
-      map("n", "<leader>fd", function()
-        require("mini.pick").builtin.files(nil, { source = { cwd = vim.fn.expand("%:p:h") } })
-      end, { desc = "Find in current directory" })
-
-      map("n", "<leader>fc", function()
-        require("mini.extra").pickers.explorer({ cwd = vim.fn.getcwd() }, {
-          source = {
-            choose = function(item)
-              vim.cmd('cd ' .. item.path)
-              print('Changed directory to: ' .. item.path)
-            end
-          }
-        })
-      end, { desc = "Change directory" })
-
-      -- mini.clue (keybind hints - helix style)
-      local clue = require("mini.clue")
-      clue.setup({
-        triggers = {
-          { mode = 'n', keys = '<Leader>' },
-          { mode = 'x', keys = '<Leader>' },
-          { mode = 'n', keys = '<space>' },
-          { mode = 'x', keys = '<space>' },
-          { mode = 'n', keys = 'g' },
-          { mode = 'x', keys = 'g' },
-          { mode = 'n', keys = "'" },
-          { mode = 'n', keys = '`' },
-          { mode = 'x', keys = "'" },
-          { mode = 'x', keys = '`' },
-          { mode = 'n', keys = '"' },
-          { mode = 'x', keys = '"' },
-          { mode = 'i', keys = '<C-r>' },
-          { mode = 'c', keys = '<C-r>' },
-          { mode = 'n', keys = '<C-w>' },
-          { mode = 'n', keys = 'z' },
-          { mode = 'x', keys = 'z' },
-          { mode = 'n', keys = '[' },
-          { mode = 'n', keys = ']' },
-        },
-        clues = {
-          clue.gen_clues.builtin_completion(),
-          clue.gen_clues.g(),
-          clue.gen_clues.marks(),
-          clue.gen_clues.registers(),
-          clue.gen_clues.windows(),
-          clue.gen_clues.z(),
-          -- custom groups
-          { mode = 'n', keys = '<space>', desc = '+space mode' },
-          { mode = 'n', keys = '<space>w', desc = '+workspace' },
-          { mode = 'n', keys = '<Leader>f', desc = '+find' },
-          { mode = 'n', keys = '<Leader>d', desc = '+directory/path' },
-        },
-        window = {
-          delay = 0,
-          config = { width = 'auto' },
-        },
-      })
-
-      -- mini.completion
-      require("mini.completion").setup({
-        lsp_completion = {
-          source_func = 'omnifunc',
-          auto_setup = false,
-        },
-        window = {
-          info = { border = 'single' },
-          signature = { border = 'single' },
-        },
-      })
-      -- manual trigger with C-p, confirm with C-y
-      map('i', '<C-p>', function()
-        return vim.fn.pumvisible() == 1 and '<C-p>' or '<C-x><C-o>'
-      end, { expr = true, desc = "Trigger completion" })
-
-      -- clear mini highlight groups to inherit terminal colors
-      vim.api.nvim_create_autocmd("ColorScheme", {
-        callback = function()
-          for _, group in ipairs(vim.fn.getcompletion("Mini", "highlight")) do
-            vim.api.nvim_set_hl(0, group, {})
-          end
-          vim.api.nvim_set_hl(0, "MiniPickMatchCurrent", { reverse = true })
-        end,
-      })
-      -- also clear them now
-      for _, group in ipairs(vim.fn.getcompletion("Mini", "highlight")) do
-        vim.api.nvim_set_hl(0, group, {})
-      end
-      -- but keep selection visible
-      vim.api.nvim_set_hl(0, "MiniPickMatchCurrent", { reverse = true })
-    end,
+  'junegunn/fzf.vim',
+  config = function()
+    map("n", "<leader>f", ":Files<cr>", { desc = "Find files" })
+    map("n", "<leader>/", ":Rg<cr>", { desc = "Live grep" })
+    map("n", "<leader>b", ":Buffers<cr>", { desc = "Buffers" })
+  end,
   },
 
   -- LSP
@@ -264,18 +112,15 @@ require("lazy").setup({
     "neovim/nvim-lspconfig",
     config = function()
       -- global diagnostic keymap
-      map('n', '<space>d', vim.diagnostic.setloclist, { desc = "Diagnostics to loclist" })
+      map('n', '<leader>d', vim.diagnostic.setloclist, { desc = "Diagnostics to loclist" })
 
-      -- LSP attach keymaps (helix-style)
+      -- LSP attach keymaps
       vim.api.nvim_create_autocmd('LspAttach', {
         group = vim.api.nvim_create_augroup('UserLspConfig', {}),
         callback = function(ev)
           local o = function(desc)
             return { buffer = ev.buf, desc = desc }
           end
-
-          -- enable omnifunc for mini.completion
-          vim.bo[ev.buf].omnifunc = 'v:lua.MiniCompletion.completefunc_lsp'
 
           -- goto (g-prefix)
           map('n', 'gd', vim.lsp.buf.definition, o("Definition"))
@@ -285,9 +130,9 @@ require("lazy").setup({
           map('n', 'gy', vim.lsp.buf.type_definition, o("Type definition"))
 
           -- space mode actions
-          map('n', '<space>r', vim.lsp.buf.rename, o("Rename symbol"))
-          map({ 'n', 'v' }, '<space>a', vim.lsp.buf.code_action, o("Code action"))
-          map('n', '<space>F', function()
+          map('n', '<leader>r', vim.lsp.buf.rename, o("Rename symbol"))
+          map({ 'n', 'v' }, '<leader>a', vim.lsp.buf.code_action, o("Code action"))
+          map('n', '<leader>F', function()
             vim.lsp.buf.format({ async = true })
           end, o("Format buffer"))
 
@@ -301,13 +146,6 @@ require("lazy").setup({
           map('n', 'gh', function()
             vim.diagnostic.open_float(nil, { border = "rounded", scope = "line" })
           end, o("Line diagnostics"))
-
-          -- workspace folders (less common, but available)
-          map('n', '<space>wa', vim.lsp.buf.add_workspace_folder, o("Add workspace folder"))
-          map('n', '<space>wr', vim.lsp.buf.remove_workspace_folder, o("Remove workspace folder"))
-          map('n', '<space>wl', function()
-            print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
-          end, o("List workspace folders"))
         end,
       })
 
@@ -332,6 +170,32 @@ require("lazy").setup({
 
       vim.lsp.enable({ 'pyright', 'ts_ls' })
     end,
+  },
+  {
+    'nvim-treesitter/nvim-treesitter',
+    -- parsers managed by Nix; plugin provides queries
+    config = function()
+      vim.api.nvim_create_autocmd('FileType', {
+        callback = function()
+          pcall(vim.treesitter.start)
+        end,
+      })
+    end,
+  },
+  {
+    -- incremental selection (removed from nvim-treesitter main branch)
+    'MeanderingProgrammer/treesitter-modules.nvim',
+    dependencies = { 'nvim-treesitter/nvim-treesitter' },
+    opts = {
+      incremental_selection = {
+        enable = true,
+        keymaps = {
+          init_selection = '<CR>',
+          node_incremental = '<CR>',
+          node_decremental = '<BS>',
+        },
+      },
+    },
   },
 
   -- lean
@@ -382,5 +246,4 @@ require("lazy").setup({
       }
     end,
   },
-
 })

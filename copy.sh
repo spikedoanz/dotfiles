@@ -14,20 +14,21 @@ cfg() {
     fi
 }
 
-# source                              dest                file
-cfg ~/.zshrc                          .                   .zshrc
-cfg ~/.config/nvim/init.lua           nvim                init.lua
-cfg ~/.config/wezterm/wezterm.lua     wezterm             wezterm.lua 
-cfg ~/.config/zed/settings.json       zed                 settings.json
-cfg ~/.config/zed/keymap.json         zed                 settings.json
-cfg ~/.config/karabiner/karabiner.json karabiner          karabiner.json
-cfg ~/.aerospace.toml                 aerospace           .aerospace.toml
-cfg ~/.config/tmux/tmux.conf          tmux                tmux.conf 
-cfg ~/.claude/settings.json           claude              settings.json
-cfg ~/.config/ghostty/config          ghostty             config
+# source                              dest                    file
+cfg ~/.zshrc                          .                       .zshrc
+cfg ~/.config/nvim/init.lua           nvim                    init.lua
+cfg ~/.config/karabiner/karabiner.json karabiner              karabiner.json
+cfg ~/.aerospace.toml                 aerospace               .aerospace.toml
+cfg ~/.config/tmux/tmux.conf          tmux                    tmux.conf 
+cfg ~/.claude/settings.json           claude                  settings.json
+cfg ~/.config/ghostty/config          ghostty                 config
 
-cfg /etc/nixos/configuration.nix      nix                 configuration.nix
-cfg ~/.config/home-manager/home.nix   nix/home-manager    home.nix
+cfg /etc/nixos/configuration.nix      nix                     configuration.nix
+cfg ~/.config/home-manager/home.nix   nix/home-manager        home.nix
 
-cfg ~/.config/i3/config               i3/i3               config
-cfg ~/.config/i3status/config         i3/i3status         config
+cfg ~/.config/i3/config               i3/i3                   config
+cfg ~/.config/i3status/config         i3/i3status             config
+
+cfg ~/.config/wezterm/wezterm.lua     experimental/wezterm    wezterm.lua 
+cfg ~/.config/zed/settings.json       experimental/zed        settings.json
+cfg ~/.config/zed/keymap.json         experimental/zed        settings.json
