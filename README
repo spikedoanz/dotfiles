@@ -1,172 +1,100 @@
-        # this is out of date
-        ███████╗██████╗ ██╗██╗  ██╗███████╗ ███████╗
-        ██╔════╝██╔══██╗██║██║ ██╔╝██╔════╝ ██╔════╝
-        ███████╗██████╔╝██║█████╔╝ █████╗   ███████╗
-        ╚════██║██╔═══╝ ██║██╔═██╗ ██╔══╝   ╚════██║
-        ███████║██║     ██║██║  ██╗███████╗ ███████║
-        ╚══════╝╚═╝     ╚═╝╚═╝  ╚═╝╚══════╝ ╚══════╝
-  ██████╗  ██████╗ ████████╗███████╗██╗██╗     ███████╗███████╗
-  ██╔══██╗██╔═══██╗╚══██╔══╝██╔════╝██║██║     ██╔════╝██╔════╝
-  ██║  ██║██║   ██║   ██║   █████╗  ██║██║     █████╗  ███████╗
-  ██║  ██║██║   ██║   ██║   ██╔══╝  ██║██║     ██╔══╝  ╚════██║
-  ██████╔╝╚██████╔╝   ██║   ██║     ██║███████╗███████╗███████║
-  ╚═════╝  ╚═════╝    ╚═╝   ╚═╝     ╚═╝╚══════╝╚══════╝╚══════╝
+# spike's dotfiles
+------------------
 
-  ┌─ ▼ OVERVIEW─────────────────────────────────────────────┐
-  │ OS:       nixos                                         │
-  │ WM:       i3                                            │
-  │ Terminal: ghostty                                       │
-  │ Shell:    zsh                                           │
-  │ Editors:  neovim                                        │
-  │ Theme:    gruvbox                                       │
-  │ Font:     jetbrains mono nerd font                      │
-  └─────────────────────────────────────────────────────────┘
+```
+dotfiles/
+├── flake.nix              # entry point
+├── lib/mksystem.nix       # system builder helper
+├── machines/
+│   └── macbook/
+│       └── default.nix    # system + home-manager + homebrew config
+└── config/                # shared dotfiles
+    ├── aerospace/
+    ├── claude/
+    ├── ghostty/
+    ├── nvim/
+    └── sh/
+```
 
-  ┌─ ▼ FILE STRUCTURE ──────────────────────────────────────┐
-  │ /etc/nixos/configuration.nix                            │
-  │ ~/.config/                                              │
-  │ ├── i3/config                                           │
-  │ ├── nvim/init.lua                                       │
-  │ └── wezterm/wezterm.lua                                 │
-  └─────────────────────────────────────────────────────────┘
+## what gets installed
+----------------------
 
-  ┌──▼ SYSTEM UTILITIES─────────────────────────────────────┐
-  │ Network Management: nmtui                               │
-  │ Brightness Control: brightnessctl                       │
-  │ Audio:              pipewire + pulseaudio               │
-  │ Screenshot:         flameshot                           │
-  │ File Management:    yazi, syncthing                     │
-  └─────────────────────────────────────────────────────────┘
+**via nix (home-manager):**
+- cli: ripgrep, fzf, eza, tree, curl, jq, htop, ncdu
+- dev: uv, gh, git-lfs, cmake, gnumake
+- languages: python312, nodejs_22
+- media: ffmpeg, imagemagick
+- editor: neovim (with treesitter, lsps)
+- terminal: tmux (with floax, fzf, thumbs plugins)
 
-  ┌──▼ SYSTEM SERVICES──────────────────────────────────────┐
-  │ POWER MANAGEMENT                                        │
-  │ ├── tlp:                    battery optimization        │
-  │ ├── thermald:               temperature control         │
-  │ ├── auto-cpufreq:           cpu frequency scaling       │
-  │ └── power-profiles-daemon:  power management            │
-  │                                                         │
-  │ SYSTEM MAINTENANCE                                      │
-  │ ├── Garbage Collection:    weekly                       │
-  │ ├── TRIM:                  weekly (ssd optimization)    │
-  │ ├── Health Monitoring:     smartd                       │
-  │ └── Updates:               automatic security patches   │
-  │                                                         │
-  │ SECURITY                                                │
-  │ ├── Firewall:              enabled by default           │
-  │ ├── GPG Agent:             configured for runtime       │
-  │ ├── SSH Agent:             configured for runtime       │
-  │ └── Syncthing:             secure default configuration │
-  └─────────────────────────────────────────────────────────┘
+**via homebrew (managed by nix-darwin):**
+- casks: ghostty@tip, mactex, android-platform-tools
+- brews: ffmpeg, cmake, git-lfs, gnupg, colima, scrcpy, rclone
 
-┌──▼ KEYBINDS─────────────────────────────────────────────────┐
-│                                                             │
-│ ┌─────────────────────────────────────────────────────────┐ │
-│ │                                                         │ │
-│ │ MOD is reserved for window manager                      │ │
-│ │ ALT is reserved for client applications                 │ │
-│ │ CTL is reserved for apps inside apps                    │ │
-│ │                                                         │ │
-│ └─────────────────────────────────────────────────────────┘ │
-│                                                             │
-│                                                             │
-│ ┌─ ▼ WINDOW MANAGER (i3) ─────────────────────────────────┐ │
-│ │                                                         │ │
-│ │ Mod Key = Super (Windows Key)                           │ │
-│ │                                                         │ │
-│ │ Core Operations                                         │ │
-│ │ mod + shift + return    terminal                        │ │
-│ │ mod + shift + q         kill window                     │ │
-│ │ mod + p                 application launcher            │ │
-│ │ mod + d                 window switcher                 │ │
-│ │ mod + shift + c         reload i3 config                │ │
-│ │ mod + shift + r         restart i3                      │ │
-│ │ mod + shift + escape    exit i3                         │ │
-│ │                                                         │ │
-│ │ Window Navigation                                       │ │
-│ │ mod + h                 focus left                      │ │
-│ │ mod + j                 focus down                      │ │
-│ │ mod + k                 focus up                        │ │
-│ │ mod + l                 focus right                     │ │
-│ │ mod + shift + h         move window left                │ │
-│ │ mod + shift + j         move window down                │ │
-│ │ mod + shift + k         move window up                  │ │
-│ │ mod + shift + l         move window right               │ │
-│ │                                                         │ │
-│ │ Layout Control                                          │ │
-│ │ mod + shift + o         split horizontal                │ │
-│ │ mod + shift + i         split vertical                  │ │
-│ │ mod + f                 toggle fullscreen               │ │
-│ │ mod + shift + space     toggle floating                 │ │
-│ │ mod + space             toggle focus floating/tiling    │ │
-│ │                                                         │ │
-│ │ Layout Modes                                            │ │
-│ │ mod + s                 layout: stacking                │ │
-│ │ mod + w                 layout: tabbed                  │ │
-│ │ mod + e                 layout: toggle split            │ │
-│ │                                                         │ │
-│ │ Resize Mode (mod + semicolon)                           │ │
-│ │     h                   shrink width                    │ │
-│ │     j                   grow height                     │ │
-│ │     k                   shrink height                   │ │
-│ │     l                   grow width                      │ │
-│ │     return/escape       exit resize mode                │ │
-│ │                                                         │ │
-│ │ Workspace Management                                    │ │
-│ │ mod + [0-9]            switch to workspace              │ │
-│ │ mod + shift + [0-9]    move window to workspace         │ │
-│ │                                                         │ │
-│ │ Hardware Controls                                       │ │
-│ │ XF86AudioRaiseVolume    volume up                       │ │
-│ │ XF86AudioLowerVolume    volume down                     │ │
-│ │ XF86AudioMute           toggle mute                     │ │
-│ │ XF86AudioMicMute        toggle mic mute                 │ │
-│ │ XF86MonBrightnessUp     brightness up                   │ │
-│ │ XF86MonBrightnessDown   brightness down                 │ │
-│ │ Print                   screenshot (flameshot)          │ │
-│ └─────────────────────────────────────────────────────────┘ │
-│                                                             │
-│                                                             │
-│ ┌─ ▼ TERMINAL (WEZTERM) ──────────────────────────────────┐ │
-│ │ Pane Management                                         │ │
-│ │ alt + -                split vertically                 │ │
-│ │ alt + =                split horizontally               │ │
-│ │ alt + q                close pane                       │ │
-│ │ alt + t                cycle theme                      │ │
-│ │                                                         │ │
-│ │ Navigation & Resizing                                   │ │
-│ │ alt + h                focus/resize left                │ │
-│ │ alt + j                focus/resize down                │ │
-│ │ alt + k                focus/resize up                  │ │
-│ │ alt + l                focus/resize right               │ │
-│ │                                                         │ │
-│ │ Text Navigation                                         │ │
-│ │ alt + b                word back                        │ │
-│ │ alt + w                word forward                     │ │
-│ │ alt + 0                start of line                    │ │
-│ │ alt + 4/$              end of line                      │ │
-│ │ alt + d                delete word forward              │ │
-│ │ alt + d                delete to end of line            │ │
-│ │ alt + x                delete character                 │ │
-│ │ alt + v                enter copy mode                  │ │
-│ └─────────────────────────────────────────────────────────┘ │
-│                                                             │
-│                                                             │
-│ ┌─ ▼ VIM ─────────────────────────────────────────────────┐ │
-│ │ Leader Key = Space                                      │ │
-│ │                                                         │ │
-│ │ File Navigation                                         │ │
-│ │ <leader>ff             find files                       │ │
-│ │ <leader>fg             live grep                        │ │
-│ │ <leader>fb             browse buffers                   │ │
-│ │ <leader>fh             help tags                        │ │
-│ │                                                         │ │
-│ │ Editor Features                                         │ │
-│ │ <leader>n              toggle line numbers              │ │
-│ │ <leader>r              toggle relative numbers          │ │
-│ │ <leader>t2             set tab width to 2               │ │
-│ │ <leader>t4             set tab width to 4               │ │
-│ │ ctrl + b               toggle file tree                 │ │
-│ │ ctrl + j               move 10 lines down               │ │
-│ │ ctrl + k               move 10 lines up                 │ │
-│ └─────────────────────────────────────────────────────────┘ │
-└─────────────────────────────────────────────────────────────┘
+**configs symlinked:**
+- ~/.config/nvim/
+- ~/.config/ghostty/
+- ~/.config/tmux/
+- ~/.config/claude/
+- ~/.aerospace.toml
+- ~/.zshrc
+
+## bootstrap (fresh machine)
+
+1. install nix
+
+```bash
+curl --proto '=https' --tlsv1.2 -ssf -l https://install.determinate.systems/nix | sh -s -- install
+```
+
+2. enable flakes
+
+```bash
+mkdir -p ~/.config/nix
+echo 'experimental-features = nix-command flakes' > ~/.config/nix/nix.conf
+```
+
+3. install homebrew
+
+```bash
+/bin/bash -c "$(curl -fssl https://raw.githubusercontent.com/homebrew/install/head/install.sh)"
+```
+
+4. clone dotfiles
+
+```bash
+git clone https://github.com/spikedoanz/dotfiles ~/.config/dotfiles
+cd ~/.config/dotfiles
+```
+
+5. deploy
+
+```bash
+nix run nix-darwin -- switch --flake .#macbook
+```
+
+this single command:
+- installs all nix packages
+- installs all homebrew packages
+- symlinks all config files
+- sets up tmux plugins
+- configures the system
+
+## update
+
+after making changes:
+
+```bash
+darwin-rebuild switch --flake ~/.config/dotfiles
+```
+
+or use the alias:
+```bash
+rebuild
+```
+
+## adding a new machine
+
+1. create `machines/<name>/default.nix`
+2. add entry to `flake.nix`
+3. deploy: `nix run nix-darwin -- switch --flake .#<name>`
