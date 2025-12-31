@@ -98,6 +98,7 @@ alias gp='git push origin $(git branch --show-current)'
 alias gl='git pull'
 alias gb='git branch '
 alias gt='git checkout '
+alias rebuild='sudo darwin-rebuild switch --flake ~/.config/dotfiles'
 
 #================================================================================
 # path

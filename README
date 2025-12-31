@@ -1,6 +1,11 @@
 # spike's dotfiles
 ------------------
 
+tldr
+```bash
+sudo nix run nix-darwin -- switch --flake .#macbook
+```
+
 ```
 dotfiles/
 ├── flake.nix              # entry point
@@ -19,7 +24,7 @@ dotfiles/
 ## what gets installed
 ----------------------
 
-**via nix (home-manager):**
+via nix (home-manager):
 - cli: ripgrep, fzf, eza, tree, curl, jq, htop, ncdu
 - dev: uv, gh, git-lfs, cmake, gnumake
 - languages: python312, nodejs_22
@@ -27,17 +32,19 @@ dotfiles/
 - editor: neovim (with treesitter, lsps)
 - terminal: tmux (with floax, fzf, thumbs plugins)
 
-**via homebrew (managed by nix-darwin):**
-- casks: ghostty@tip, mactex, android-platform-tools
-- brews: ffmpeg, cmake, git-lfs, gnupg, colima, scrcpy, rclone
+via homebrew (managed by nix-darwin):
+- brews: none; nixpkgs or bust!
+- casks: ghostty@tip, mactex, claude-code
 
-**configs symlinked:**
+configs symlinked:
 - ~/.config/nvim/
 - ~/.config/ghostty/
 - ~/.config/tmux/
 - ~/.config/claude/
 - ~/.aerospace.toml
 - ~/.zshrc
+
+--------------------------------------------------------------------------------
 
 ## bootstrap (fresh machine)
 
@@ -70,7 +77,7 @@ cd ~/.config/dotfiles
 5. deploy
 
 ```bash
-nix run nix-darwin -- switch --flake .#macbook
+sudo nix run nix-darwin -- switch --flake .#macbook
 ```
 
 this single command:
@@ -80,18 +87,6 @@ this single command:
 - sets up tmux plugins
 - configures the system
 
-## update
-
-after making changes:
-
-```bash
-darwin-rebuild switch --flake ~/.config/dotfiles
-```
-
-or use the alias:
-```bash
-rebuild
-```
 
 ## adding a new machine
 
