@@ -76,6 +76,16 @@ map('n', '<leader>c', function()
     print("Colorcolumn on")
   end
 end, { desc = "Toggle colorcolumn" })
+
+-- readline-style insert mode bindings
+map('i', '<C-a>', '<Home>', { desc = "Beginning of line" })
+map('i', '<C-e>', '<End>', { desc = "End of line" })
+map('i', '<C-p>', '<Up>', { desc = "Previous line" })
+map('i', '<C-n>', '<Down>', { desc = "Next line" })
+map('i', '<C-b>', '<Left>', { desc = "Back one char" })
+map('i', '<C-f>', '<Right>', { desc = "Forward one char" })
+map('i', '<C-d>', '<Del>', { desc = "Delete char" })
+map('i', '<C-k>', '<C-o>D', { desc = "Kill to end of line" })
 --------------------------------------------------------------------------------
 
 -- bootstrap lazy.nvim
@@ -241,7 +251,8 @@ require("lazy").setup({
     'ggml-org/llama.vim',
     init = function()
       vim.g.llama_config = {
-        keymap_accept_full = "<C-F>",
+        keymap_trigger = "<C-Space>",
+        keymap_accept_full = "<Tab>",
         show_info = false,
       }
     end,
