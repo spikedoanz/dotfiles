@@ -26,32 +26,22 @@
   };
 
   #############################################################################
-  # HOMEBREW (managed by nix-darwin)
+  # HOMEBREW (only for things not in nixpkgs)
   #############################################################################
 
   homebrew = {
     enable = true;
     onActivation = {
       autoUpdate = true;
-      cleanup = "zap";  # remove unlisted packages
+      cleanup = "zap";
     };
 
     taps = [];
-
-    brews = [
-      "ffmpeg"
-      "cmake"
-      "git-lfs"
-      "gnupg"
-      "colima"
-      "scrcpy"
-      "rclone"
-    ];
+    brews = [];
 
     casks = [
-      "ghostty@tip"
-      "mactex"
-      "android-platform-tools"
+      "ghostty@tip"      # tip build not in nixpkgs
+      "mactex"           # large LaTeX distribution
     ];
   };
 
@@ -74,7 +64,7 @@
       coreutils findutils gnused gawk
 
       # Dev tools
-      uv gh git-lfs
+      uv gh git-lfs gnupg
       cmake gnumake
 
       # Languages
@@ -83,6 +73,13 @@
 
       # Media
       ffmpeg imagemagick
+
+      # System tools
+      colima scrcpy rclone
+      android-tools  # adb, fastboot
+
+      # Window manager
+      aerospace
     ];
 
     #--------------------------------------------------------------------------
