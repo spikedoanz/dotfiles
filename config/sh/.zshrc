@@ -4,7 +4,10 @@
 PS1='%F{green}%n@%m%f:%F{cyan}%~%f $ '
 source ~/.env
 
-# NIX SETUP - MUST COME FIRST
+# HOMEBREW SETUP - MUST COME FIRST (Apple Silicon)
+eval "$(/opt/homebrew/bin/brew shellenv)"
+
+# NIX SETUP
 export PATH="/nix/var/nix/profiles/default/bin:$HOME/.nix-profile/bin:$PATH"
 if [ -e ~/.nix-profile/etc/profile.d/nix.sh ]; then . ~/.nix-profile/etc/profile.d/nix.sh; fi
 

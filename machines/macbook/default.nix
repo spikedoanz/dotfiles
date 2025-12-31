@@ -20,8 +20,9 @@
   system.stateVersion = 5;
 
   # User
+  system.primaryUser = "spike";
   users.users.spike = {
-    shell = pkgs.bash;
+    shell = pkgs.zsh;
     home = "/Users/spike";
   };
 
@@ -40,6 +41,7 @@
     brews = [];
 
     casks = [
+      "claude-code"
       "ghostty@tip"      # tip build not in nixpkgs
       "mactex"           # large LaTeX distribution
     ];
@@ -90,25 +92,6 @@
       settings.user = {
         name = "spikedoanz";
         email = "spikedoanz@gmail.com";
-      };
-    };
-
-    #--------------------------------------------------------------------------
-    # Bash
-    #--------------------------------------------------------------------------
-    programs.bash = {
-      enable = true;
-      initExtra = ''
-        PS1="\[\033[34m\]\W\[\033[0m\] § "
-        eval "$(fzf --bash)"
-        export PATH="$HOME/.bin:$PATH"
-      '';
-      shellAliases = {
-        ls = "eza"; ll = "eza -l"; la = "eza -a"; l = "eza";
-        ga = "git add"; gc = "git commit -m"; gp = "git push";
-        gl = "git pull"; gb = "git branch"; gk = "git checkout";
-        v = "source .venv/bin/activate";
-        rebuild = "darwin-rebuild switch --flake ~/.config/dotfiles";
       };
     };
 

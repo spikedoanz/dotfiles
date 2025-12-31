@@ -1,0 +1,100 @@
+# spike's dotfiles
+------------------
+
+```
+dotfiles/
+├── flake.nix              # entry point
+├── lib/mksystem.nix       # system builder helper
+├── machines/
+│   └── macbook/
+│       └── default.nix    # system + home-manager + homebrew config
+└── config/                # shared dotfiles
+    ├── aerospace/
+    ├── claude/
+    ├── ghostty/
+    ├── nvim/
+    └── sh/
+```
+
+## what gets installed
+----------------------
+
+**via nix (home-manager):**
+- cli: ripgrep, fzf, eza, tree, curl, jq, htop, ncdu
+- dev: uv, gh, git-lfs, cmake, gnumake
+- languages: python312, nodejs_22
+- media: ffmpeg, imagemagick
+- editor: neovim (with treesitter, lsps)
+- terminal: tmux (with floax, fzf, thumbs plugins)
+
+**via homebrew (managed by nix-darwin):**
+- casks: ghostty@tip, mactex, android-platform-tools
+- brews: ffmpeg, cmake, git-lfs, gnupg, colima, scrcpy, rclone
+
+**configs symlinked:**
+- ~/.config/nvim/
+- ~/.config/ghostty/
+- ~/.config/tmux/
+- ~/.config/claude/
+- ~/.aerospace.toml
+- ~/.zshrc
+
+## bootstrap (fresh machine)
+
+1. install nix
+
+```bash
+curl --proto '=https' --tlsv1.2 -ssf -l https://install.determinate.systems/nix | sh -s -- install
+```
+
+2. enable flakes
+
+```bash
+mkdir -p ~/.config/nix
+echo 'experimental-features = nix-command flakes' > ~/.config/nix/nix.conf
+```
+
+3. install homebrew
+
+```bash
+/bin/bash -c "$(curl -fssl https://raw.githubusercontent.com/homebrew/install/head/install.sh)"
+```
+
+4. clone dotfiles
+
+```bash
+git clone https://github.com/spikedoanz/dotfiles ~/.config/dotfiles
+cd ~/.config/dotfiles
+```
+
+5. deploy
+
+```bash
+nix run nix-darwin -- switch --flake .#macbook
+```
+
+this single command:
+- installs all nix packages
+- installs all homebrew packages
+- symlinks all config files
+- sets up tmux plugins
+- configures the system
+
+## update
+
+after making changes:
+
+```bash
+darwin-rebuild switch --flake ~/.config/dotfiles
+```
+
+or use the alias:
+```bash
+rebuild
+```
+
+## adding a new machine
+
+1. create `machines/<name>/default.nix`
+2. add entry to `flake.nix`
+3. deploy: `nix run nix-darwin -- switch --flake .#<name>`

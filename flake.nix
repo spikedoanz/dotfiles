@@ -28,6 +28,10 @@
         system = "aarch64-darwin";
         darwin = true;
       };
+      darwinConfigurations.softmacs = mkSystem "macbook" {
+        system = "aarch64-darwin";
+        darwin = true;
+      };
 
       # Linux (uncomment when ready)
       # nixosConfigurations.clinky = mkSystem "clinky" {
