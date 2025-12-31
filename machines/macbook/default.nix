@@ -26,6 +26,36 @@
   };
 
   #############################################################################
+  # HOMEBREW (managed by nix-darwin)
+  #############################################################################
+
+  homebrew = {
+    enable = true;
+    onActivation = {
+      autoUpdate = true;
+      cleanup = "zap";  # remove unlisted packages
+    };
+
+    taps = [];
+
+    brews = [
+      "ffmpeg"
+      "cmake"
+      "git-lfs"
+      "gnupg"
+      "colima"
+      "scrcpy"
+      "rclone"
+    ];
+
+    casks = [
+      "ghostty@tip"
+      "mactex"
+      "android-platform-tools"
+    ];
+  };
+
+  #############################################################################
   # HOME-MANAGER
   #############################################################################
 
@@ -39,10 +69,20 @@
     # Packages
     #--------------------------------------------------------------------------
     home.packages = with pkgs; [
-      # Core
-      ripgrep fzf eza tree curl jq
-      # Dev
-      uv gh
+      # Core CLI
+      ripgrep fzf eza tree curl jq htop ncdu
+      coreutils findutils gnused gawk
+
+      # Dev tools
+      uv gh git-lfs
+      cmake gnumake
+
+      # Languages
+      python312
+      nodejs_22
+
+      # Media
+      ffmpeg imagemagick
     ];
 
     #--------------------------------------------------------------------------
