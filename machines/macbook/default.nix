@@ -110,5 +110,11 @@
     #--------------------------------------------------------------------------
     xdg.configFile."ghostty/config".source = ./config/ghostty/config;
     xdg.configFile."ghostty/cursor.glsl".source = ./config/ghostty/cursor.glsl;
+
+    #--------------------------------------------------------------------------
+    # Tmux
+    #--------------------------------------------------------------------------
+    home.file.".tmux.conf".source = ./config/tmux/tmux.conf;
+    xdg.configFile."tmux".source = ./config/tmux;
   };
 }
