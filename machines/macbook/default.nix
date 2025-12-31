@@ -104,5 +104,11 @@
     # Aerospace (tiling window manager)
     #--------------------------------------------------------------------------
     home.file.".aerospace.toml".source = ./config/aerospace/.aerospace.toml;
+
+    #--------------------------------------------------------------------------
+    # Ghostty (terminal)
+    #--------------------------------------------------------------------------
+    xdg.configFile."ghostty/config".source = ./config/ghostty/config;
+    xdg.configFile."ghostty/cursor.glsl".source = ./config/ghostty/cursor.glsl;
   };
 }
