@@ -91,7 +91,7 @@
       ripgrep fzf eza bat tree curl jq htop btop ncdu
       coreutils findutils gnused gawk
       wget aria2 croc magic-wormhole
-      du-dust tokei ascii neofetch
+      dust tokei ascii neofetch
 
       # Dev tools
       uv gh git-lfs gnupg lazygit
@@ -123,14 +123,14 @@
       newsboat  # RSS
       glow  # markdown
       hledger  # accounting
-      taskwarrior taskwarrior-tui
+      taskwarrior3
       zellij  # terminal multiplexer
 
       # System tools
       colima scrcpy rclone
       android-tools  # adb, fastboot
       pass  # password-store
-      rlwrap unrar
+      rlwrap
       cue  # data validation
 
       # Window manager
@@ -189,67 +189,13 @@
     #--------------------------------------------------------------------------
     programs.tmux = {
       enable = true;
-      prefix = "C-s";
-      shell = "${pkgs.zsh}/bin/zsh";
-      terminal = "screen-256color";
-      historyLimit = 1000000;
-      mouse = true;
-      keyMode = "vi";
-
       plugins = with pkgs.tmuxPlugins; [
         sensible
         tmux-fzf
         tmux-thumbs
         tmux-floax
       ];
-
-      extraConfig = ''
-        bind-key C-a last-window #KB: tmux | C-s | - | C-a | Last window
-        bind-key e send-prefix #KB: tmux | C-s | - | e | Send prefix
-
-        # Status bar
-        set -g status-position bottom
-        set -g status-bg default
-        set -g status-fg white
-        set -g status-style bold
-        set -g status-left ""
-        set -g status-right "#[fg=white,bold]#S "
-        set -g status-right-length 50
-        set -g status-left-length 20
-
-        # Copy mode
-        bind-key -T copy-mode-vi v send -X begin-selection #KB: tmux | none | copy | v | Begin selection
-        bind-key -T copy-mode-vi y send -X copy-selection
-
-        # Pane navigation
-        bind h select-pane -L #KB: tmux | C-s | - | h | Select pane left
-        bind j select-pane -D #KB: tmux | C-s | - | j | Select pane down
-        bind k select-pane -U #KB: tmux | C-s | - | k | Select pane up
-        bind l select-pane -R #KB: tmux | C-s | - | l | Select pane right
-
-        # Pane resizing
-        bind -r H resize-pane -L 5 #KB: tmux | C-s | - | H | Resize pane left
-        bind -r J resize-pane -D 5 #KB: tmux | C-s | - | J | Resize pane down
-        bind -r K resize-pane -U 5 #KB: tmux | C-s | - | K | Resize pane up
-        bind -r L resize-pane -R 5 #KB: tmux | C-s | - | L | Resize pane right
-
-        # Window status
-        setw -g window-status-current-format " #I:#W#F "
-        setw -g window-status-format " #I:#W#F "
-        setw -g window-status-style "fg=white,bg=default"
-        setw -g window-status-current-style "fg=black,bg=white,bold"
-
-        set-option -g allow-rename off
-
-        # Clipboard
-        bind-key -T copy-mode-vi y send-keys -X copy-pipe-and-cancel "pbcopy" #KB: tmux | none | copy | y | Copy to clipboard
-
-        # Plugin settings
-        set -g @thumbs-key Space #KB: tmux | C-s | - | Space | Thumbs (copy hints)
-        set -g @floax-change-path "false"
-        set -g @floax-width "90%"
-        set -g @floax-height "100%"
-      '';
+      extraConfig = builtins.readFile ../../config/tmux/tmux.conf;
     };
 
     #--------------------------------------------------------------------------
