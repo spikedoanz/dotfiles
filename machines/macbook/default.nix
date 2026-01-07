@@ -87,8 +87,8 @@
     #--------------------------------------------------------------------------
     home.packages = with pkgs; [
       # Core CLI
-      ripgrep fzf eza bat tree curl jq htop btop ncdu
-      coreutils findutils gnused gawk
+      ripgrep fzf eza bat tree curl jq htop
+      coreutils findutils gawk
       wget aria2 croc magic-wormhole
       dust tokei ascii neofetch
 
@@ -102,14 +102,13 @@
       nodejs_22
       go
       typst  # typesetting
-      coq elan stack  # proof assistants & haskell
+      # coq elan stack  # proof assistants & haskell
 
       # Shells
       fish nushell
 
       # Editors
-      emacs helix kakoune
-      plan9port  # acme, etc.
+      emacs
 
       # Media
       ffmpeg imagemagick
