@@ -68,7 +68,6 @@
     casks = [
       "claude-code"
       "ghostty@tip"      # tip build not in nixpkgs
-      "mactex"           # large LaTeX distribution
       "middleclick"
     ];
   };
