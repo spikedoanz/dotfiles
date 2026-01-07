@@ -69,6 +69,7 @@
       "claude-code"
       "ghostty@tip"      # tip build not in nixpkgs
       "mactex"           # large LaTeX distribution
+      "middleclick"
     ];
   };
 
@@ -87,23 +88,50 @@
     #--------------------------------------------------------------------------
     home.packages = with pkgs; [
       # Core CLI
-      ripgrep fzf eza tree curl jq htop ncdu
+      ripgrep fzf eza bat tree curl jq htop btop ncdu
       coreutils findutils gnused gawk
+      wget aria2 croc magic-wormhole
+      du-dust tokei ascii neofetch
 
       # Dev tools
-      uv gh git-lfs gnupg
+      uv gh git-lfs gnupg lazygit
       cmake gnumake
+      ruff pyright marksman  # linters/LSPs
 
       # Languages
       python312
       nodejs_22
+      go
+      typst  # typesetting
+      coq elan stack  # proof assistants & haskell
+
+      # Shells
+      fish nushell
+
+      # Editors
+      emacs helix kakoune
+      plan9port  # acme, etc.
 
       # Media
       ffmpeg imagemagick
+      mpv yt-dlp
+      zathura  # PDF viewer
+
+      # TUI apps
+      yazi  # file manager
+      visidata  # data viewer
+      newsboat  # RSS
+      glow  # markdown
+      hledger  # accounting
+      taskwarrior taskwarrior-tui
+      zellij  # terminal multiplexer
 
       # System tools
       colima scrcpy rclone
       android-tools  # adb, fastboot
+      pass  # password-store
+      rlwrap unrar
+      cue  # data validation
 
       # Window manager
       aerospace

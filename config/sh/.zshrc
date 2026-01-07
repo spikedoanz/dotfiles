@@ -104,6 +104,7 @@ alias rebuild='sudo darwin-rebuild switch --flake ~/.config/dotfiles'
 # path
 export PATH="/Applications/Ghostty.app/Contents/MacOS:$PATH"
 export PATH="$HOME/.bin/:$PATH"
+export PATH="$HOME/.config/emacs/bin/:$PATH"
 #--------------------------------------------------------------------------------
 # android sdk
 export ANDROID_NDK="$HOME/Library/Android/sdk/ndk/29.0.14033849"
