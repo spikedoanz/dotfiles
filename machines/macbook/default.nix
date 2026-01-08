@@ -170,6 +170,8 @@
 
     xdg.configFile."nvim/init.lua".source = ../../config/nvim/init.lua;
     xdg.configFile."nvim/lazy-lock.json".source = ../../config/nvim/lazy-lock.json;
+    xdg.configFile."nvim/latex-unicoder/autoload/unicoder.vim".source = ../../config/nvim/latex-unicoder/autoload/unicoder.vim;
+    xdg.configFile."nvim/latex-unicoder/plugin/unicoder.vim".source = ../../config/nvim/latex-unicoder/plugin/unicoder.vim;
 
     #--------------------------------------------------------------------------
     # Aerospace (tiling window manager)

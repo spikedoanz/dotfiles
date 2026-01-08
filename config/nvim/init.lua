@@ -105,6 +105,9 @@ vim.g.fzf_layout = { window = { width = 1, height = 1 } }
 -- plugins
 --------------------------------------------------------------------------------
 require("lazy").setup({
+  -- latex-unicoder (vendored)
+  { dir = "~/.config/nvim/latex-unicoder" },
+
   -- fzf
   { 'junegunn/fzf', build = './install --bin', },
   {
