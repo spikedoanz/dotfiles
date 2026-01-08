@@ -6,6 +6,7 @@ source ~/.env
 
 # HOMEBREW SETUP - MUST COME FIRST (Apple Silicon)
 eval "$(/opt/homebrew/bin/brew shellenv)"
+FPATH="$(brew --prefix)/share/zsh/site-functions:${FPATH}"
 
 # NIX SETUP
 export PATH="/nix/var/nix/profiles/default/bin:$HOME/.nix-profile/bin:$PATH"
