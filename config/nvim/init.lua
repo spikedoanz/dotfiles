@@ -85,7 +85,6 @@ map('i', '<C-n>', '<Down>', { desc = "Next line" }) --KB: nvim | C | i | n | Nex
 map('i', '<C-b>', '<Left>', { desc = "Back one char" }) --KB: nvim | C | i | b | Back one char
 map('i', '<C-f>', '<Right>', { desc = "Forward one char" }) --KB: nvim | C | i | f | Forward one char
 map('i', '<C-d>', '<Del>', { desc = "Delete char" }) --KB: nvim | C | i | d | Delete char
-map('i', '<C-k>', '<C-o>D', { desc = "Kill to end of line" }) --KB: nvim | C | i | k | Kill to end of line
 --------------------------------------------------------------------------------
 
 -- bootstrap lazy.nvim
