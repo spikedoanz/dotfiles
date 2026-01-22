@@ -12,6 +12,9 @@ FPATH="$(brew --prefix)/share/zsh/site-functions:${FPATH}"
 export PATH="/nix/var/nix/profiles/default/bin:$HOME/.nix-profile/bin:$PATH"
 if [ -e ~/.nix-profile/etc/profile.d/nix.sh ]; then . ~/.nix-profile/etc/profile.d/nix.sh; fi
 
+# GHCUP
+[ -f "$HOME/.ghcup/env" ] && source "$HOME/.ghcup/env"
+
 set -o emacs
 
 if command -v fzf >/dev/null 2>&1; then

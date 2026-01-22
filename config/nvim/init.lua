@@ -42,6 +42,10 @@ opt.writebackup = false
 -- make comments pop
 vim.cmd("highlight Comment ctermfg=3 gui=none")
 
+-- fade line numbers
+vim.cmd("highlight LineNr ctermfg=8")
+vim.cmd("highlight CursorLineNr ctermfg=8")
+
 -- basic keymaps
 
 -- line numbers

@@ -122,6 +122,7 @@
       glow  # markdown
       hledger  # accounting
       taskwarrior3
+      watson  # time tracker
       zellij  # terminal multiplexer
 
       # System tools
