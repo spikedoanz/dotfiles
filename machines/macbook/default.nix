@@ -63,7 +63,7 @@
     };
 
     taps = [];
-    brews = [];
+    brews = [ "chezscheme" ];
 
     casks = [
       "claude-code"
