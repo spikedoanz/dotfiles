@@ -62,13 +62,15 @@
       cleanup = "zap";
     };
 
-    taps = [];
-    brews = [ "chezscheme" ];
+    taps = [ "wpmed92/dawn" ];
+    brews = [
+      "chezscheme"  # needed for idris
+      "dawn"        # WebGPU
+    ];
 
     casks = [
       "claude-code"
       "ghostty@tip"      # tip build not in nixpkgs
-      "middleclick"
     ];
   };
 
@@ -93,16 +95,17 @@
       dust tokei ascii neofetch
 
       # Dev tools
-      uv gh git-lfs gnupg lazygit
+      gh git-lfs gnupg lazygit
       cmake gnumake
-      ruff pyright marksman  # linters/LSPs
+      marksman  # linters/LSPs
 
       # Languages
-      python312
+      python312 uv ruff pyright
       nodejs_22
       go
       typst  # typesetting
-      # coq elan stack  # proof assistants & haskell
+      elan coq # proof assistants
+      # coq elan stack  # proof assistants
 
       # Shells
       fish nushell
@@ -111,7 +114,7 @@
       emacs
 
       # Media
-      ffmpeg imagemagick
+      ffmpeg imagemagick # image / video editing
       mpv yt-dlp
       zathura  # PDF viewer
 
@@ -119,18 +122,19 @@
       yazi  # file manager
       visidata  # data viewer
       newsboat  # RSS
-      glow  # markdown
       hledger  # accounting
       taskwarrior3
       watson  # time tracker
-      zellij  # terminal multiplexer
+
+      # LLM agents
+      codex
 
       # System tools
       colima scrcpy rclone
       android-tools  # adb, fastboot
       pass  # password-store
       rlwrap
-      cue  # data validation
+      cue
 
       # Window manager
       aerospace
