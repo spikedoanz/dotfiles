@@ -234,6 +234,12 @@ require("lazy").setup({
     },
     ft = { 'idris2' },
     config = function()
+      local action = require('idris2.code_action')
+      local metavars = require('idris2.metavars')
+      local browse = require('idris2.browse')
+      local repl = require('idris2.repl')
+      local hover = require('idris2.hover')
+
       require('idris2').setup({
         client = {
           hover = {
@@ -244,7 +250,30 @@ require("lazy").setup({
             with_history = false,
           },
         },
-        server = {},
+        server = {
+          on_attach = function(_, bufnr)
+            local o = function(desc)
+              return { buffer = bufnr, desc = desc }
+            end
+            map('n', '<LocalLeader>c', action.case_split, o("Case split")) --KB: nvim | localleader | n | c | Idris case split
+            map('n', '<LocalLeader>a', action.add_clause, o("Add clause")) --KB: nvim | localleader | n | a | Idris add clause
+            map('n', '<LocalLeader>s', action.expr_search, o("Expression search")) --KB: nvim | localleader | n | s | Idris expression search
+            map('n', '<LocalLeader>g', action.generate_def, o("Generate def")) --KB: nvim | localleader | n | g | Idris generate def
+            map('n', '<LocalLeader>r', action.refine_hole, o("Refine hole")) --KB: nvim | localleader | n | r | Idris refine hole
+            map('n', '<LocalLeader>d', action.make_case, o("Make case")) --KB: nvim | localleader | n | d | Idris make case
+            map('n', '<LocalLeader>w', action.make_with, o("Make with")) --KB: nvim | localleader | n | w | Idris make with
+            map('n', '<LocalLeader>l', action.make_lemma, o("Make lemma")) --KB: nvim | localleader | n | l | Idris make lemma
+            map('n', '<LocalLeader>i', action.intro, o("Intro")) --KB: nvim | localleader | n | i | Idris intro
+            map('n', '<LocalLeader>h', action.expr_search_hints, o("Expr search hints")) --KB: nvim | localleader | n | h | Idris expr search with hints
+            map('n', '<LocalLeader>m', metavars.request_all, o("Metavariables")) --KB: nvim | localleader | n | m | Idris list metavariables
+            map('n', ']h', metavars.goto_next, o("Next hole")) --KB: nvim | none | n | ]h | Idris next hole
+            map('n', '[h', metavars.goto_prev, o("Prev hole")) --KB: nvim | none | n | [h | Idris prev hole
+            map('n', '<LocalLeader>b', browse.browse, o("Browse namespace")) --KB: nvim | localleader | n | b | Idris browse namespace
+            map('n', '<LocalLeader>e', repl.evaluate, o("Evaluate")) --KB: nvim | localleader | n | e | Idris evaluate expression
+            map('n', '<LocalLeader>o', hover.open_split, o("Open hover split")) --KB: nvim | localleader | n | o | Idris open hover split
+            map('n', '<LocalLeader>q', hover.close_split, o("Close hover split")) --KB: nvim | localleader | n | q | Idris close hover split
+          end,
+        },
         autostart_semantic = true,
         code_action_post_hook = function() vim.cmd('silent write') end,
         use_default_semantic_hl_groups = true,
