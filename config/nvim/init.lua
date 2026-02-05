@@ -281,6 +281,35 @@ require("lazy").setup({
     end,
   },
 
+  -- which-key (helix-style key hints)
+  {
+    'folke/which-key.nvim',
+    event = 'VeryLazy',
+    opts = {
+      delay = 300,
+      icons = { mappings = false, keys = {} },
+      spec = {
+        { '<leader>',      group = 'leader' },
+        { '<LocalLeader>',  group = 'local', icon = '' },
+        { '<LocalLeader>c', desc = 'Case split' },
+        { '<LocalLeader>a', desc = 'Add clause' },
+        { '<LocalLeader>s', desc = 'Expr search' },
+        { '<LocalLeader>g', desc = 'Generate def' },
+        { '<LocalLeader>r', desc = 'Refine hole' },
+        { '<LocalLeader>d', desc = 'Make case' },
+        { '<LocalLeader>w', desc = 'Make with' },
+        { '<LocalLeader>l', desc = 'Make lemma' },
+        { '<LocalLeader>i', desc = 'Intro' },
+        { '<LocalLeader>h', desc = 'Expr search hints' },
+        { '<LocalLeader>m', desc = 'Metavariables' },
+        { '<LocalLeader>b', desc = 'Browse namespace' },
+        { '<LocalLeader>e', desc = 'Evaluate' },
+        { '<LocalLeader>o', desc = 'Hover split open' },
+        { '<LocalLeader>q', desc = 'Hover split close' },
+      },
+    },
+  },
+
   -- llama completion
   {
     'ggml-org/llama.vim',
