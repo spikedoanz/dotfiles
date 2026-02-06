@@ -1,6 +1,6 @@
 # Ghostty configuration matching wezterm setup
 # Reload with: CMD+SHIFT+,
-theme = dark:Nvim Dark, light:Flexoki Light
+theme = dark:Gitlab Dark, light:Flexoki Light
 macos-window-shadow = false
 window-colorspace = display-p3
 
