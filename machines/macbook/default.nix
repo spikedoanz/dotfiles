@@ -66,10 +66,8 @@
       cleanup = "zap";
     };
 
-    taps = [ "wpmed92/dawn" ];
     brews = [
       "chezscheme"  # needed for idris
-      "dawn"        # WebGPU
     ];
 
     casks = [
