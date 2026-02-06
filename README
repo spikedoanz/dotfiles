@@ -11,11 +11,10 @@
   ██████╔╝╚██████╔╝   ██║   ██║     ██║███████╗███████╗███████║
   ╚═════╝  ╚═════╝    ╚═╝   ╚═╝     ╚═╝╚══════╝╚══════╝╚══════╝
 
-## TLDR
-
-```
 sudo nix run nix-darwin --extra-experimental-features "nix-command flakes" -- switch --flake .#macbook
-```
+
+last stable build: 2026-02-06
+
 
 ## file structure
 -----------------
