@@ -14,7 +14,7 @@
 ## TLDR
 
 ```
-sudo nix run nix-darwin -- switch --flake .#macbook
+sudo nix run nix-darwin --extra-experimental-features "nix-command flakes" -- switch --flake .#macbook
 ```
 
 ## file structure
