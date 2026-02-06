@@ -1,0 +1,9 @@
+#!/usr/bin/env -S uv run --with qrcode --with pillow python3
+import sys
+import qrcode
+
+data = sys.argv[1] if len(sys.argv) > 1 else input()
+qr = qrcode.QRCode(box_size=1, border=1)
+qr.add_data(data)
+qr.make()
+qr.print_ascii(invert=True)
