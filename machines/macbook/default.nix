@@ -75,6 +75,7 @@ in
     ];
 
     casks = [
+      "visual-studio-code"
       "claude-code"
       "ghostty@tip"      # tip build not in nixpkgs
     ];
