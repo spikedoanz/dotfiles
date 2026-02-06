@@ -40,6 +40,9 @@
     # Trackpad
     trackpad.TrackpadRightClick = true;
 
+    # Security
+    security.pam.enableSudoTouchIdAuth = false;
+
     # Misc
     NSGlobalDomain.AppleInterfaceStyle = "Dark";  # dark mode
   };
