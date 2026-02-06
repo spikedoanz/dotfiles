@@ -1,6 +1,11 @@
 # machines/macbook/default.nix - Complete macbook configuration
 # Everything for this machine lives in this folder.
-{ pkgs, lib, ... }:
+{ pkgs, lib, config, ... }:
+
+let
+  dotfiles = "/Users/spike/.config/dotfiles";
+  link = config.lib.file.mkOutOfStoreSymlink;
+in
 
 {
   #############################################################################
@@ -175,21 +180,21 @@
       ];
     };
 
-    xdg.configFile."nvim/init.lua".source = ../../config/nvim/init.lua;
-    xdg.configFile."nvim/lazy-lock.json".source = ../../config/nvim/lazy-lock.json;
-    xdg.configFile."nvim/latex-unicoder/autoload/unicoder.vim".source = ../../config/nvim/latex-unicoder/autoload/unicoder.vim;
-    xdg.configFile."nvim/latex-unicoder/plugin/unicoder.vim".source = ../../config/nvim/latex-unicoder/plugin/unicoder.vim;
+    xdg.configFile."nvim/init.lua".source = link "${dotfiles}/config/nvim/init.lua";
+    xdg.configFile."nvim/lazy-lock.json".source = link "${dotfiles}/config/nvim/lazy-lock.json";
+    xdg.configFile."nvim/latex-unicoder/autoload/unicoder.vim".source = link "${dotfiles}/config/nvim/latex-unicoder/autoload/unicoder.vim";
+    xdg.configFile."nvim/latex-unicoder/plugin/unicoder.vim".source = link "${dotfiles}/config/nvim/latex-unicoder/plugin/unicoder.vim";
 
     #--------------------------------------------------------------------------
     # Aerospace (tiling window manager)
     #--------------------------------------------------------------------------
-    home.file.".aerospace.toml".source = ../../config/aerospace/.aerospace.toml;
+    home.file.".aerospace.toml".source = link "${dotfiles}/config/aerospace/.aerospace.toml";
 
     #--------------------------------------------------------------------------
     # Ghostty (terminal)
     #--------------------------------------------------------------------------
-    xdg.configFile."ghostty/config".source = ../../config/ghostty/config;
-    xdg.configFile."ghostty/cursor.glsl".source = ../../config/ghostty/cursor.glsl;
+    xdg.configFile."ghostty/config".source = link "${dotfiles}/config/ghostty/config";
+    xdg.configFile."ghostty/cursor.glsl".source = link "${dotfiles}/config/ghostty/cursor.glsl";
 
     #--------------------------------------------------------------------------
     # Tmux
@@ -200,7 +205,6 @@
         sensible
         tmux-fzf
         tmux-thumbs
-        tmux-floax
       ];
       extraConfig = builtins.readFile ../../config/tmux/tmux.conf;
     };
@@ -208,12 +212,12 @@
     #--------------------------------------------------------------------------
     # Claude Code
     #--------------------------------------------------------------------------
-    xdg.configFile."claude/settings.json".source = ../../config/claude/settings.json;
-    xdg.configFile."claude/statusline.sh".source = ../../config/claude/statusline.sh;
+    xdg.configFile."claude/settings.json".source = link "${dotfiles}/config/claude/settings.json";
+    xdg.configFile."claude/statusline.sh".source = link "${dotfiles}/config/claude/statusline.sh";
 
     #--------------------------------------------------------------------------
     # Zsh
     #--------------------------------------------------------------------------
-    home.file.".zshrc".source = ../../config/sh/.zshrc;
+    home.file.".zshrc".source = link "${dotfiles}/config/sh/.zshrc";
   };
 }
