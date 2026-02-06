@@ -19,6 +19,9 @@
   programs.zsh.enable = true;
   system.stateVersion = 5;
 
+  # Security
+  security.pam.enableSudoTouchIdAuth = false;
+
   #############################################################################
   # MACOS SETTINGS
   #############################################################################
@@ -39,9 +42,6 @@
 
     # Trackpad
     trackpad.TrackpadRightClick = true;
-
-    # Security
-    security.pam.enableSudoTouchIdAuth = false;
 
     # Misc
     NSGlobalDomain.AppleInterfaceStyle = "Dark";  # dark mode
