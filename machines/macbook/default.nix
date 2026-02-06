@@ -20,7 +20,7 @@
   system.stateVersion = 5;
 
   # Security
-  security.pam.enableSudoTouchIdAuth = false;
+  security.pam.services.sudo_local.touchIdAuth = false;
 
   #############################################################################
   # MACOS SETTINGS
