@@ -4,7 +4,6 @@
 
 let
   dotfiles = "/Users/spike/.config/dotfiles";
-  link = config.lib.file.mkOutOfStoreSymlink;
 in
 
 {
@@ -85,7 +84,10 @@ in
   # HOME-MANAGER
   #############################################################################
 
-  home-manager.users.spike = { pkgs, ... }: {
+  home-manager.users.spike = { pkgs, config, ... }:
+  let
+    link = config.lib.file.mkOutOfStoreSymlink;
+  in {
     home.username = "spike";
     home.homeDirectory = "/Users/spike";
     home.stateVersion = "24.11";
