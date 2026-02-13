@@ -103,6 +103,7 @@ in
       coreutils findutils gawk
       wget aria2 croc magic-wormhole
       dust tokei ascii neofetch
+      bitwarden-cli
 
       # Dev tools
       gh git-lfs gnupg lazygit
