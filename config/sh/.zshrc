@@ -127,3 +127,8 @@ daily() {
     mkdir -p "$dir"
     ${EDITOR:-nvim} "$dir/$(date +%Y-%m-%d).md"
 }
+
+task() {
+    command task "$@"
+    command task sync &>/dev/null || echo "task sync failed"
+}
