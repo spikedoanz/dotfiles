@@ -310,15 +310,12 @@ require("lazy").setup({
     },
   },
 
-  -- llama completion
+  -- easy align
   {
-    'ggml-org/llama.vim',
-    init = function()
-      vim.g.llama_config = {
-        keymap_trigger = "<C-Space>", --KB: nvim | C | i | Space | Trigger llama completion
-        keymap_accept_full = "<Tab>", --KB: nvim | none | i | Tab | Accept llama completion
-        show_info = false,
-      }
+    'junegunn/vim-easy-align',
+    config = function()
+      map('n', 'ga', '<Plug>(EasyAlign)', { desc = "EasyAlign" }) --KB: nvim | g | n | a | EasyAlign
+      map('x', 'ga', '<Plug>(EasyAlign)', { desc = "EasyAlign" }) --KB: nvim | g | x | a | EasyAlign
     end,
   },
 })
