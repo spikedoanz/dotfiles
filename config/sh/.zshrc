@@ -109,6 +109,7 @@ alias rebuild='sudo darwin-rebuild switch --flake ~/.config/dotfiles'
 export PATH="/Applications/Ghostty.app/Contents/MacOS:$PATH"
 export PATH="$HOME/.bin/:$PATH"
 export PATH="$HOME/.config/emacs/bin/:$PATH"
+export PATH="$HOME/.cargo/bin:$PATH"
 #--------------------------------------------------------------------------------
 # android sdk
 export ANDROID_NDK="$HOME/Library/Android/sdk/ndk/29.0.14033849"
@@ -132,3 +133,11 @@ task() {
     command task "$@"
     command task sync &>/dev/null || echo "task sync failed"
 }
+export PATH="$HOME/.npm-global/bin:$PATH"
+
+# bun completions
+[ -s "/Users/spike/.bun/_bun" ] && source "/Users/spike/.bun/_bun"
+
+# bun
+export BUN_INSTALL="$HOME/.bun"
+export PATH="$BUN_INSTALL/bin:$PATH"

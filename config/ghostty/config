@@ -1,6 +1,6 @@
 # Ghostty configuration matching wezterm setup
 # Reload with: CMD+SHIFT+,
-theme = dark:Gitlab Dark, light:Flexoki Light
+theme = dark:Nvim Dark, light:Flexoki Light
 macos-window-shadow = false
 window-colorspace = display-p3
 
@@ -22,7 +22,7 @@ window-padding-x = 0
 window-padding-y = 0
 window-colorspace = display-p3
 window-decoration = false
-background-opacity = 0.95
+# background-opacity = 0.95
 auto-update-channel = stable
 
 mouse-hide-while-typing = true
@@ -33,3 +33,5 @@ keybind = ctrl+h=unbind
 keybind = ctrl+shift+h=unbind
 
 custom-shader = ~/.config/ghostty/cursor.glsl
+
+keybind = shift+enter=text:\x1b\r
