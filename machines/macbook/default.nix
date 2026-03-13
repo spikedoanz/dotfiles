@@ -136,6 +136,12 @@ in
       hledger  # accounting
       taskwarrior3
       watson  # time tracker
+      pkgs.tmux
+
+      # Tmux plugins (load via run-shell in tmux.conf)
+      pkgs.tmuxPlugins.sensible
+      pkgs.tmuxPlugins.tmux-fzf
+      pkgs.tmuxPlugins.tmux-thumbs
 
       # LLM agents
       codex
@@ -203,15 +209,7 @@ in
     #--------------------------------------------------------------------------
     # Tmux
     #--------------------------------------------------------------------------
-    programs.tmux = {
-      enable = true;
-      plugins = with pkgs.tmuxPlugins; [
-        sensible
-        tmux-fzf
-        tmux-thumbs
-      ];
-      extraConfig = builtins.readFile ../../config/tmux/tmux.conf;
-    };
+    xdg.configFile."tmux/tmux.conf".source = link (dotfiles + "/config/tmux/tmux.conf");
 
     #--------------------------------------------------------------------------
     # Claude Code
