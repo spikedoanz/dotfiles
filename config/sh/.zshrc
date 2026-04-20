@@ -96,6 +96,7 @@ fi
 alias p='python'
 alias vim='nvim'
 alias gg='git add . && git commit -m "lazycommit" && git push origin $(git branch --show-current)'
+alias gs='git status '
 alias ga='git add '
 alias gc='git commit -m '
 alias gp='git push origin $(git branch --show-current)'
@@ -103,6 +104,7 @@ alias gl='git pull'
 alias gb='git branch '
 alias gt='git checkout '
 alias rebuild='sudo darwin-rebuild switch --flake ~/.config/dotfiles'
+alias yclaude='claude --dangerously-skip-permissions'
 
 #================================================================================
 # path
@@ -128,6 +130,7 @@ daily() {
     mkdir -p "$dir"
     ${EDITOR:-nvim} "$dir/$(date +%Y-%m-%d).md"
 }
+alias notes="${EDITOR:-nvim} $HOME/Global/Vault/"
 
 task() {
     command task "$@"

@@ -101,6 +101,20 @@ this single command:
 - configures the system
 
 
+## notes
+-------
+
+macOS Mission Control binds Ctrl+Alt+Arrow to "Move left/right a space" by default.
+This conflicts with VsCoq (Coq IDE) keybindings. Disable with:
+
+```bash
+defaults write com.apple.symbolichotkeys AppleSymbolicHotKeys -dict-add 80 '{ enabled = 0; value = { parameters = (65535, 123, 8781824); type = standard; }; }'
+defaults write com.apple.symbolichotkeys AppleSymbolicHotKeys -dict-add 82 '{ enabled = 0; value = { parameters = (65535, 124, 8781824); type = standard; }; }'
+```
+
+Requires logout/login to take effect.
+
+
 ## adding a new machine
 
 1. create `machines/<name>/default.nix`

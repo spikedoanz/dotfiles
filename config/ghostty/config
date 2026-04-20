@@ -1,3 +1,4 @@
+
 # Ghostty configuration matching wezterm setup
 # Reload with: CMD+SHIFT+,
 theme = dark:Nvim Dark, light:iTerm2 Solarized Light
