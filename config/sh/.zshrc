@@ -1,7 +1,17 @@
 ######################
 ## spike's shell rc ##
 ######################
-PS1=$'%F{green}%n@%m%f:%F{cyan}%~%f\n$ '
+#PS1=$'%F{green}%n@%m%f:%F{cyan}%~%f\n$ '
+setopt PROMPT_SUBST
+
+git_branch() {
+  local branch
+  branch=$(git symbolic-ref --short HEAD 2>/dev/null) || \
+  branch=$(git rev-parse --short HEAD 2>/dev/null) || return
+  echo " ${branch}"
+}
+
+PS1=$'\n$ %F{green}%n@%m%f %F{yellow}%D{%Y%m%d:%H%M%S}%f%F{magenta}$(git_branch)%f\n%F{cyan}%~%f\n'
 source ~/.env
 
 # HOMEBREW SETUP - MUST COME FIRST (Apple Silicon)
