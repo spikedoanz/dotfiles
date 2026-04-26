@@ -2,16 +2,52 @@
 ## spike's shell rc ##
 ######################
 #PS1=$'%F{green}%n@%m%f:%F{cyan}%~%f\n$ '
+# ============================================================
+# Prompt configuration
+# ============================================================
+
+zmodload zsh/datetime
 setopt PROMPT_SUBST
 
-git_branch() {
+# ---------- segments ----------
+# Each segment owns one piece of prompt state.
+# Convention: _seg_<name> holds the rendered string (or empty).
+# Convention: _update_<name> refreshes it; called from precmd.
+
+_seg_git=""
+_update_git() {
   local branch
-  branch=$(git symbolic-ref --short HEAD 2>/dev/null) || \
-  branch=$(git rev-parse --short HEAD 2>/dev/null) || return
-  echo " ${branch}"
+  branch=$(git symbolic-ref --short HEAD 2>/dev/null) \
+    || branch=$(git rev-parse --short HEAD 2>/dev/null) \
+    || { _seg_git=""; return; }
+  _seg_git=" %F{magenta}${branch}%f"
 }
 
-PS1=$'\n$ %F{green}%n@%m%f %F{yellow}%D{%Y%m%d:%H%M%S}%f%F{magenta}$(git_branch)%f\n%F{cyan}%~%f\n'
+_seg_duration=""
+_cmd_start=0
+_update_duration() {
+  if (( _cmd_start > 0 )); then
+    local elapsed=$(( EPOCHREALTIME - _cmd_start ))
+    _seg_duration=$(printf " %%F{red}%.2fs%%f" $elapsed)
+    _cmd_start=0
+  else
+    _seg_duration=""
+  fi
+}
+_start_timer() { _cmd_start=$EPOCHREALTIME }
+
+# ---------- hooks ----------
+autoload -Uz add-zsh-hook
+add-zsh-hook preexec _start_timer
+add-zsh-hook precmd  _update_git
+add-zsh-hook precmd  _update_duration
+
+# ---------- prompt ----------
+PS1=$'%F{green}$ %n@%m%f %F{yellow}%D{%Y%m%d:%H%M%S}%f${_seg_git}${_seg_duration}\n%F{cyan}%~%f\n'
+
+# ============================================================
+# Environment
+# ============================================================
 source ~/.env
 
 # HOMEBREW SETUP - MUST COME FIRST (Apple Silicon)
