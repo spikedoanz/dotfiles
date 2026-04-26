@@ -1,7 +1,7 @@
 ######################
 ## spike's shell rc ##
 ######################
-PS1='%F{green}%n@%m%f:%F{cyan}%~%f $ '
+PS1=$'%F{green}%n@%m%f:%F{cyan}%~%f\n$ '
 source ~/.env
 
 # HOMEBREW SETUP - MUST COME FIRST (Apple Silicon)
@@ -105,6 +105,10 @@ alias gb='git branch '
 alias gt='git checkout '
 alias rebuild='sudo darwin-rebuild switch --flake ~/.config/dotfiles'
 alias yclaude='claude --dangerously-skip-permissions'
+
+# Autosuggestions + syntax highlighting
+source $(brew --prefix)/share/zsh-autosuggestions/zsh-autosuggestions.zsh
+source $(brew --prefix)/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 
 #================================================================================
 # path

@@ -72,11 +72,13 @@ in
 
     brews = [
       "chezscheme"  # needed for idris
+      "zsh-autosuggestions" "zsh-syntax-highlighting"
     ];
 
     casks = [
       "visual-studio-code"
       "claude-code"
+      "codex"
       "ghostty@tip"      # tip build not in nixpkgs
       "sol"
     ];
@@ -115,12 +117,8 @@ in
       python312 uv ruff pyright
       nodejs_22
       go
-      typst  # typesetting
-      elan coq # proof assistants
+      elan
       # coq elan stack  # proof assistants
-
-      # Shells
-      fish nushell
 
       # Editors
       emacs
@@ -133,8 +131,6 @@ in
       # TUI apps
       yazi  # file manager
       visidata  # data viewer
-      newsboat  # RSS
-      hledger  # accounting
       taskwarrior3
       watson  # time tracker
       pkgs.tmux
@@ -142,17 +138,12 @@ in
       # Tmux plugins (load via run-shell in tmux.conf)
       pkgs.tmuxPlugins.sensible
       pkgs.tmuxPlugins.tmux-fzf
-      pkgs.tmuxPlugins.tmux-thumbs
-
-      # LLM agents
-      codex
 
       # System tools
       colima scrcpy rclone
       android-tools  # adb, fastboot
       pass  # password-store
       rlwrap
-      cue
 
       # Window manager
       aerospace

@@ -1,13 +1,11 @@
-
 # Ghostty configuration matching wezterm setup
 # Reload with: CMD+SHIFT+,
 theme = dark:Nvim Dark, light:iTerm2 Solarized Light
 macos-window-shadow = false
 window-colorspace = display-p3
 
-
 # Appearance
-font-size = 18
+font-size = 17
 font-thicken = true
 font-feature = zero
 font-feature = ss01
@@ -18,16 +16,13 @@ font-feature = ss05
 font-feature = ss06
 font-feature = calt
 font-feature = liga
-
 window-padding-x = 0
 window-padding-y = 0
 window-colorspace = display-p3
 window-decoration = false
 # background-opacity = 0.95
 auto-update-channel = stable
-
 mouse-hide-while-typing = true
-
 
 # Disable default keybinds that conflict with custom ones
 keybind = ctrl+h=unbind
@@ -36,3 +31,7 @@ keybind = ctrl+shift+h=unbind
 custom-shader = ~/.config/ghostty/cursor.glsl
 
 keybind = shift+enter=text:\x1b\r
+
+# CMD-9: zoomed-out font size for 3 splits
+keybind = cmd+digit9=set_font_size:12
+keybind = cmd+digit1=set_font_size:24
