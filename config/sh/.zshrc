@@ -151,6 +151,7 @@ alias gb='git branch '
 alias gt='git checkout '
 alias rebuild='sudo darwin-rebuild switch --flake ~/.config/dotfiles'
 alias yclaude='claude --dangerously-skip-permissions'
+alias ycodex='codex --yolo --no-alt-screen'
 
 # Autosuggestions + syntax highlighting
 source $(brew --prefix)/share/zsh-autosuggestions/zsh-autosuggestions.zsh
@@ -182,7 +183,7 @@ daily() {
 }
 alias notes="${EDITOR:-nvim} $HOME/Global/Vault/"
 
-task() {
+t() {
     command task "$@"
     command task sync &>/dev/null || echo "task sync failed"
 }
