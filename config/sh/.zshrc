@@ -50,9 +50,12 @@ PS1=$'%F{green}$ %n@%m%f %F{yellow}%D{%Y%m%d:%H%M%S}%f${_seg_git}${_seg_duration
 # ============================================================
 source ~/.env
 
-# HOMEBREW SETUP - MUST COME FIRST (Apple Silicon)
-eval "$(/opt/homebrew/bin/brew shellenv)"
-FPATH="$(brew --prefix)/share/zsh/site-functions:${FPATH}"
+# HOMEBREW SETUP - static paths are much faster than spawning `brew` on every shell.
+export HOMEBREW_PREFIX="/opt/homebrew"
+export HOMEBREW_CELLAR="/opt/homebrew/Cellar"
+export HOMEBREW_REPOSITORY="/opt/homebrew"
+export PATH="$HOMEBREW_PREFIX/bin:$HOMEBREW_PREFIX/sbin:$PATH"
+FPATH="$HOMEBREW_PREFIX/share/zsh/site-functions:${FPATH}"
 
 # NIX SETUP
 export PATH="/nix/var/nix/profiles/default/bin:$HOME/.nix-profile/bin:$PATH"
@@ -73,14 +76,8 @@ fi
 
 . "$HOME/.local/bin/env"
 
-# SSH Agent
-if ! pgrep -u "$USER" ssh-agent > /dev/null; then
-    eval "$(ssh-agent -s)" > /dev/null
-fi
-
-if [ -n "$SSH_AUTH_SOCK" ]; then
-    ssh-add --apple-use-keychain ~/.ssh/gh 2>/dev/null
-fi
+# SSH is configured in ~/.ssh/config. Do not run ssh-agent/ssh-add here:
+# doing so makes every new shell pay the keychain/agent startup cost.
 
 # capture tmux buffer in vim
 bindkey -s '^X^E' 'tmux capture-pane -S - -p > /tmp/tmux-buffer.txt && nvim + /tmp/tmux-buffer.txt\n' #KB: zsh | C-x | - | C-e | Capture tmux buffer in nvim
@@ -154,8 +151,8 @@ alias yclaude='claude --dangerously-skip-permissions'
 alias ycodex='codex --yolo --no-alt-screen'
 
 # Autosuggestions + syntax highlighting
-source $(brew --prefix)/share/zsh-autosuggestions/zsh-autosuggestions.zsh
-source $(brew --prefix)/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+source /opt/homebrew/share/zsh-autosuggestions/zsh-autosuggestions.zsh
+source /opt/homebrew/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 
 #================================================================================
 # path
@@ -170,9 +167,6 @@ export TVM_NDK_CC="$ANDROID_NDK/toolchains/llvm/prebuilt/darwin-x86_64/bin/aarch
 export JAVA_HOME="/Applications/Android Studio.app/Contents/jbr/Contents/Home"
 export TVM_SOURCE_DIR="/Users/spike/R/t-efficient-ai-notes/mlc-llm/3rdparty/tvm"
 export PATH="$HOME/Library/Android/sdk/platform-tools:$PATH"
-
-export PLAN9=/Users/spike/R/plan9 export PLAN9
-export PATH=$PATH:$PLAN9/bin export PATH
 
 # Daily notes
 DAILY_NOTES_DIR="$HOME/Global/Vault/daily"
@@ -189,13 +183,27 @@ t() {
 }
 
 # bun completions
-[ -s "/Users/spike/.bun/_bun" ] && source "/Users/spike/.bun/_bun"
+# [ -s "/Users/spike/.bun/_bun" ] && source "/Users/spike/.bun/_bun"
 
-# bun
 export BUN_INSTALL="$HOME/.bun"
 export PATH="$BUN_INSTALL/bin:$PATH"
-
 export NVM_DIR="$HOME/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
-[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
 export PATH="$HOME/.npm-global/bin:$PATH"
+
+# 
+# [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+# [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+
+# >>> juliaup initialize >>>
+
+# !! Contents within this block are managed by juliaup !!
+
+path=('/Users/spike/.juliaup/bin' $path)
+export PATH
+# Tab completion for juliaup and julia channel selection
+[ -f "/Users/spike/.julia/juliaup/completions/zsh.zsh" ] && source "/Users/spike/.julia/juliaup/completions/zsh.zsh"
+
+# Dedupe PATH/FPATH after Homebrew, Nix, and tool installers have all mutated them.
+typeset -U path PATH fpath FPATH
+
+# <<< juliaup initialize <<<
