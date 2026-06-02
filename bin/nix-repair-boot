@@ -1,0 +1,136 @@
+#!/usr/bin/env sh
+set -u
+
+auto=0
+
+usage() {
+  cat <<'EOF'
+usage: nix-repair-boot [--auto]
+
+Re-enable and start the macOS launchd jobs that mount /nix and run nix-daemon.
+This is for the failure mode where macOS Background Items forgets or blocks the
+org.nixos launch daemons after reboot.
+EOF
+}
+
+case "${1:-}" in
+  --auto)
+    auto=1
+    ;;
+  -h|--help)
+    usage
+    exit 0
+    ;;
+  "")
+    ;;
+  *)
+    usage >&2
+    exit 2
+    ;;
+esac
+
+say() {
+  if [ "$auto" -eq 0 ]; then
+    printf '%s\n' "$*"
+  fi
+}
+
+warn() {
+  printf '%s\n' "$*" >&2
+}
+
+as_root() {
+  if [ "$(id -u)" -eq 0 ]; then
+    "$@"
+  else
+    sudo "$@"
+  fi
+}
+
+nix_client_ok() {
+  [ -d /nix/store ] || return 1
+  [ -S /nix/var/nix/daemon-socket/socket ] || return 1
+
+  if command -v nix >/dev/null 2>&1; then
+    nix store info >/dev/null 2>&1
+  elif [ -x /nix/var/nix/profiles/default/bin/nix ]; then
+    /nix/var/nix/profiles/default/bin/nix store info >/dev/null 2>&1
+  else
+    return 1
+  fi
+}
+
+enable_service() {
+  as_root /bin/launchctl enable "system/$1" >/dev/null 2>&1 || true
+}
+
+bootstrap_service() {
+  label="$1"
+  plist="/Library/LaunchDaemons/$label.plist"
+
+  if /bin/launchctl print "system/$label" >/dev/null 2>&1; then
+    return 0
+  fi
+
+  if [ ! -f "$plist" ]; then
+    warn "Missing $plist"
+    return 1
+  fi
+
+  as_root /bin/launchctl bootstrap system "$plist" >/dev/null 2>&1 || true
+  /bin/launchctl print "system/$label" >/dev/null 2>&1
+}
+
+kickstart_service() {
+  as_root /bin/launchctl kickstart -k "system/$1" >/dev/null 2>&1 || true
+}
+
+wait_for_path() {
+  path="$1"
+  tries="${2:-20}"
+
+  while [ "$tries" -gt 0 ]; do
+    [ -e "$path" ] && return 0
+    sleep 1
+    tries=$((tries - 1))
+  done
+
+  return 1
+}
+
+if [ "$(uname -s)" != "Darwin" ]; then
+  say "nix-repair-boot is only needed on macOS."
+  exit 0
+fi
+
+if nix_client_ok; then
+  say "Nix is already healthy."
+  exit 0
+fi
+
+warn "Nix is unavailable; trying to re-enable and start its launchd jobs."
+warn "sudo may ask for your password."
+
+enable_service org.nixos.darwin-store
+enable_service org.nixos.nix-daemon
+enable_service org.nixos.activate-system
+
+bootstrap_service org.nixos.darwin-store || true
+kickstart_service org.nixos.darwin-store
+wait_for_path /nix/store 20 || true
+
+bootstrap_service org.nixos.activate-system || true
+bootstrap_service org.nixos.nix-daemon || true
+kickstart_service org.nixos.activate-system
+kickstart_service org.nixos.nix-daemon
+wait_for_path /nix/var/nix/daemon-socket/socket 20 || true
+
+if nix_client_ok; then
+  say "Nix repaired."
+  exit 0
+fi
+
+warn "Nix still is not healthy."
+warn "Check System Settings -> General -> Login Items & Extensions -> Allow in the Background."
+warn "The Nix jobs may appear as 'sh' from an unidentified developer."
+exit 1

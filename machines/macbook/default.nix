@@ -213,5 +213,10 @@ in
     # Zsh
     #--------------------------------------------------------------------------
     home.file.".zshrc".source = link "${dotfiles}/config/sh/.zshrc";
+
+    #--------------------------------------------------------------------------
+    # Local helper scripts
+    #--------------------------------------------------------------------------
+    home.file.".bin/nix-repair-boot".source = link "${dotfiles}/bin/nix-repair-boot";
   };
 }

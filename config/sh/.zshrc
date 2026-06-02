@@ -59,6 +59,27 @@ FPATH="$HOMEBREW_PREFIX/share/zsh/site-functions:${FPATH}"
 
 # NIX SETUP
 export PATH="/nix/var/nix/profiles/default/bin:$HOME/.nix-profile/bin:$PATH"
+_nix_auto_repair_boot() {
+  [[ "$OSTYPE" == darwin* ]] || return
+  [[ -o interactive ]] || return
+  [[ "${NIX_REPAIR_BOOT_AUTO:-1}" == 1 ]] || return
+  [[ -d /nix/store && -S /nix/var/nix/daemon-socket/socket ]] && return
+
+  local repair_cmd="$HOME/.bin/nix-repair-boot"
+  [[ -x "$repair_cmd" ]] || repair_cmd="$HOME/.config/dotfiles/bin/nix-repair-boot"
+  [[ -x "$repair_cmd" ]] || return
+
+  local boot_id marker
+  boot_id=$(/usr/sbin/sysctl -n kern.boottime 2>/dev/null | /usr/bin/sed -n 's/.*sec = \([0-9][0-9]*\).*/\1/p')
+  marker="${TMPDIR:-/tmp}/nix-repair-boot.${UID}.${boot_id:-unknown}"
+  [[ -e "$marker" ]] && return
+
+  : > "$marker" 2>/dev/null || true
+  "$repair_cmd" --auto || true
+}
+_nix_auto_repair_boot
+unfunction _nix_auto_repair_boot 2>/dev/null || true
+
 if [ -e ~/.nix-profile/etc/profile.d/nix.sh ]; then . ~/.nix-profile/etc/profile.d/nix.sh; fi
 
 # GHCUP

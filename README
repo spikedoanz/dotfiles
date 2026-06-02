@@ -114,6 +114,20 @@ defaults write com.apple.symbolichotkeys AppleSymbolicHotKeys -dict-add 82 '{ en
 
 Requires logout/login to take effect.
 
+Nix boot repair:
+
+macOS updates/reboots can leave the Nix APFS volume unmounted because the
+`org.nixos.*` launch daemons are no longer loaded. The shell runs
+`nix-repair-boot --auto` once per boot when `/nix` or the daemon socket is
+missing. Run it manually if needed:
+
+```bash
+nix-repair-boot
+```
+
+If it still fails, enable the `sh` items in System Settings -> General -> Login
+Items & Extensions -> Allow in the Background.
+
 
 ## adding a new machine
 
