@@ -218,5 +218,6 @@ in
     # Local helper scripts
     #--------------------------------------------------------------------------
     home.file.".bin/nix-repair-boot".source = link "${dotfiles}/bin/nix-repair-boot";
+    home.file.".bin/sol-no-cache".source = link "${dotfiles}/bin/sol-no-cache";
   };
 }

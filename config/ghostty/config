@@ -1,7 +1,7 @@
 # Ghostty configuration matching wezterm setup
 # Reload with: CMD+SHIFT+,
 #theme = dark:Nvim Dark, light:iTerm2 Solarized Light
-theme = dark:Nvim Dark, light:Violet Light
+theme = dark:Nvim Dark, light:Adwaita
 macos-window-shadow = false
 window-colorspace = display-p3
 
@@ -33,6 +33,7 @@ custom-shader = ~/.config/ghostty/cursor.glsl
 
 keybind = shift+enter=text:\x1b\r
 
-# CMD-9: zoomed-out font size for 3 splits
-keybind = cmd+digit9=set_font_size:12
+# CMD-N fits that many windows
 keybind = cmd+digit1=set_font_size:24
+keybind = cmd+digit2=set_font_size:17
+keybind = cmd+digit3=set_font_size:12

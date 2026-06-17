@@ -2,6 +2,7 @@
   "fzf": { "branch": "master", "commit": "55193ee4dc379d643e91a21b34b75745b90e6aa0" },
   "fzf.vim": { "branch": "master", "commit": "34a564c81f36047f50e593c1656f4580ff75ccca" },
   "idris2-nvim": { "branch": "main", "commit": "19dcf61737293365c23c890ca622fa34aeb12780" },
+  "julia-vim": { "branch": "master", "commit": "52b30547346b21bc93acda28d626795667f9e087" },
   "lazy.nvim": { "branch": "main", "commit": "306a05526ada86a7b30af95c5cc81ffba93fef97" },
   "lean.nvim": { "branch": "main", "commit": "4f9d48499b002ab361a4351142cae2f6f5403646" },
   "nui.nvim": { "branch": "main", "commit": "de740991c12411b663994b2860f1a4fd0937c130" },

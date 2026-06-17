@@ -128,6 +128,27 @@ nix-repair-boot
 If it still fails, enable the `sh` items in System Settings -> General -> Login
 Items & Extensions -> Allow in the Background.
 
+Sol image cache:
+
+Sol writes copied images into `~/.config/sol/images_pasteboard`, which can grow
+large and make the launcher feel slow. Keep that directory read-only/immutable:
+
+```bash
+sol-no-cache lock
+sol-no-cache status
+```
+
+Undo if Sol changes behavior or image clipboard support is needed:
+
+```bash
+sol-no-cache unlock
+```
+
+Other Sol settings worth keeping quiet:
+- `~/.config/sol/config.json` should keep `"searchFolders": []`.
+- Sol Settings -> Save clipboard history should stay off unless needed.
+- Sol Settings -> Show Browser Bookmarks can be disabled if bookmark search gets heavy.
+
 
 ## adding a new machine
 

@@ -1,0 +1,78 @@
+#!/usr/bin/env sh
+set -eu
+
+cache_dir="${HOME}/.config/sol/images_pasteboard"
+
+quit_sol() {
+  if command -v osascript >/dev/null 2>&1; then
+    osascript -e 'quit app "Sol"' >/dev/null 2>&1 || true
+    sleep 1
+  fi
+}
+
+open_sol() {
+  if command -v open >/dev/null 2>&1; then
+    open -a Sol >/dev/null 2>&1 || true
+  fi
+}
+
+unlock_flags() {
+  chflags nouchg "$cache_dir" >/dev/null 2>&1 || true
+  chmod u+w "$cache_dir" >/dev/null 2>&1 || true
+}
+
+lock_cache() {
+  quit_sol
+
+  if [ -d "$cache_dir" ]; then
+    unlock_flags
+    if find "$cache_dir" -mindepth 1 -print -quit | grep -q .; then
+      backup="${cache_dir}.bak.$(date +%Y%m%d%H%M%S)"
+      mv "$cache_dir" "$backup"
+      printf 'Moved old Sol image cache to %s\n' "$backup"
+    else
+      rmdir "$cache_dir"
+    fi
+  fi
+
+  mkdir -p "$cache_dir"
+  chmod 555 "$cache_dir"
+  chflags uchg "$cache_dir" >/dev/null 2>&1 || true
+  open_sol
+  printf 'Sol image cache is locked: %s\n' "$cache_dir"
+}
+
+unlock_cache() {
+  quit_sol
+  mkdir -p "$cache_dir"
+  unlock_flags
+  chmod 755 "$cache_dir"
+  open_sol
+  printf 'Sol image cache is writable again: %s\n' "$cache_dir"
+}
+
+status_cache() {
+  if [ -e "$cache_dir" ]; then
+    /bin/ls -ldO "$cache_dir" 2>/dev/null || ls -ld "$cache_dir"
+    du -sh "$cache_dir" 2>/dev/null || true
+    find "$cache_dir" -type f 2>/dev/null | wc -l | awk '{print $1 " files"}'
+  else
+    printf 'Missing: %s\n' "$cache_dir"
+  fi
+}
+
+case "${1:-lock}" in
+  lock)
+    lock_cache
+    ;;
+  unlock)
+    unlock_cache
+    ;;
+  status)
+    status_cache
+    ;;
+  *)
+    printf 'usage: %s [lock|unlock|status]\n' "$0" >&2
+    exit 2
+    ;;
+esac
