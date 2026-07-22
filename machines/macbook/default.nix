@@ -67,7 +67,9 @@ in
     enable = true;
     onActivation = {
       autoUpdate = true;
-      cleanup = "zap";
+      # Homebrew 5 deprecated `brew bundle --cleanup`; it now exits nonzero
+      # when unmanaged packages exist and prevents Home Manager activation.
+      cleanup = "none";
     };
 
     brews = [

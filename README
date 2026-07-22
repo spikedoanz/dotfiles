@@ -11,9 +11,9 @@
   ██████╔╝╚██████╔╝   ██║   ██║     ██║███████╗███████╗███████║
   ╚═════╝  ╚═════╝    ╚═╝   ╚═╝     ╚═╝╚══════╝╚══════╝╚══════╝
 
-sudo nix run nix-darwin --extra-experimental-features "nix-command flakes" -- switch --flake .#macbook
+./bootstrap.sh
 
-last stable build: 2026-02-06
+last stable build: 2026-07-21
 
 
 ## file structure
@@ -21,7 +21,10 @@ last stable build: 2026-02-06
 
 ```
 dotfiles/
+├── bootstrap.sh           # repair, build, and activate in one command
 ├── flake.nix              # entry point
+├── bin/
+│   └── nix-repair-boot    # recover the encrypted Nix APFS volume after boot
 ├── lib/mksystem.nix       # system builder helper
 ├── machines/
 │   └── macbook/
@@ -64,36 +67,32 @@ configs symlinked:
 1. install nix
 
 ```bash
-curl --proto '=https' --tlsv1.2 -ssf -l https://install.determinate.systems/nix | sh -s -- install
+curl --proto '=https' --tlsv1.2 -sSf -L https://install.determinate.systems/nix | sh -s -- install
 ```
 
-2. enable flakes
+2. install homebrew
 
 ```bash
-mkdir -p ~/.config/nix
-echo 'experimental-features = nix-command flakes' > ~/.config/nix/nix.conf
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 ```
 
-3. install homebrew
-
-```bash
-/bin/bash -c "$(curl -fssl https://raw.githubusercontent.com/homebrew/install/head/install.sh)"
-```
-
-4. clone dotfiles
+3. clone dotfiles
 
 ```bash
 git clone https://github.com/spikedoanz/dotfiles ~/.config/dotfiles
 cd ~/.config/dotfiles
 ```
 
-5. deploy
+4. repair (if needed), build, and deploy
 
 ```bash
-sudo nix run nix-darwin -- switch --flake .#macbook
+./bootstrap.sh
 ```
 
 this single command:
+- repairs a reboot-broken Nix APFS volume and daemon
+- builds the flake as the current user (avoids root Git ownership failures)
+- uses sudo only to switch and activate the built generation
 - installs all nix packages
 - installs all homebrew packages
 - symlinks all config files
@@ -125,6 +124,9 @@ missing. Run it manually if needed:
 nix-repair-boot
 ```
 
+You normally do not need to call this directly: `./bootstrap.sh` runs it before
+building whenever Nix is unavailable.
+
 If it still fails, enable the `sh` items in System Settings -> General -> Login
 Items & Extensions -> Allow in the Background.
 
@@ -154,4 +156,4 @@ Other Sol settings worth keeping quiet:
 
 1. create `machines/<name>/default.nix`
 2. add entry to `flake.nix`
-3. deploy: `nix run nix-darwin -- switch --flake .#<name>`
+3. deploy: `./bootstrap.sh <name>`

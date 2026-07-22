@@ -1,7 +1,8 @@
 # Ghostty configuration matching wezterm setup
 # Reload with: CMD+SHIFT+,
-#theme = dark:Nvim Dark, light:iTerm2 Solarized Light
-theme = dark:Nvim Dark, light:Adwaita
+theme = dark:Nvim Dark, light:iTerm2 Solarized Light
+#theme = dark:Nvim Dark, light:Adwaita
+#theme = dark:Nvim Dark, light:Builtin Light
 macos-window-shadow = false
 window-colorspace = display-p3
 
@@ -21,7 +22,7 @@ window-padding-x = 0
 window-padding-y = 0
 window-colorspace = display-p3
 window-decoration = false
-# background-opacity = 0.95
+# background-opacity = 0.90
 auto-update-channel = stable
 mouse-hide-while-typing = true
 

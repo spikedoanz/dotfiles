@@ -7,6 +7,7 @@ local map = vim.keymap.set
 -- editor settings
 --------------------------------------------------------------------------------
 opt.lazyredraw = true
+opt.wrap = false
 opt.shortmess:append("I")  -- disable intro screen
 opt.showmode = true
 opt.autoindent = true
@@ -148,6 +149,9 @@ require("lazy").setup({
           map('n', 'gr', vim.lsp.buf.references, o("References")) --KB: nvim | g | n | r | Go to references
           map('n', 'gy', vim.lsp.buf.type_definition, o("Type definition")) --KB: nvim | g | n | y | Go to type definition
 
+
+
+
           -- space mode actions
           map('n', '<leader>r', vim.lsp.buf.rename, o("Rename symbol")) --KB: nvim | leader | n | r | Rename symbol (LSP)
           map({ 'n', 'v' }, '<leader>a', vim.lsp.buf.code_action, o("Code action")) --KB: nvim | leader | nv | a | Code action
@@ -186,8 +190,24 @@ require("lazy").setup({
           },
         },
       })
+      vim.lsp.config['ocamllsp'] = {
+        cmd = { 'ocamllsp' },
+        filetypes = {
+          'ocaml',
+          'ocaml.interface',
+          'ocaml.menhir',
+          'ocaml.ocamllex',
+          'dune',
+          'reason',
+        },
+        root_markers = {
+          { 'dune-project', 'dune-workspace' },
+          { '*.opam', 'esy.json', 'package.json' },
+          '.git',
+        },
+      }
 
-      vim.lsp.enable({ 'pyright', 'ts_ls'})
+      vim.lsp.enable({ 'pyright', 'ts_ls', 'ocamllsp'})
     end,
   },
   {

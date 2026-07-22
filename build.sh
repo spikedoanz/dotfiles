@@ -1,2 +1,5 @@
 #!/bin/sh
-sudo nix run nix-darwin --extra-experimental-features "nix-command flakes" -- switch --flake .#macbook
+set -eu
+
+repo_dir=$(CDPATH='' cd -- "$(dirname -- "$0")" && pwd -P)
+exec "$repo_dir/bootstrap.sh" "$@"
