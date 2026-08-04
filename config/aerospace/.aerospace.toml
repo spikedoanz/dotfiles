@@ -98,8 +98,8 @@ automatically-unhide-macos-hidden-apps = false
     # '''
 
     # See: https://nikitabobko.github.io/AeroSpace/commands#layout
-    alt-slash = 'layout tiles horizontal vertical' #KB: aerospace | alt | - | / | Toggle tiles layout
-    alt-comma = 'layout accordion horizontal vertical' #KB: aerospace | alt | - | , | Toggle accordion layout
+    ctrl-alt-v = 'layout tiles horizontal vertical' #KB: aerospace | alt | - | / | Toggle tiles layout
+    ctrl-alt-h = 'layout accordion horizontal vertical' #KB: aerospace | alt | - | , | Toggle accordion layout
 
     # See: https://nikitabobko.github.io/AeroSpace/commands#focus
     alt-h = 'focus left' #KB: aerospace | alt | - | h | Focus left
