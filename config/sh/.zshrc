@@ -224,7 +224,4 @@ export PATH
 # Tab completion for juliaup and julia channel selection
 [ -f "/Users/spike/.julia/juliaup/completions/zsh.zsh" ] && source "/Users/spike/.julia/juliaup/completions/zsh.zsh"
 
-# Dedupe PATH/FPATH after Homebrew, Nix, and tool installers have all mutated them.
-typeset -U path PATH fpath FPATH
-
 # <<< juliaup initialize <<<
