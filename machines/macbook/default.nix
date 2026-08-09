@@ -4,6 +4,13 @@
 
 let
   dotfiles = "/Users/spike/.config/dotfiles";
+  kanataConfigSource = ../../kanata.kbd;
+  kanataConfig = pkgs.runCommand "kanata.kbd" {
+    nativeBuildInputs = [ pkgs.kanata ];
+  } ''
+    kanata --check --cfg ${kanataConfigSource}
+    cp ${kanataConfigSource} "$out"
+  '';
 in
 
 {
@@ -19,7 +26,7 @@ in
     options = "--delete-older-than 30d";
   };
 
-  environment.systemPackages = with pkgs; [ home-manager ];
+  environment.systemPackages = with pkgs; [ home-manager kanata ];
   programs.zsh.enable = true;
   system.stateVersion = 5;
 
@@ -57,6 +64,35 @@ in
   users.users.spike = {
     shell = pkgs.zsh;
     home = "/Users/spike";
+  };
+
+  #############################################################################
+  # KANATA (keyboard remapper)
+  #############################################################################
+
+  # Kanata must run as root on macOS to intercept physical keyboard events.
+  # Keep it in the logged-in user's launchd domain so macOS can request Input
+  # Monitoring permission through the normal System Settings UI. The nixpkgs
+  # package is built without the security-sensitive `cmd` action.
+  security.sudo.extraConfig = ''
+    spike ALL=(root) NOPASSWD: ${pkgs.kanata}/bin/kanata
+  '';
+
+  launchd.user.agents.kanata.serviceConfig = {
+    Label = "org.spike.kanata";
+    ProgramArguments = [
+      "/usr/bin/sudo"
+      "${pkgs.kanata}/bin/kanata"
+      "--cfg"
+      "${kanataConfig}"
+      "--no-wait"
+    ];
+    RunAtLoad = true;
+    KeepAlive = true;
+    ProcessType = "Interactive";
+    ThrottleInterval = 3;
+    StandardOutPath = "/tmp/kanata.out.log";
+    StandardErrorPath = "/tmp/kanata.err.log";
   };
 
   #############################################################################
@@ -193,6 +229,11 @@ in
     # Aerospace (tiling window manager)
     #--------------------------------------------------------------------------
     home.file.".aerospace.toml".source = link "${dotfiles}/config/aerospace/.aerospace.toml";
+
+    #--------------------------------------------------------------------------
+    # Kanata (the service consumes the immutable Nix-store copy)
+    #--------------------------------------------------------------------------
+    xdg.configFile."kanata/kanata.kbd".source = kanataConfig;
 
     #--------------------------------------------------------------------------
     # Ghostty (terminal)

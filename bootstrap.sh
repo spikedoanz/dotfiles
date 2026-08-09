@@ -123,3 +123,5 @@ fi
 
 "$nix_bin" store info >/dev/null
 printf 'Nix is healthy; %s is active.\n' "$configuration"
+printf 'to start kanata, manually run:'
+printf 'launchctl kickstart -k gui/$(id -u)/org.spike.kanata'
