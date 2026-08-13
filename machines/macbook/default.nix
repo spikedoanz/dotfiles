@@ -113,10 +113,13 @@ in
       "zsh-autosuggestions" "zsh-syntax-highlighting"
     ];
 
+    taps = [
+      "d12frosted/emacs-plus" #todo: take this into my own hands
+    ];
+
     casks = [
-      "emacs-app"
+      "emacs-plus-app"
       "visual-studio-code"
-      "claude-code"
       "codex"
       "ghostty@tip"      # tip build not in nixpkgs
       "sol"
@@ -150,25 +153,20 @@ in
       # Dev tools
       gh git-lfs gnupg lazygit
       cmake gnumake
-      marksman  # linters/LSPs
 
       # Languages
       python312 uv ruff pyright
       nodejs_22
       go
       elan
-      # coq elan stack  # proof assistants
 
       # Media
       ffmpeg imagemagick # image / video editing
       mpv yt-dlp
-      zathura  # PDF viewer
 
       # TUI apps
-      yazi  # file manager
       visidata  # data viewer
       taskwarrior3
-      watson  # time tracker
       pkgs.tmux
 
       # Tmux plugins (load via run-shell in tmux.conf)
@@ -177,8 +175,6 @@ in
 
       # System tools
       colima scrcpy rclone
-      android-tools  # adb, fastboot
-      pass  # password-store
       rlwrap
 
       # Window manager
