@@ -114,7 +114,7 @@ in
     ];
 
     casks = [
-      "emacs"
+      "emacs-app"
       "visual-studio-code"
       "claude-code"
       "codex"
