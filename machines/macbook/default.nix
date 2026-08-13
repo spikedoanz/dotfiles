@@ -110,19 +110,15 @@ in
 
     brews = [
       "chezscheme"  # needed for idris
+      "agda"
       "zsh-autosuggestions" "zsh-syntax-highlighting"
     ];
 
-    taps = [
-      "d12frosted/emacs-plus" #todo: take this into my own hands
-    ];
-
     casks = [
-      "emacs-plus-app"
+      "emacs-app"
       "visual-studio-code"
       "codex"
       "ghostty@tip"      # tip build not in nixpkgs
-      "sol"
     ];
   };
 
