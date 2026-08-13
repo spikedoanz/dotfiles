@@ -114,6 +114,7 @@ in
     ];
 
     casks = [
+      "emacs"
       "visual-studio-code"
       "claude-code"
       "codex"
@@ -157,9 +158,6 @@ in
       go
       elan
       # coq elan stack  # proof assistants
-
-      # Editors
-      emacs
 
       # Media
       ffmpeg imagemagick # image / video editing
