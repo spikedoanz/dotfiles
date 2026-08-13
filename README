@@ -13,57 +13,11 @@
 
 ./bootstrap.sh
 
-last stable build: 2026-07-21
+last stable build: 2026-08-13
 
 
-## file structure
------------------
-
-```
-dotfiles/
-├── bootstrap.sh           # repair, build, and activate in one command
-├── flake.nix              # entry point
-├── bin/
-│   └── nix-repair-boot    # recover the encrypted Nix APFS volume after boot
-├── lib/mksystem.nix       # system builder helper
-├── machines/
-│   └── macbook/
-│       └── default.nix    # system + home-manager + homebrew config
-└── config/                # shared dotfiles
-    ├── aerospace/
-    ├── claude/
-    ├── ghostty/
-    ├── nvim/
-    └── sh/
-```
-
-## what gets installed
-----------------------
-
-via nix (home-manager):
-- cli: ripgrep, fzf, eza, tree, curl, jq, htop, ncdu
-- dev: uv, gh, git-lfs, cmake, gnumake
-- languages: python312, nodejs_22
-- media: ffmpeg, imagemagick
-- editor: neovim (with treesitter, lsps)
-- terminal: tmux (with floax, fzf, thumbs plugins)
-
-via homebrew (managed by nix-darwin):
-- brews: none; nixpkgs or bust!
-- casks: ghostty@tip, mactex, claude-code
-
-configs symlinked:
-- ~/.config/nvim/
-- ~/.config/ghostty/
-- ~/.config/tmux/
-- ~/.config/claude/
-- ~/.config/kanata/kanata.kbd
-- ~/.aerospace.toml
-- ~/.zshrc
-
---------------------------------------------------------------------------------
-
-## bootstrap (fresh machine)
+  bootstrap (fresh machine)
+-----------------------------
 
 1. install nix
 
@@ -101,8 +55,9 @@ this single command:
 - configures the system
 
 
-## notes
--------
+
+  notes  
+---------
 
 macOS Mission Control binds Ctrl+Alt+Arrow to "Move left/right a space" by default.
 This conflicts with VsCoq (Coq IDE) keybindings. Disable with:
@@ -112,9 +67,9 @@ defaults write com.apple.symbolichotkeys AppleSymbolicHotKeys -dict-add 80 '{ en
 defaults write com.apple.symbolichotkeys AppleSymbolicHotKeys -dict-add 82 '{ enabled = 0; value = { parameters = (65535, 124, 8781824); type = standard; }; }'
 ```
 
-Requires logout/login to take effect.
+requires logout/login to take effect.
 
-Nix boot repair:
+nix boot repair:
 
 macOS updates/reboots can leave the Nix APFS volume unmounted because the
 `org.nixos.*` launch daemons are no longer loaded. The shell runs
@@ -125,75 +80,8 @@ missing. Run it manually if needed:
 nix-repair-boot
 ```
 
-You normally do not need to call this directly: `./bootstrap.sh` runs it before
-building whenever Nix is unavailable.
+you normally do not need to call this directly: `./bootstrap.sh` runs it before
+building whenever nix is unavailable.
 
-If it still fails, enable the `sh` items in System Settings -> General -> Login
-Items & Extensions -> Allow in the Background.
-
-Sol image cache:
-
-Sol writes copied images into `~/.config/sol/images_pasteboard`, which can grow
-large and make the launcher feel slow. Keep that directory read-only/immutable:
-
-```bash
-sol-no-cache lock
-sol-no-cache status
-```
-
-Undo if Sol changes behavior or image clipboard support is needed:
-
-```bash
-sol-no-cache unlock
-```
-
-Other Sol settings worth keeping quiet:
-- `~/.config/sol/config.json` should keep `"searchFolders": []`.
-- Sol Settings -> Save clipboard history should stay off unless needed.
-- Sol Settings -> Show Browser Bookmarks can be disabled if bookmark search gets heavy.
-
-Kanata keyboard remapping:
-
-`nix-darwin` installs Kanata, validates/copies `kanata.kbd` into the Nix store,
-and runs it at login as `org.spike.kanata`. The launch agent uses a narrowly
-scoped sudo rule because macOS requires root access to intercept keyboards.
-The nixpkgs build disables Kanata's security-sensitive `cmd` action.
-
-macOS still requires two one-time, machine-local steps that cannot be made
-hermetic: install and activate the signed Karabiner DriverKit VirtualHIDDevice,
-then approve Kanata under System Settings -> Privacy & Security -> Input
-Monitoring. Kanata's release notes specify VirtualHIDDevice 6.2.0 for macOS
-11 and newer:
-
-https://github.com/jtroo/kanata/releases
-
-Karabiner-Elements may supply the driver, but its remapper must not run at the
-same time as Kanata. The `karabiner_grabber` process indicates a conflict; the
-VirtualHIDDevice daemon itself is required.
-
-After `./bootstrap.sh`, add `/run/current-system/sw/bin/kanata` in Input
-Monitoring (press Command-Shift-G in the file picker to enter the path), then
-restart the agent:
-
-```bash
-launchctl kickstart -k gui/$(id -u)/org.spike.kanata
-```
-
-macOS may require Input Monitoring approval again after a Nix update changes
-the Kanata executable's code signature.
-
-Useful checks:
-
-```bash
-kanata --check --cfg ~/.config/kanata/kanata.kbd
-launchctl print gui/$(id -u)/org.spike.kanata
-tail -n 100 /tmp/kanata.err.log /tmp/kanata.out.log
-pgrep -lf 'karabiner_grabber|Karabiner-VirtualHIDDevice-Daemon|kanata'
-```
-
-
-## adding a new machine
-
-1. create `machines/<name>/default.nix`
-2. add entry to `flake.nix`
-3. deploy: `./bootstrap.sh <name>`
+if it still fails, enable the `sh` items in system settings -> general -> login
+items & extensions -> allow in the background.

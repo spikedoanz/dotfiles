@@ -1,0 +1,39 @@
+  kanata keyboard remapping  
+-----------------------------
+
+`nix-darwin` installs Kanata, validates/copies `kanata.kbd` into the Nix store,
+and runs it at login as `org.spike.kanata`. The launch agent uses a narrowly
+scoped sudo rule because macOS requires root access to intercept keyboards.
+The nixpkgs build disables Kanata's security-sensitive `cmd` action.
+
+macOS still requires two one-time, machine-local steps that cannot be made
+hermetic: install and activate the signed Karabiner DriverKit VirtualHIDDevice,
+then approve Kanata under System Settings -> Privacy & Security -> Input
+Monitoring. Kanata's release notes specify VirtualHIDDevice 6.2.0 for macOS
+11 and newer:
+
+https://github.com/jtroo/kanata/releases
+
+Karabiner-Elements may supply the driver, but its remapper must not run at the
+same time as Kanata. The `karabiner_grabber` process indicates a conflict; the
+VirtualHIDDevice daemon itself is required.
+
+after `./bootstrap.sh`, add `/run/current-system/sw/bin/kanata` in Input
+Monitoring (press Command-Shift-G in the file picker to enter the path), then
+restart the agent:
+
+```bash
+launchctl kickstart -k gui/$(id -u)/org.spike.kanata
+```
+
+macOS may require Input Monitoring approval again after a Nix update changes
+the Kanata executable's code signature.
+
+Useful checks:
+
+```bash
+kanata --check --cfg ~/.config/kanata/kanata.kbd
+launchctl print gui/$(id -u)/org.spike.kanata
+tail -n 100 /tmp/kanata.err.log /tmp/kanata.out.log
+pgrep -lf 'karabiner_grabber|Karabiner-VirtualHIDDevice-Daemon|kanata'
+```

@@ -4,7 +4,7 @@
 
 let
   dotfiles = "/Users/spike/.config/dotfiles";
-  kanataConfigSource = ../../kanata.kbd;
+  kanataConfigSource = ../../config/kanata/main.kbd;
   kanataConfig = pkgs.runCommand "kanata.kbd" {
     nativeBuildInputs = [ pkgs.kanata ];
   } ''
@@ -221,9 +221,9 @@ in
     home.file.".aerospace.toml".source = link "${dotfiles}/config/aerospace/.aerospace.toml";
 
     #--------------------------------------------------------------------------
-    # Kanata (the service consumes the immutable Nix-store copy)
+    # Kanata (editable config link; the service consumes a validated store copy)
     #--------------------------------------------------------------------------
-    xdg.configFile."kanata/kanata.kbd".source = kanataConfig;
+    xdg.configFile."kanata/main.kbd".source = link "${dotfiles}/config/kanata/main.kbd";
 
     #--------------------------------------------------------------------------
     # Ghostty (terminal)
