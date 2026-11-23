@@ -90,6 +90,30 @@ map('i', '<C-n>', '<Down>', { desc = "Next line" }) --KB: nvim | C | i | n | Nex
 map('i', '<C-b>', '<Left>', { desc = "Back one char" }) --KB: nvim | C | i | b | Back one char
 map('i', '<C-f>', '<Right>', { desc = "Forward one char" }) --KB: nvim | C | i | f | Forward one char
 map('i', '<C-d>', '<Del>', { desc = "Delete char" }) --KB: nvim | C | i | d | Delete char
+
+-- LaTeX/unicode input (routed from lean.nvim's abbreviation engine)
+-- Type e.g. \alpha then <Tab>/<Space>/<CR> -> α. Works in any buffer.
+local latex_input_on = false
+vim.api.nvim_create_user_command('LatexToggle', function()
+  -- lean.nvim is lazy-loaded on .lean buffers; force it so this works anywhere
+  pcall(function() require("lazy").load({ plugins = { "lean.nvim" } }) end)
+  local ok, abbrev = pcall(require, 'lean.abbreviations')
+  if not ok then
+    vim.notify("LatexToggle: lean.nvim not available", vim.log.levels.ERROR)
+    return
+  end
+  if latex_input_on then
+    -- enable() registers its autocmds under the LeanAbbreviations augroup;
+    -- clearing it detaches the InsertCharPre machinery from every buffer.
+    vim.api.nvim_create_augroup('LeanAbbreviations', { clear = true })
+    latex_input_on = false
+    print("LaTeX input off")
+  else
+    abbrev.enable('*', {})
+    latex_input_on = true
+    print("LaTeX input on (type \\alpha then <Tab>)")
+  end
+end, { desc = "Toggle LaTeX/unicode abbreviation input" }) --KB: nvim | cmd | n | LatexToggle | Toggle LaTeX input
 --------------------------------------------------------------------------------
 
 -- bootstrap lazy.nvim

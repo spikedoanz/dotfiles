@@ -30,7 +30,7 @@ mouse-hide-while-typing = true
 keybind = ctrl+h=unbind
 keybind = ctrl+shift+h=unbind
 
-custom-shader = ~/.config/ghostty/cursor.glsl
+# custom-shader = ~/.config/ghostty/cursor.glsl
 
 keybind = shift+enter=text:\x1b\r
 

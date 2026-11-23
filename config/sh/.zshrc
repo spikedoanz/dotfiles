@@ -20,7 +20,7 @@ _update_git() {
   branch=$(git symbolic-ref --short HEAD 2>/dev/null) \
     || branch=$(git rev-parse --short HEAD 2>/dev/null) \
     || { _seg_git=""; return; }
-  _seg_git=" %F{magenta}${branch}%f"
+  _seg_git=" %F{green}${branch}%f"
 }
 
 _seg_duration=""
@@ -43,7 +43,8 @@ add-zsh-hook precmd  _update_git
 add-zsh-hook precmd  _update_duration
 
 # ---------- prompt ----------
-PS1=$'%F{green}$ %n@%m%f %F{yellow}%D{%Y%m%d:%H%M%S}%f${_seg_git}${_seg_duration}\n%F{cyan}%~%f\n'
+# PS1=$'%F{green}$ %n@%m%f %F{green}%D{%Y%m%d:%H%M%S}%f${_seg_git}${_seg_duration}\n%F{green}%~%f\n'
+PS1=$'%F{green}$ %n@%m%f%f${_seg_git}${_seg_duration}\n%F{grey}%~%f\n'
 
 # ============================================================
 # Environment
